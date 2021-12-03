@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">neon</string>
+    <string name="game_left_button">Move left</string>
+    <string name="game_right_button">Move right</string>
+</resources>
