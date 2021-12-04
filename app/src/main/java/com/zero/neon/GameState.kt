@@ -6,7 +6,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.zero.neon.constellation.Star
 import com.zero.neon.ship.ShipLaser
-import com.zero.neon.spaceobject.Rock
+import com.zero.neon.spaceobject.SpaceRock
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.delay
@@ -121,10 +121,10 @@ class GameState(
     }
 
     private fun monitorLaserSpaceObjectsHit() {
-        rocks.map { it.rockRect }.forEachIndexed { rockIndex, rockRect ->
+        spaceRocks.map { it.rockRect }.forEachIndexed { rockIndex, rockRect ->
             lasers.map { it.offset }.forEachIndexed { laserIndex, offset ->
                 if (rockRect.contains(offset)) {
-                    rocks[rockIndex].destroyRock()
+                    spaceRocks[rockIndex].destroyRock()
                     lasers[laserIndex].destroyLaser()
                 }
             }
@@ -163,25 +163,25 @@ class GameState(
     /**
      * Space objects
      */
-    var rocks by mutableStateOf<List<Rock>>(listOf())
+    var spaceRocks by mutableStateOf<List<SpaceRock>>(listOf())
         private set
     private val maxRockSpawnRateMillis: Long = 500
     private var rockSpawnRateMillis: Long = 4000
 
     private fun createRock() {
         val rockXOffset = Random.nextInt(0, screenWidthDp.value.toInt()).dp
-        rocks = rocks
+        spaceRocks = spaceRocks
             .filter { it.floating }
             .toMutableList()
             .apply {
-                val rock = Rock(
+                val spaceRock = SpaceRock(
                     xOffset = rockXOffset,
                     size = 50.dp,
                     screenHeight = screenHeightDp,
                     coroutineScope = coroutineScope,
                     onDestroyRock = { destroyRock(it) }
                 )
-                add(rock)
+                add(spaceRock)
             }
         if (rockSpawnRateMillis > maxRockSpawnRateMillis) {
             rockSpawnRateMillis = (rockSpawnRateMillis * 0.9).toLong()
@@ -189,7 +189,7 @@ class GameState(
     }
 
     private fun destroyRock(rockId: String) {
-        rocks = rocks
+        spaceRocks = spaceRocks
             .toMutableList()
             .apply { removeAll { it.id == rockId } }
     }

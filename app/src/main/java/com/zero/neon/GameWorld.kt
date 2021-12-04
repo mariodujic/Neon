@@ -27,7 +27,7 @@ fun GameWorld(
     shipYRotation: Float = 0f,
     shipLaser: List<Laser>,
     stars: List<Star>,
-    rocks: List<SpaceObject>,
+    spaceRocks: List<SpaceObject>,
     modifier: Modifier = Modifier
 ) {
 
@@ -66,10 +66,10 @@ fun GameWorld(
                     )
                 })
         }
-        rocks.forEach { rock ->
+        spaceRocks.forEach { rock ->
             Box(modifier = Modifier.offset(x = rock.xOffset, y = rock.yOffset)) {
                 Image(
-                    painterResource(id = R.drawable.stone_1),
+                    painterResource(id = rock.drawableId),
                     contentScale = ContentScale.None,
                     contentDescription = "",
                     modifier = Modifier.size(rock.size)

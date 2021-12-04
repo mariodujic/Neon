@@ -30,7 +30,7 @@ fun GameScreen() {
             shipYRotation = gameState.shipYRotation,
             shipLaser = gameState.lasers,
             stars = gameState.stars,
-            rocks = gameState.rocks,
+            spaceRocks = gameState.spaceRocks,
             modifier = Modifier.weight(1f)
         )
         GameControls(
