@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -18,31 +17,40 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.zero.neon.constellation.Star
+import com.zero.neon.ship.Laser
+import com.zero.neon.spaceobject.SpaceObject
 
 @Composable
 fun GameWorld(
-    modifier: Modifier = Modifier,
     shipXOffset: Dp = 0.dp,
     shipYRotation: Float = 0f,
-    shipLaser: List<GameState.ShipLaser>,
-    stars: List<GameState.Star>
+    shipLaser: List<Laser>,
+    stars: List<Star>,
+    rocks: List<SpaceObject>,
+    modifier: Modifier = Modifier
 ) {
 
     val rotation by animateFloatAsState(targetValue = shipYRotation)
 
     BoxWithConstraints(modifier = modifier.fillMaxSize()) {
         shipLaser.forEach { shipLaser ->
-            Image(
-                painterResource(id = R.drawable.laser_blue_7),
-                contentScale = ContentScale.None,
-                contentDescription = "",
+            Box(
                 modifier = Modifier
                     .offset(x = shipLaser.xOffset, y = shipLaser.yOffset)
                     .align(Alignment.BottomCenter)
-                    .graphicsLayer {
-                        rotationY = rotation
-                    }
-            )
+            ) {
+                Image(
+                    painterResource(id = R.drawable.laser_blue_7),
+                    contentScale = ContentScale.None,
+                    contentDescription = "",
+                    modifier = Modifier
+                        .graphicsLayer {
+                            rotationY = rotation
+                        }
+                )
+                //Text(shipLaser.offset.toString(), color = Color.White, fontSize = 12.sp)
+            }
         }
         stars.forEach {
             Canvas(
@@ -57,6 +65,17 @@ fun GameWorld(
                         blendMode = BlendMode.Luminosity
                     )
                 })
+        }
+        rocks.forEach { rock ->
+            Box(modifier = Modifier.offset(x = rock.xOffset, y = rock.yOffset)) {
+                Image(
+                    painterResource(id = R.drawable.stone_1),
+                    contentScale = ContentScale.None,
+                    contentDescription = "",
+                    modifier = Modifier.size(rock.size)
+                )
+                // Text(rock.rockRect.toString(), color = Color.White, fontSize = 12.sp)
+            }
         }
         Image(
             painterResource(id = R.drawable.ship_blue),

@@ -4,6 +4,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.zero.neon.constellation.Star
+import com.zero.neon.ship.ShipLaser
+import com.zero.neon.spaceobject.Rock
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -31,9 +34,14 @@ class GameState(
 
     init {
         coroutineScope.launch {
-            createStars()
+            createStars(
+                screenHeight = screenHeightDp.value.toInt(),
+                screenWidth = screenWidthDp.value.toInt(),
+                coroutineScope = coroutineScope
+            )
             while (true) {
                 moveShip()
+                monitorLaserSpaceObjectsHit()
                 delay(loopRefreshRate)
             }
         }
@@ -41,6 +49,12 @@ class GameState(
             while (true) {
                 fireLasers()
                 delay(laserFireSpeedRate)
+            }
+        }
+        coroutineScope.launch {
+            while (true) {
+                createRock()
+                delay(rockSpawnRateMillis)
             }
         }
     }
@@ -76,58 +90,56 @@ class GameState(
      * Ship laser
      */
     var lasers by mutableStateOf<List<ShipLaser>>(listOf())
-    private var laserFireSpeedRate: Long = 150
+        private set
+    private val laserFireSpeedRate: Long = 550
 
     private fun fireLasers() {
         lasers = lasers
             .filter { it.shooting }
             .toMutableList()
-            .apply { add(ShipLaser(shipOffsetX, screenHeightDp, coroutineScope)) }
+            .apply {
+                val laser = ShipLaser(
+                    xOffset = shipOffsetX,
+                    yRange = screenHeightDp,
+                    screenWidth = screenWidthDp,
+                    screenHeight = screenHeightDp,
+                    onDestroyLaser = { destroyLaser(it) },
+                    coroutineScope = coroutineScope
+                )
+                add(laser)
+            }
     }
 
-    inner class ShipLaser(
-        override var xOffset: Dp,
-        yRange: Dp,
-        coroutineScope: CoroutineScope
-    ) : Laser {
+    private fun destroyLaser(laserId: String) {
+        lasers = lasers
+            .toMutableList()
+            .apply {
+                removeAll { it.id == laserId }
+            }
+    }
 
-        override var yOffset: Dp by mutableStateOf((-10).dp)
-        override var shooting: Boolean by mutableStateOf(false)
-
-        init {
-            coroutineScope.launch {
-                shooting = true
-                while (yOffset > -yRange || !shooting) {
-                    yOffset -= 7.dp
-                    delay(loopRefreshRate)
+    private fun monitorLaserSpaceObjectsHit() {
+        rocks.map { it.rockRect }.forEachIndexed { rockIndex, rockRect ->
+            lasers.map { it.offset }.forEachIndexed { laserIndex, offset ->
+                if (rockRect.contains(offset)) {
+                    rocks[rockIndex].destroyRock()
+                    lasers[laserIndex].destroyLaser()
                 }
-                shooting = false
             }
         }
-
-        override fun destroyLaser() {
-            shooting = false
-        }
-    }
-
-    interface Laser {
-        var xOffset: Dp
-        var yOffset: Dp
-        var shooting: Boolean
-
-        fun destroyLaser()
     }
 
     /**
      * Constellation
      */
     var stars by mutableStateOf<List<Star>>(listOf())
+        private set
 
-    private fun createStars() {
+    private fun createStars(screenWidth: Int, screenHeight: Int, coroutineScope: CoroutineScope) {
         val starList = mutableListOf<Star>()
         for (i in 0..40) {
-            val starXOffset = Random.nextInt(0, screenWidthDp.value.toInt()).dp
-            val starYOffset = Random.nextInt(0, screenHeightDp.value.toInt()).dp
+            val starXOffset = Random.nextInt(0, screenWidth).dp
+            val starYOffset = Random.nextInt(0, screenHeight).dp
             val starSize = Random.nextInt(1, 12).dp
             val star = Star(starXOffset, starYOffset, starSize, coroutineScope)
             starList.add(star)
@@ -135,41 +147,33 @@ class GameState(
         stars = starList.toList()
     }
 
-    class Star(
-        override var xOffset: Dp,
-        override var yOffset: Dp,
-        override var size: Dp,
-        coroutineScope: CoroutineScope
-    ) : SpaceObject {
+    /**
+     * Space objects
+     */
+    var rocks by mutableStateOf<List<Rock>>(listOf())
+        private set
+    private val rockSpawnRateMillis: Long = 4000
 
-        private val initialStarSize = size
-        private var enlargeStar = false
-
-        init {
-            coroutineScope.launch {
-                while (true) {
-                    if (enlargeStar) {
-                        if (size == initialStarSize) {
-                            enlargeStar = false
-                        } else {
-                            size += 1.dp
-                        }
-                    } else {
-                        if (size == 1.dp) {
-                            enlargeStar = true
-                        } else {
-                            size -= 1.dp
-                        }
-                    }
-                    delay(150)
-                }
+    private fun createRock() {
+        val rockXOffset = Random.nextInt(0, screenWidthDp.value.toInt()).dp
+        rocks = rocks
+            .filter { it.floating }
+            .toMutableList()
+            .apply {
+                val rock = Rock(
+                    xOffset = rockXOffset,
+                    size = 50.dp,
+                    screenHeight = screenHeightDp,
+                    coroutineScope = coroutineScope,
+                    onDestroyRock = { destroyRock(it) }
+                )
+                add(rock)
             }
-        }
     }
 
-    interface SpaceObject {
-        var xOffset: Dp
-        var yOffset: Dp
-        var size: Dp
+    private fun destroyRock(rockId: String) {
+        rocks = rocks
+            .toMutableList()
+            .apply { removeAll { it.id == rockId } }
     }
 }
