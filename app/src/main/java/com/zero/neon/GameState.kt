@@ -12,21 +12,33 @@ import kotlinx.coroutines.launch
 fun rememberGameState(): GameState {
     val configuration = LocalConfiguration.current
     val screenWidthDp = configuration.screenWidthDp.dp
+    val screenHeightDp = configuration.screenHeightDp.dp
     val coroutineScope = rememberCoroutineScope()
-    return remember { GameState(screenWidthDp, coroutineScope) }
+    return remember { GameState(screenWidthDp, screenHeightDp, coroutineScope) }
 }
 
-class GameState(screenWidthDp: Dp, coroutineScope: CoroutineScope) {
+class GameState(
+    screenWidthDp: Dp,
+    private val screenHeightDp: Dp,
+    private val coroutineScope: CoroutineScope
+) {
 
     /**
      * Main loop
      */
+    private val loopRefreshRate = 5L
+
     init {
         coroutineScope.launch {
             while (true) {
-                if (movingLeft && shipOffsetX > -maxXMovement) shipOffsetX -= 2.dp
-                if (movingRight && shipOffsetX < maxXMovement) shipOffsetX += 2.dp
-                delay(5)
+                moveShip()
+                delay(loopRefreshRate)
+            }
+        }
+        coroutineScope.launch {
+            while (true) {
+                fireLasers()
+                delay(laserFireSpeedRate)
             }
         }
     }
@@ -34,7 +46,13 @@ class GameState(screenWidthDp: Dp, coroutineScope: CoroutineScope) {
     /**
      * Ship movement
      */
-    private val maxXMovement = screenWidthDp / 2
+    private val shipMaxXOffset = screenWidthDp / 2
+    private val shipXMovementSpeed = 2.dp
+
+    private fun moveShip() {
+        if (movingLeft && shipOffsetX > -shipMaxXOffset) shipOffsetX -= shipXMovementSpeed
+        if (movingRight && shipOffsetX < shipMaxXOffset) shipOffsetX += shipXMovementSpeed
+    }
 
     var shipOffsetX by mutableStateOf(0.dp)
     val shipYRotation by derivedStateOf { shipOffsetX.value * 0.3f }
@@ -48,5 +66,51 @@ class GameState(screenWidthDp: Dp, coroutineScope: CoroutineScope) {
 
     fun moveShipRight(movingShipRight: Boolean) {
         movingRight = movingShipRight
+    }
+
+    /**
+     * Ship laser
+     */
+    var lasers by mutableStateOf<List<ShipLaser>>(listOf())
+    private var laserFireSpeedRate: Long = 150
+
+    private fun fireLasers() {
+        lasers = lasers
+            .filter { it.shooting }
+            .toMutableList()
+            .apply { add(ShipLaser(shipOffsetX, screenHeightDp, coroutineScope)) }
+    }
+
+    inner class ShipLaser(
+        override var xOffset: Dp,
+        yRange: Dp,
+        coroutineScope: CoroutineScope
+    ) : Laser {
+
+        override var yOffset: Dp by mutableStateOf(0.dp)
+        override var shooting: Boolean by mutableStateOf(false)
+
+        init {
+            coroutineScope.launch {
+                shooting = true
+                while (yOffset > -yRange || !shooting) {
+                    yOffset -= 7.dp
+                    delay(loopRefreshRate)
+                }
+                shooting = false
+            }
+        }
+
+        override fun destroyLaser() {
+            shooting = false
+        }
+    }
+
+    interface Laser {
+        var xOffset: Dp
+        var yOffset: Dp
+        var shooting: Boolean
+
+        fun destroyLaser()
     }
 }

@@ -21,12 +21,27 @@ import androidx.compose.ui.unit.dp
 fun GameWorld(
     modifier: Modifier = Modifier,
     shipXOffset: Dp = 0.dp,
-    shipYRotation: Float = 0f
+    shipYRotation: Float = 0f,
+    shipLaser: List<GameState.ShipLaser>
 ) {
 
     val rotation by animateFloatAsState(targetValue = shipYRotation)
 
     BoxWithConstraints(modifier = modifier.fillMaxSize()) {
+        shipLaser.forEach { shipLaser ->
+            Image(
+                painterResource(id = R.drawable.laser_blue_7),
+                contentScale = ContentScale.None,
+                contentDescription = "",
+                modifier = Modifier
+                    .scale(0.9f)
+                    .offset(x = shipLaser.xOffset, y = shipLaser.yOffset)
+                    .align(Alignment.BottomCenter)
+                    .graphicsLayer {
+                        rotationY = rotation
+                    }
+            )
+        }
         Image(
             painterResource(id = R.mipmap.ship),
             contentScale = ContentScale.None,

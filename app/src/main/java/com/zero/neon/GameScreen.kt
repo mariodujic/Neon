@@ -24,6 +24,7 @@ fun GameScreen() {
         GameWorld(
             shipXOffset = gameState.shipOffsetX,
             shipYRotation = gameState.shipYRotation,
+            shipLaser = gameState.lasers,
             modifier = Modifier.weight(1f)
         )
         GameControls(
