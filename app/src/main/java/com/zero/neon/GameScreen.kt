@@ -19,14 +19,17 @@ fun GameScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(brush = Brush.verticalGradient(
-                colors = listOf(Blue, Pink))
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(Blue, Pink)
+                )
             )
     ) {
         GameWorld(
             shipXOffset = gameState.shipOffsetX,
             shipYRotation = gameState.shipYRotation,
             shipLaser = gameState.lasers,
+            stars = gameState.stars,
             modifier = Modifier.weight(1f)
         )
         GameControls(

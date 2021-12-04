@@ -7,6 +7,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.random.Random
 
 @Composable
 fun rememberGameState(): GameState {
@@ -18,7 +19,7 @@ fun rememberGameState(): GameState {
 }
 
 class GameState(
-    screenWidthDp: Dp,
+    private val screenWidthDp: Dp,
     private val screenHeightDp: Dp,
     private val coroutineScope: CoroutineScope
 ) {
@@ -30,6 +31,7 @@ class GameState(
 
     init {
         coroutineScope.launch {
+            createStars()
             while (true) {
                 moveShip()
                 delay(loopRefreshRate)
@@ -51,7 +53,9 @@ class GameState(
 
     private fun moveShip() {
         if (movingLeft && shipOffsetX > -shipMaxXOffset) shipOffsetX -= shipXMovementSpeed
+        else movingLeft = false
         if (movingRight && shipOffsetX < shipMaxXOffset) shipOffsetX += shipXMovementSpeed
+        else movingRight = false
     }
 
     var shipOffsetX by mutableStateOf(0.dp)
@@ -87,7 +91,7 @@ class GameState(
         coroutineScope: CoroutineScope
     ) : Laser {
 
-        override var yOffset: Dp by mutableStateOf(0.dp)
+        override var yOffset: Dp by mutableStateOf((-10).dp)
         override var shooting: Boolean by mutableStateOf(false)
 
         init {
@@ -112,5 +116,60 @@ class GameState(
         var shooting: Boolean
 
         fun destroyLaser()
+    }
+
+    /**
+     * Constellation
+     */
+    var stars by mutableStateOf<List<Star>>(listOf())
+
+    private fun createStars() {
+        val starList = mutableListOf<Star>()
+        for (i in 0..40) {
+            val starXOffset = Random.nextInt(0, screenWidthDp.value.toInt()).dp
+            val starYOffset = Random.nextInt(0, screenHeightDp.value.toInt()).dp
+            val starSize = Random.nextInt(1, 12).dp
+            val star = Star(starXOffset, starYOffset, starSize, coroutineScope)
+            starList.add(star)
+        }
+        stars = starList.toList()
+    }
+
+    class Star(
+        override var xOffset: Dp,
+        override var yOffset: Dp,
+        override var size: Dp,
+        coroutineScope: CoroutineScope
+    ) : SpaceObject {
+
+        private val initialStarSize = size
+        private var enlargeStar = false
+
+        init {
+            coroutineScope.launch {
+                while (true) {
+                    if (enlargeStar) {
+                        if (size == initialStarSize) {
+                            enlargeStar = false
+                        } else {
+                            size += 1.dp
+                        }
+                    } else {
+                        if (size == 1.dp) {
+                            enlargeStar = true
+                        } else {
+                            size -= 1.dp
+                        }
+                    }
+                    delay(150)
+                }
+            }
+        }
+    }
+
+    interface SpaceObject {
+        var xOffset: Dp
+        var yOffset: Dp
+        var size: Dp
     }
 }
