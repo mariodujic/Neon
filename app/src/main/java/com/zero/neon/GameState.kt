@@ -8,6 +8,7 @@ import com.zero.neon.constellation.Star
 import com.zero.neon.ship.ShipLaser
 import com.zero.neon.spaceobject.Rock
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.random.Random
@@ -39,6 +40,7 @@ class GameState(
                 screenWidth = screenWidthDp.value.toInt(),
                 coroutineScope = coroutineScope
             )
+            animateStars(coroutineScope)
             while (true) {
                 moveShip()
                 monitorLaserSpaceObjectsHit()
@@ -136,15 +138,26 @@ class GameState(
         private set
 
     private fun createStars(screenWidth: Int, screenHeight: Int, coroutineScope: CoroutineScope) {
-        val starList = mutableListOf<Star>()
-        for (i in 0..40) {
-            val starXOffset = Random.nextInt(0, screenWidth).dp
-            val starYOffset = Random.nextInt(0, screenHeight).dp
-            val starSize = Random.nextInt(1, 12).dp
-            val star = Star(starXOffset, starYOffset, starSize, coroutineScope)
-            starList.add(star)
+        coroutineScope.launch(IO) {
+            val starList = mutableListOf<Star>()
+            for (i in 0..30) {
+                val starXOffset = Random.nextInt(0, screenWidth).dp
+                val starYOffset = Random.nextInt(0, screenHeight).dp
+                val starSize = Random.nextInt(1, 12).dp
+                val star = Star(xOffset = starXOffset, yOffset = starYOffset, size = starSize)
+                starList.add(star)
+            }
+            stars = starList.toList()
         }
-        stars = starList.toList()
+    }
+
+    private fun animateStars(coroutineScope: CoroutineScope) {
+        coroutineScope.launch(IO) {
+            while (true) {
+                stars.forEach { it.animateStar() }
+                delay(50)
+            }
+        }
     }
 
     /**
@@ -152,7 +165,8 @@ class GameState(
      */
     var rocks by mutableStateOf<List<Rock>>(listOf())
         private set
-    private val rockSpawnRateMillis: Long = 4000
+    private val maxRockSpawnRateMillis: Long = 500
+    private var rockSpawnRateMillis: Long = 4000
 
     private fun createRock() {
         val rockXOffset = Random.nextInt(0, screenWidthDp.value.toInt()).dp
@@ -169,6 +183,9 @@ class GameState(
                 )
                 add(rock)
             }
+        if (rockSpawnRateMillis > maxRockSpawnRateMillis) {
+            rockSpawnRateMillis = (rockSpawnRateMillis * 0.9).toLong()
+        }
     }
 
     private fun destroyRock(rockId: String) {

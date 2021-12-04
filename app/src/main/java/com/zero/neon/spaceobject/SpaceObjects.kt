@@ -10,6 +10,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
@@ -33,7 +34,7 @@ class Rock(
     }
 
     init {
-        coroutineScope.launch {
+        coroutineScope.launch(IO) {
             floating = true
             while (yOffset < screenHeight + 100.dp && floating) {
                 yOffset += 1.dp
