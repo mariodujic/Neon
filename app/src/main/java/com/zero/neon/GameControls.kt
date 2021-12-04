@@ -2,16 +2,12 @@ package com.zero.neon
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -23,45 +19,47 @@ fun GameControls(
     onMoveRight: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
+
+    val buttonSize = 80.dp
+
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
-        modifier = modifier
-            .padding(16.dp)
-            .fillMaxWidth()
+        modifier = modifier.padding(20.dp).fillMaxWidth()
     ) {
 
-        Image(
-            painterResource(id = R.mipmap.left_button),
-            contentScale = ContentScale.None,
-            contentDescription = stringResource(id = R.string.game_left_button),
-            modifier = Modifier
-                .scale(0.7f)
-                .pointerInput(Unit) {
-                    detectTapGestures(
-                        onPress = {
-                            onMoveLeft(true)
-                            this.awaitRelease()
-                            onMoveLeft(false)
-                        }
-                    )
-                }
-        )
+        Box(modifier = Modifier.size(buttonSize)) {
+            Image(
+                painter = painterResource(id = R.drawable.move_left_purple_button),
+                contentDescription = stringResource(id = R.string.game_left_button),
+                modifier = Modifier
+                    .size(buttonSize)
+                    .pointerInput(Unit) {
+                        detectTapGestures(
+                            onPress = {
+                                onMoveLeft(true)
+                                this.awaitRelease()
+                                onMoveLeft(false)
+                            }
+                        )
+                    }
+            )
+        }
 
-        Image(
-            painterResource(id = R.mipmap.right_button),
-            contentScale = ContentScale.None,
-            contentDescription = stringResource(id = R.string.game_right_button),
-            modifier = Modifier
-                .scale(0.7f)
-                .pointerInput(Unit) {
-                    detectTapGestures(
-                        onPress = {
-                            onMoveRight(true)
-                            this.awaitRelease()
-                            onMoveRight(false)
-                        }
-                    )
-                }
-        )
+        Box(modifier = Modifier.size(buttonSize)) {
+            Image(
+                painterResource(id = R.drawable.move_right_purple_button),
+                contentDescription = stringResource(id = R.string.game_right_button),
+                modifier = Modifier
+                    .pointerInput(Unit) {
+                        detectTapGestures(
+                            onPress = {
+                                onMoveRight(true)
+                                this.awaitRelease()
+                                onMoveRight(false)
+                            }
+                        )
+                    }
+            )
+        }
     }
 }
