@@ -8,18 +8,28 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.dp
-import com.zero.neon.ui.GameControls
 import com.zero.neon.ui.theme.Blue
 import com.zero.neon.ui.theme.Pink
 
 @Composable
 fun GameScreen() {
+
+    val gameState = rememberGameState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(brush = Brush.verticalGradient(colors = listOf(Blue, Pink)))
     ) {
-        GameWorld(modifier = Modifier.weight(1f))
-        GameControls(modifier = Modifier.padding(bottom = 24.dp))
+        GameWorld(
+            shipXOffset = gameState.shipOffsetX,
+            shipYRotation = gameState.shipYRotation,
+            modifier = Modifier.weight(1f)
+        )
+        GameControls(
+            onMoveLeft = { gameState.moveShipLeft(it) },
+            onMoveRight = { gameState.moveShipRight(it) },
+            modifier = Modifier.padding(bottom = 24.dp)
+        )
     }
 }
