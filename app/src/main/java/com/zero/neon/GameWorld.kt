@@ -23,6 +23,7 @@ import com.zero.neon.spaceobject.SpaceObject
 
 @Composable
 fun GameWorld(
+    shipSize: Dp,
     shipXOffset: Dp = 0.dp,
     shipYRotation: Float = 0f,
     shipLaser: List<Laser>,
@@ -37,7 +38,6 @@ fun GameWorld(
         shipLaser.forEach {
             Image(
                 painterResource(id = R.drawable.laser_blue_7),
-                contentScale = ContentScale.None,
                 contentDescription = "",
                 modifier = Modifier
                     .offset(x = it.xOffset, y = it.yOffset)
@@ -74,7 +74,7 @@ fun GameWorld(
             painterResource(id = R.drawable.ship_blue),
             contentDescription = stringResource(id = R.string.ship),
             modifier = Modifier
-                .width(120.dp)
+                .width(shipSize)
                 .offset(x = shipXOffset)
                 .align(Alignment.BottomCenter)
                 .graphicsLayer {

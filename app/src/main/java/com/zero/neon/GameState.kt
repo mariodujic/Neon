@@ -1,6 +1,8 @@
 package com.zero.neon
 
 import androidx.compose.runtime.*
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -41,45 +43,57 @@ class GameState(
                 screenWidth = screenWidthDp.value.toInt(),
                 coroutineScope = coroutineScope
             )
+            launch(IO) {
+                while (true) {
+                    if (gameContinuity == GameContinuity.RUNNING) {
+                        tinker(
+                            id = animateStarsId,
+                            triggerMillis = 50,
+                            doWork = { animateStars() }
+                        )
+                        tinker(
+                            id = moveShipId,
+                            triggerMillis = 1,
+                            doWork = { moveShip() }
+                        )
+                        tinker(
+                            id = fireLaserId,
+                            triggerMillis = 100,
+                            doWork = { fireLasers() }
+                        )
+                        tinker(
+                            id = spaceRockId,
+                            triggerMillis = 2000,
+                            doWork = { addSpaceRock() }
+                        )
+                        tinker(
+                            id = addWeaponBoosterId,
+                            triggerMillis = 4000,
+                            doWork = { addWeaponBooster() }
+                        )
+                        tinker(
+                            id = moveSpaceObjectsId,
+                            triggerMillis = 5,
+                            doWork = { moveSpaceObjects() }
+                        )
+                    }
+                    delay(1)
+                }
+            }
             while (true) {
                 if (gameContinuity == GameContinuity.RUNNING) {
                     tinker(
-                        id = animateStarsId,
-                        triggerMillis = 50,
-                        doWork = { animateStars() }
-                    )
-                    tinker(
-                        id = moveShipId,
-                        triggerMillis = 1,
-                        doWork = { moveShip() }
-                    )
-                    tinker(
-                        id = fireLaserId,
-                        triggerMillis = 100,
-                        doWork = { fireLasers() }
-                    )
-                    tinker(
-                        id = spaceRockId,
-                        triggerMillis = 2000,
-                        doWork = { addSpaceRock() }
-                    )
-                    tinker(
-                        id = addWeaponBoosterId,
-                        triggerMillis = 4000,
-                        doWork = { addWeaponBooster() }
-                    )
-                    tinker(
-                        id = moveSpaceObjectsId,
-                        triggerMillis = 5,
-                        doWork = { moveSpaceObjects() }
-                    )
-                    tinker(
                         id = monitorSpaceObjectHitsId,
                         triggerMillis = 1,
-                        doWork = { monitorLaserSpaceObjectsHit() }
+                        doWork = {
+                            monitorLaserSpaceObjectsHit(
+                                spaceRectObjects = spaceObjects.map { it.rect },
+                                laserOffsets = lasers.map { it.offset }
+                            )
+                        }
                     )
                 }
-                delay(1)
+                delay(10)
             }
         }
     }
@@ -101,14 +115,15 @@ class GameState(
     /**
      * Ship movement
      */
+    val shipSize = 120.dp
     private val shipMaxXOffset = screenWidthDp / 2
     private val shipXMovementSpeed = 2.dp
     private val moveShipId = UUID.randomUUID().toString()
 
     private fun moveShip() {
-        if (movingLeft && shipOffsetX > -shipMaxXOffset) shipOffsetX -= shipXMovementSpeed
+        if (movingLeft && shipOffsetX > -shipMaxXOffset + shipSize / 6) shipOffsetX -= shipXMovementSpeed
         else movingLeft = false
-        if (movingRight && shipOffsetX < shipMaxXOffset) shipOffsetX += shipXMovementSpeed
+        if (movingRight && shipOffsetX < shipMaxXOffset - shipSize / 6) shipOffsetX += shipXMovementSpeed
         else movingRight = false
     }
 
@@ -158,9 +173,12 @@ class GameState(
     }
 
     private val monitorSpaceObjectHitsId = UUID.randomUUID().toString()
-    private fun monitorLaserSpaceObjectsHit() {
-        spaceObjects.map { it.rect }.forEachIndexed { rockIndex, rockRect ->
-            lasers.map { it.offset }.forEachIndexed { laserIndex, offset ->
+    private fun monitorLaserSpaceObjectsHit(
+        spaceRectObjects: List<Rect>,
+        laserOffsets: List<Offset>
+    ) {
+        spaceRectObjects.forEachIndexed { rockIndex, rockRect ->
+            laserOffsets.forEachIndexed { laserIndex, offset ->
                 if (rockRect.contains(offset)) {
                     spaceObjects[rockIndex].destroyObject()
                     lasers[laserIndex].destroyLaser()
@@ -199,15 +217,13 @@ class GameState(
      */
     var spaceObjects by mutableStateOf<List<SpaceObject>>(listOf())
         private set
-    private val maxRockSpawnRateMillis: Long = 500
-    private var rockSpawnRateMillis: Long = 4000
     private val minRockSize = 20
     private val maxRockSize = 80
     private val spaceRockId = UUID.randomUUID().toString()
 
     private fun addSpaceRock() {
-        val rockXOffset = Random.nextInt(0, screenWidthDp.value.toInt()).dp
         val rockSize = Random.nextInt(minRockSize, maxRockSize)
+        val rockXOffset = Random.nextInt(rockSize, screenWidthDp.value.toInt() - rockSize).dp
         spaceObjects = spaceObjects
             .filter { it.floating }
             .toMutableList()
@@ -220,21 +236,19 @@ class GameState(
                 )
                 add(spaceRock)
             }
-        if (rockSpawnRateMillis > maxRockSpawnRateMillis) {
-            rockSpawnRateMillis = (rockSpawnRateMillis * 0.9).toLong()
-        }
     }
 
     private val addWeaponBoosterId = UUID.randomUUID().toString()
     private fun addWeaponBooster() {
-        val boosterXOffset = Random.nextInt(0, screenWidthDp.value.toInt()).dp
+        val size = 30
+        val boosterXOffset = Random.nextInt(size, screenWidthDp.value.toInt() - size).dp
         spaceObjects = spaceObjects
             .filter { it.floating }
             .toMutableList()
             .apply {
                 val spaceRock = WeaponBooster(
                     xOffset = boosterXOffset,
-                    size = 25.dp,
+                    size = size.dp,
                     screenHeight = screenHeightDp,
                     onDestroyBooster = { destroyRock(it) }
                 )

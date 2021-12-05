@@ -32,6 +32,7 @@ fun GameScreen() {
         ) { gameState.toggleGamePause() }
         Column(modifier = Modifier.fillMaxSize()) {
             GameWorld(
+                shipSize = gameState.shipSize,
                 shipXOffset = gameState.shipOffsetX,
                 shipYRotation = gameState.shipYRotation,
                 shipLaser = gameState.lasers,
