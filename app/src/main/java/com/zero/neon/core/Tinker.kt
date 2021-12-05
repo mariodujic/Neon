@@ -1,7 +1,7 @@
 package com.zero.neon.core
 
 /**
- * Stores unique works by id and start time in milliseconds.
+ * Stores unique work by id as key and start time in milliseconds as value.
  */
 private val tinkerList = mutableMapOf<String, Long>()
 
@@ -11,7 +11,7 @@ private val tinkerList = mutableMapOf<String, Long>()
  *  will be called and new (current) time in milliseconds will
  *  be set on unique job.
  *  @param id unique work ID
- *  @param triggerMillis time after work will be triggered
+ *  @param triggerMillis time after which work will be triggered
  *  @param doWork any periodic work
  */
 fun tinker(id: String, triggerMillis: Int, doWork: () -> Unit) {
