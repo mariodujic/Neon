@@ -12,7 +12,6 @@ import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
@@ -23,10 +22,10 @@ import com.zero.neon.spaceobject.SpaceObject
 
 @Composable
 fun GameWorld(
-    shipSize: Dp,
+    shipSize: Dp = 40.dp,
     shipXOffset: Dp = 0.dp,
     shipYRotation: Float = 0f,
-    shipLaser: List<Laser>,
+    shipLasers: List<Laser>,
     stars: List<Star>,
     spaceObjects: List<SpaceObject>,
     modifier: Modifier = Modifier
@@ -35,10 +34,10 @@ fun GameWorld(
     val rotation by animateFloatAsState(targetValue = shipYRotation)
 
     BoxWithConstraints(modifier = modifier.fillMaxSize()) {
-        shipLaser.forEach {
+        shipLasers.forEach {
             Image(
                 painterResource(id = R.drawable.laser_blue_7),
-                contentDescription = "",
+                contentDescription = stringResource(id = R.string.laser),
                 modifier = Modifier
                     .offset(x = it.xOffset, y = it.yOffset)
                     .align(Alignment.BottomCenter)
@@ -64,7 +63,7 @@ fun GameWorld(
         spaceObjects.forEach {
             Image(
                 painterResource(id = it.drawableId),
-                contentDescription = "",
+                contentDescription = stringResource(id = R.string.ship),
                 modifier = Modifier
                     .size(it.size)
                     .offset(x = it.xOffset, y = it.yOffset)
@@ -77,9 +76,7 @@ fun GameWorld(
                 .width(shipSize)
                 .offset(x = shipXOffset)
                 .align(Alignment.BottomCenter)
-                .graphicsLayer {
-                    rotationY = rotation
-                }
+                .graphicsLayer { rotationY = rotation }
         )
     }
 }

@@ -15,14 +15,16 @@ import com.zero.neon.R
 @Composable
 fun SettingsButton(modifier: Modifier = Modifier, onSettings: () -> Unit) {
 
-    val buttonPadding = dimensionResource(id = R.dimen.button_padding)
+    val buttonPaddingEnd = dimensionResource(id = R.dimen.button_padding)
+    val buttonPaddingTop = buttonPaddingEnd * 2
+    val buttonSize = 60.dp
 
     Image(
         painter = painterResource(id = R.drawable.settings_button),
         contentDescription = stringResource(id = R.string.game_settings_button),
         modifier = modifier
-            .padding(top = buttonPadding * 2, end = buttonPadding)
-            .size(60.dp)
+            .padding(top = buttonPaddingTop, end = buttonPaddingEnd)
+            .size(buttonSize)
             .clickable { onSettings() }
     )
 }

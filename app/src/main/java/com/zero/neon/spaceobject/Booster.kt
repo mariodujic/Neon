@@ -14,7 +14,7 @@ import com.zero.neon.R
 import java.util.*
 import kotlin.random.Random
 
-class WeaponBooster(
+class Booster(
     override var xOffset: Dp,
     override var size: Dp,
     private val screenHeight: Dp,
@@ -49,6 +49,8 @@ class WeaponBooster(
     }
 
     enum class BoosterType(@DrawableRes val drawableId: Int) {
-        WEAPON_BOOSTER_ONE(R.drawable.weapon_boost),
+        ULTIMATE_WEAPON_BOOSTER(R.drawable.booster_green),
+        SHIELD_BOOSTER(R.drawable.booster_1),
+        HEALTH_BOOSTER(R.drawable.booster_health_2),
     }
 }

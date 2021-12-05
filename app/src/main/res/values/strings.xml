@@ -4,4 +4,6 @@
     <string name="game_settings_button">Settings</string>
     <string name="game_right_button">Move right</string>
     <string name="ship">Ship</string>
+    <string name="space_object">Space object</string>
+    <string name="laser">Starship laser</string>
 </resources>

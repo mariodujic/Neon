@@ -9,9 +9,9 @@ import androidx.compose.ui.unit.dp
 import com.zero.neon.constellation.Star
 import com.zero.neon.core.tinker
 import com.zero.neon.ship.ShipLaser
+import com.zero.neon.spaceobject.Booster
 import com.zero.neon.spaceobject.SpaceObject
 import com.zero.neon.spaceobject.SpaceRock
-import com.zero.neon.spaceobject.WeaponBooster
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.delay
@@ -34,7 +34,7 @@ class GameState(
     private val coroutineScope: CoroutineScope
 ) {
 
-    private var gameContinuity: GameContinuity = GameContinuity.RUNNING
+    private var gameContinuity by mutableStateOf(GameContinuity.RUNNING)
 
     init {
         coroutineScope.launch {
@@ -72,9 +72,9 @@ class GameState(
                             doWork = { addSpaceRock() }
                         )
                         tinker(
-                            id = addWeaponBoosterId,
+                            id = addBoosterId,
                             triggerMillis = 4000,
-                            doWork = { addWeaponBooster() }
+                            doWork = { addBooster() }
                         )
                         tinker(
                             id = moveSpaceObjectsId,
@@ -89,7 +89,7 @@ class GameState(
                 if (gameContinuity == GameContinuity.RUNNING) {
                     tinker(
                         id = monitorSpaceObjectHitsId,
-                        triggerMillis = 1,
+                        triggerMillis = 10,
                         doWork = {
                             monitorLaserSpaceObjectsHit(
                                 spaceRectObjects = spaceObjects.map { it.rect },
@@ -248,21 +248,21 @@ class GameState(
             }
     }
 
-    private val addWeaponBoosterId = UUID.randomUUID().toString()
-    private fun addWeaponBooster() {
-        val size = 30
+    private val addBoosterId = UUID.randomUUID().toString()
+    private fun addBooster() {
+        val size = 45
         val boosterXOffset = Random.nextInt(size, screenWidthDp.value.toInt() - size).dp
         spaceObjects = spaceObjects
             .filter { it.floating }
             .toMutableList()
             .apply {
-                val spaceRock = WeaponBooster(
+                val booster = Booster(
                     xOffset = boosterXOffset,
                     size = size.dp,
                     screenHeight = screenHeightDp,
                     onDestroyBooster = { destroyRock(it) }
                 )
-                add(spaceRock)
+                add(booster)
             }
     }
 
