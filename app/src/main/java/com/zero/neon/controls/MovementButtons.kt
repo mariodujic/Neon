@@ -3,28 +3,31 @@ package com.zero.neon
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun GameControls(
+fun MovementButtons(
     onMoveLeft: (Boolean) -> Unit,
     onMoveRight: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
-    val buttonSize = 80.dp
+    val buttonSize = dimensionResource(id = R.dimen.button_size)
+    val buttonPadding = dimensionResource(id = R.dimen.button_padding)
 
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
-        modifier = modifier.padding(20.dp).fillMaxWidth()
+        modifier = modifier
+            .padding(buttonPadding)
+            .fillMaxWidth()
     ) {
 
         Box(modifier = Modifier.size(buttonSize)) {

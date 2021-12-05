@@ -14,17 +14,17 @@ import com.zero.neon.R
 import java.util.*
 import kotlin.random.Random
 
-class SpaceRock(
+class WeaponBooster(
     override var xOffset: Dp,
     override var size: Dp,
     private val screenHeight: Dp,
-    private val onDestroyRock: (rockId: String) -> Unit
+    private val onDestroyBooster: (boosterId: String) -> Unit
 ) : SpaceObject {
 
     override val id: String = UUID.randomUUID().toString()
     override var yOffset by mutableStateOf(1.dp)
-    private val randomDrawableIndex = Random.nextInt(0, RockType.values().size)
-    override val drawableId: Int = RockType.values().get(randomDrawableIndex).drawableId
+    private val randomDrawableIndex = Random.nextInt(0, BoosterType.values().size)
+    override val drawableId: Int = BoosterType.values()[randomDrawableIndex].drawableId
     override var floating by mutableStateOf(false)
     override val rect by derivedStateOf {
         Rect(
@@ -45,13 +45,10 @@ class SpaceRock(
 
     override fun destroyObject() {
         floating = false
-        onDestroyRock(id)
+        onDestroyBooster(id)
     }
 
-    enum class RockType(@DrawableRes val drawableId: Int) {
-        ROCK_ONE(R.drawable.space_rock_1),
-        ROCK_TWO(R.drawable.space_rock_2),
-        ROCK_THREE(R.drawable.space_rock_3),
-        ROCK_FOUR(R.drawable.space_rock_4)
+    enum class BoosterType(@DrawableRes val drawableId: Int) {
+        WEAPON_BOOSTER_ONE(R.drawable.weapon_boost),
     }
 }

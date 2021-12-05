@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">neon</string>
     <string name="game_left_button">Move left</string>
+    <string name="game_settings_button">Settings</string>
     <string name="game_right_button">Move right</string>
     <string name="ship">Ship</string>
 </resources>

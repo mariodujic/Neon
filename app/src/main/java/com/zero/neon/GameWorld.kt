@@ -27,30 +27,25 @@ fun GameWorld(
     shipYRotation: Float = 0f,
     shipLaser: List<Laser>,
     stars: List<Star>,
-    spaceRocks: List<SpaceObject>,
+    spaceObjects: List<SpaceObject>,
     modifier: Modifier = Modifier
 ) {
 
     val rotation by animateFloatAsState(targetValue = shipYRotation)
 
     BoxWithConstraints(modifier = modifier.fillMaxSize()) {
-        shipLaser.forEach { shipLaser ->
-            Box(
+        shipLaser.forEach {
+            Image(
+                painterResource(id = R.drawable.laser_blue_7),
+                contentScale = ContentScale.None,
+                contentDescription = "",
                 modifier = Modifier
-                    .offset(x = shipLaser.xOffset, y = shipLaser.yOffset)
+                    .offset(x = it.xOffset, y = it.yOffset)
                     .align(Alignment.BottomCenter)
-            ) {
-                Image(
-                    painterResource(id = R.drawable.laser_blue_7),
-                    contentScale = ContentScale.None,
-                    contentDescription = "",
-                    modifier = Modifier
-                        .graphicsLayer {
-                            rotationY = rotation
-                        }
-                )
-                //Text(shipLaser.offset.toString(), color = Color.White, fontSize = 12.sp)
-            }
+                    .graphicsLayer {
+                        rotationY = rotation
+                    }
+            )
         }
         stars.forEach {
             Canvas(
@@ -66,16 +61,14 @@ fun GameWorld(
                     )
                 })
         }
-        spaceRocks.forEach { rock ->
-            Box(modifier = Modifier.offset(x = rock.xOffset, y = rock.yOffset)) {
-                Image(
-                    painterResource(id = rock.drawableId),
-                    contentScale = ContentScale.None,
-                    contentDescription = "",
-                    modifier = Modifier.size(rock.size)
-                )
-                // Text(rock.rockRect.toString(), color = Color.White, fontSize = 12.sp)
-            }
+        spaceObjects.forEach {
+            Image(
+                painterResource(id = it.drawableId),
+                contentDescription = "",
+                modifier = Modifier
+                    .size(it.size)
+                    .offset(x = it.xOffset, y = it.yOffset)
+            )
         }
         Image(
             painterResource(id = R.drawable.ship_blue),

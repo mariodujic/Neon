@@ -5,12 +5,16 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.zero.neon.constellation.Star
+import com.zero.neon.core.tinker
 import com.zero.neon.ship.ShipLaser
+import com.zero.neon.spaceobject.SpaceObject
 import com.zero.neon.spaceobject.SpaceRock
+import com.zero.neon.spaceobject.WeaponBooster
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.*
 import kotlin.random.Random
 
 @Composable
@@ -28,10 +32,7 @@ class GameState(
     private val coroutineScope: CoroutineScope
 ) {
 
-    /**
-     * Main loop
-     */
-    private val loopRefreshRate = 5L
+    private var gameContinuity: GameContinuity = GameContinuity.RUNNING
 
     init {
         coroutineScope.launch {
@@ -40,25 +41,61 @@ class GameState(
                 screenWidth = screenWidthDp.value.toInt(),
                 coroutineScope = coroutineScope
             )
-            animateStars(coroutineScope)
             while (true) {
-                moveShip()
-                monitorLaserSpaceObjectsHit()
-                delay(loopRefreshRate)
+                if (gameContinuity == GameContinuity.RUNNING) {
+                    tinker(
+                        id = animateStarsId,
+                        triggerMillis = 50,
+                        doWork = { animateStars() }
+                    )
+                    tinker(
+                        id = moveShipId,
+                        triggerMillis = 1,
+                        doWork = { moveShip() }
+                    )
+                    tinker(
+                        id = fireLaserId,
+                        triggerMillis = 100,
+                        doWork = { fireLasers() }
+                    )
+                    tinker(
+                        id = spaceRockId,
+                        triggerMillis = 2000,
+                        doWork = { addSpaceRock() }
+                    )
+                    tinker(
+                        id = addWeaponBoosterId,
+                        triggerMillis = 4000,
+                        doWork = { addWeaponBooster() }
+                    )
+                    tinker(
+                        id = moveSpaceObjectsId,
+                        triggerMillis = 5,
+                        doWork = { moveSpaceObjects() }
+                    )
+                    tinker(
+                        id = monitorSpaceObjectHitsId,
+                        triggerMillis = 1,
+                        doWork = { monitorLaserSpaceObjectsHit() }
+                    )
+                }
+                delay(1)
             }
         }
-        coroutineScope.launch {
-            while (true) {
-                fireLasers()
-                delay(laserFireSpeedRate)
-            }
-        }
-        coroutineScope.launch {
-            while (true) {
-                createRock()
-                delay(rockSpawnRateMillis)
-            }
-        }
+    }
+
+    /**
+     * General settings
+     */
+    fun toggleGamePause() {
+        gameContinuity = if (gameContinuity == GameContinuity.RUNNING) {
+            GameContinuity.PAUSE
+        } else GameContinuity.RUNNING
+    }
+
+    enum class GameContinuity {
+        RUNNING,
+        PAUSE
     }
 
     /**
@@ -66,6 +103,7 @@ class GameState(
      */
     private val shipMaxXOffset = screenWidthDp / 2
     private val shipXMovementSpeed = 2.dp
+    private val moveShipId = UUID.randomUUID().toString()
 
     private fun moveShip() {
         if (movingLeft && shipOffsetX > -shipMaxXOffset) shipOffsetX -= shipXMovementSpeed
@@ -93,8 +131,7 @@ class GameState(
      */
     var lasers by mutableStateOf<List<ShipLaser>>(listOf())
         private set
-    private val laserFireSpeedRate: Long = 550
-
+    private val fireLaserId = UUID.randomUUID().toString()
     private fun fireLasers() {
         lasers = lasers
             .filter { it.shooting }
@@ -120,11 +157,12 @@ class GameState(
             }
     }
 
+    private val monitorSpaceObjectHitsId = UUID.randomUUID().toString()
     private fun monitorLaserSpaceObjectsHit() {
-        spaceRocks.map { it.rockRect }.forEachIndexed { rockIndex, rockRect ->
+        spaceObjects.map { it.rect }.forEachIndexed { rockIndex, rockRect ->
             lasers.map { it.offset }.forEachIndexed { laserIndex, offset ->
                 if (rockRect.contains(offset)) {
-                    spaceRocks[rockIndex].destroyRock()
+                    spaceObjects[rockIndex].destroyObject()
                     lasers[laserIndex].destroyLaser()
                 }
             }
@@ -151,34 +189,33 @@ class GameState(
         }
     }
 
-    private fun animateStars(coroutineScope: CoroutineScope) {
-        coroutineScope.launch(IO) {
-            while (true) {
-                stars.forEach { it.animateStar() }
-                delay(50)
-            }
-        }
+    private val animateStarsId = UUID.randomUUID().toString()
+    private fun animateStars() {
+        stars.forEach { it.animateStar() }
     }
 
     /**
      * Space objects
      */
-    var spaceRocks by mutableStateOf<List<SpaceRock>>(listOf())
+    var spaceObjects by mutableStateOf<List<SpaceObject>>(listOf())
         private set
     private val maxRockSpawnRateMillis: Long = 500
     private var rockSpawnRateMillis: Long = 4000
+    private val minRockSize = 20
+    private val maxRockSize = 80
+    private val spaceRockId = UUID.randomUUID().toString()
 
-    private fun createRock() {
+    private fun addSpaceRock() {
         val rockXOffset = Random.nextInt(0, screenWidthDp.value.toInt()).dp
-        spaceRocks = spaceRocks
+        val rockSize = Random.nextInt(minRockSize, maxRockSize)
+        spaceObjects = spaceObjects
             .filter { it.floating }
             .toMutableList()
             .apply {
                 val spaceRock = SpaceRock(
                     xOffset = rockXOffset,
-                    size = 50.dp,
+                    size = rockSize.dp,
                     screenHeight = screenHeightDp,
-                    coroutineScope = coroutineScope,
                     onDestroyRock = { destroyRock(it) }
                 )
                 add(spaceRock)
@@ -188,9 +225,31 @@ class GameState(
         }
     }
 
+    private val addWeaponBoosterId = UUID.randomUUID().toString()
+    private fun addWeaponBooster() {
+        val boosterXOffset = Random.nextInt(0, screenWidthDp.value.toInt()).dp
+        spaceObjects = spaceObjects
+            .filter { it.floating }
+            .toMutableList()
+            .apply {
+                val spaceRock = WeaponBooster(
+                    xOffset = boosterXOffset,
+                    size = 25.dp,
+                    screenHeight = screenHeightDp,
+                    onDestroyBooster = { destroyRock(it) }
+                )
+                add(spaceRock)
+            }
+    }
+
     private fun destroyRock(rockId: String) {
-        spaceRocks = spaceRocks
+        spaceObjects = spaceObjects
             .toMutableList()
             .apply { removeAll { it.id == rockId } }
+    }
+
+    private val moveSpaceObjectsId = UUID.randomUUID().toString()
+    private fun moveSpaceObjects() {
+        spaceObjects.forEach { it.moveObject() }
     }
 }
