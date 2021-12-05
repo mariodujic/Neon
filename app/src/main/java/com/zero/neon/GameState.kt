@@ -62,6 +62,11 @@ class GameState(
                             doWork = { fireLasers() }
                         )
                         tinker(
+                            id = moveLasersId,
+                            triggerMillis = 5,
+                            doWork = { moveLasers() }
+                        )
+                        tinker(
                             id = spaceRockId,
                             triggerMillis = 2000,
                             doWork = { addSpaceRock() }
@@ -162,6 +167,11 @@ class GameState(
                 )
                 add(laser)
             }
+    }
+
+    private val moveLasersId = UUID.randomUUID().toString()
+    private fun moveLasers() {
+        lasers.forEach { it.moveLaser() }
     }
 
     private fun destroyLaser(laserId: String) {

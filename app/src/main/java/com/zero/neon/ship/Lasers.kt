@@ -14,7 +14,7 @@ import java.util.*
 
 class ShipLaser(
     override var xOffset: Dp,
-    yRange: Dp,
+    private val yRange: Dp,
     private val screenWidth: Dp,
     private val screenHeight: Dp,
     private val onDestroyLaser: (laserId: String) -> Unit,
@@ -31,13 +31,11 @@ class ShipLaser(
         )
     }
 
-    init {
-        coroutineScope.launch {
-            shooting = true
-            while (yOffset > -yRange || !shooting) {
-                yOffset -= 7.dp
-                delay(5)
-            }
+    fun moveLaser() {
+        shooting = true
+        if (yOffset > -yRange || !shooting) {
+            yOffset -= 7.dp
+        } else {
             shooting = false
         }
     }
