@@ -1,4 +1,4 @@
-package com.zero.neon
+package com.zero.neon.controls
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -10,7 +10,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import com.zero.neon.R
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
