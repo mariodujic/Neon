@@ -2,7 +2,6 @@ package com.zero.neon
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -53,7 +52,7 @@ class GameState(
                         )
                         tinker(
                             id = moveShipId,
-                            triggerMillis = 1,
+                            triggerMillis = 3,
                             doWork = { moveShip() }
                         )
                         tinker(
@@ -92,7 +91,7 @@ class GameState(
                         triggerMillis = 10,
                         doWork = {
                             monitorLaserSpaceObjectsHit(
-                                spaceRectObjects = spaceObjects.map { it.rect },
+                                spaceObjects = spaceObjects,
                                 laserOffsets = lasers.map { it.offset }
                             )
                         }
@@ -184,14 +183,21 @@ class GameState(
 
     private val monitorSpaceObjectHitsId = UUID.randomUUID().toString()
     private fun monitorLaserSpaceObjectsHit(
-        spaceRectObjects: List<Rect>,
+        spaceObjects: List<SpaceObject>,
         laserOffsets: List<Offset>
     ) {
-        spaceRectObjects.forEachIndexed { rockIndex, rockRect ->
+        spaceObjects.forEachIndexed { rockIndex, spaceObject ->
             laserOffsets.forEachIndexed { laserIndex, offset ->
-                if (rockRect.contains(offset)) {
-                    spaceObjects[rockIndex].destroyObject()
-                    lasers[laserIndex].destroyLaser()
+                if (spaceObject.destroyable && spaceObject.rect.contains(offset)) {
+                    /**
+                     * SpaceObject list throws IndexOutOfBoundsException if multiple lasers hit
+                     * object fast. TODO Handle it without try-catch block.
+                     */
+                    try {
+                        spaceObjects[rockIndex].destroyObject()
+                        lasers[laserIndex].destroyLaser()
+                    } catch (e: IndexOutOfBoundsException) {
+                    }
                 }
             }
         }

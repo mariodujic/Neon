@@ -22,6 +22,7 @@ class Booster(
 ) : SpaceObject {
 
     override val id: String = UUID.randomUUID().toString()
+    override val destroyable: Boolean = false
     override var yOffset by mutableStateOf(1.dp)
     private val randomDrawableIndex = Random.nextInt(0, BoosterType.values().size)
     override val drawableId: Int = BoosterType.values()[randomDrawableIndex].drawableId

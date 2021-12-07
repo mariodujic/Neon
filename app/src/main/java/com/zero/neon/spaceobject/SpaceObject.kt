@@ -11,6 +11,7 @@ interface SpaceObject {
     val drawableId: Int
     var floating: Boolean
     val rect: Rect
+    val destroyable: Boolean
 
     fun moveObject()
     fun destroyObject()
