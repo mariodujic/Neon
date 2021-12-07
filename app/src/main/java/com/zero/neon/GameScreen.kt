@@ -34,7 +34,8 @@ fun GameScreen() {
         Column(modifier = Modifier.fillMaxSize()) {
             GameWorld(
                 shipSize = gameState.shipSize,
-                shipXOffset = gameState.shipOffsetX,
+                shipXOffset = gameState.shipXOffset,
+                shipYOffset = gameState.shipYOffset,
                 shipYRotation = gameState.shipYRotation,
                 shipLasers = gameState.lasers,
                 stars = gameState.stars,

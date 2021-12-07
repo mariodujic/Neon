@@ -12,6 +12,7 @@ interface SpaceObject {
     var floating: Boolean
     val rect: Rect
     val destroyable: Boolean
+    val collectable: Boolean
 
     fun moveObject()
     fun destroyObject()

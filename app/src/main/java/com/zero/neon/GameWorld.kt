@@ -24,6 +24,7 @@ import com.zero.neon.spaceobject.SpaceObject
 fun GameWorld(
     shipSize: Dp = 40.dp,
     shipXOffset: Dp = 0.dp,
+    shipYOffset: Dp = 0.dp,
     shipYRotation: Float = 0f,
     shipLasers: List<Laser>,
     stars: List<Star>,
@@ -39,11 +40,8 @@ fun GameWorld(
                 painterResource(id = R.drawable.laser_blue_7),
                 contentDescription = stringResource(id = R.string.laser),
                 modifier = Modifier
-                    .offset(x = it.xOffset, y = it.yOffset)
-                    .align(Alignment.BottomCenter)
-                    .graphicsLayer {
-                        rotationY = rotation
-                    }
+                    .absoluteOffset(x = it.xOffset, y = it.yOffset)
+                    .align(Alignment.BottomStart)
             )
         }
         stars.forEach {
@@ -74,8 +72,7 @@ fun GameWorld(
             contentDescription = stringResource(id = R.string.ship),
             modifier = Modifier
                 .width(shipSize)
-                .offset(x = shipXOffset)
-                .align(Alignment.BottomCenter)
+                .offset(x = shipXOffset, y = shipYOffset)
                 .graphicsLayer { rotationY = rotation }
         )
     }

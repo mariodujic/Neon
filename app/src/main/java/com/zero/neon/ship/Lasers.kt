@@ -15,10 +15,8 @@ import java.util.*
 class ShipLaser(
     override var xOffset: Dp,
     private val yRange: Dp,
-    private val screenWidth: Dp,
     private val screenHeight: Dp,
     private val onDestroyLaser: (laserId: String) -> Unit,
-    coroutineScope: CoroutineScope
 ) : Laser {
 
     override val id: String = UUID.randomUUID().toString()
@@ -26,7 +24,7 @@ class ShipLaser(
     override var shooting: Boolean by mutableStateOf(false)
     val offset by derivedStateOf {
         Offset(
-            x = xOffset.value + (screenWidth / 2).value,
+            x = xOffset.value,
             y = yOffset.value + screenHeight.value
         )
     }

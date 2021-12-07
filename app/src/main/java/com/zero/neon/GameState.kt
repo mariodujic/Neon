@@ -2,6 +2,8 @@ package com.zero.neon
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -54,6 +56,11 @@ class GameState(
                             id = moveShipId,
                             triggerMillis = 3,
                             doWork = { moveShip() }
+                        )
+                        tinker(
+                            id = monitorShipSpaceObjectsOverlapId,
+                            triggerMillis = 3,
+                            doWork = { monitorShipSpaceObjectsOverlap() }
                         )
                         tinker(
                             id = fireLaserId,
@@ -120,19 +127,27 @@ class GameState(
      * Ship movement
      */
     val shipSize = 120.dp
-    private val shipMaxXOffset = screenWidthDp / 2
     private val shipXMovementSpeed = 2.dp
     private val moveShipId = UUID.randomUUID().toString()
 
     private fun moveShip() {
-        if (movingLeft && shipOffsetX > -shipMaxXOffset + shipSize / 6) shipOffsetX -= shipXMovementSpeed
-        else movingLeft = false
-        if (movingRight && shipOffsetX < shipMaxXOffset - shipSize / 6) shipOffsetX += shipXMovementSpeed
-        else movingRight = false
+        if (movingLeft && shipXOffset >= 0.dp) {
+            shipXOffset -= shipXMovementSpeed
+        } else movingLeft = false
+        if (movingRight && shipXOffset <= screenWidthDp - shipSize) {
+            shipXOffset += shipXMovementSpeed
+        } else movingRight = false
     }
 
-    var shipOffsetX by mutableStateOf(0.dp)
-    val shipYRotation by derivedStateOf { shipOffsetX.value * 0.3f }
+    var shipXOffset by mutableStateOf(screenWidthDp / 2 - shipSize / 2)
+    var shipYOffset by mutableStateOf(screenHeightDp - shipSize)
+    val shipYRotation by derivedStateOf { 0f }
+    private val shipRect by derivedStateOf {
+        Rect(
+            offset = Offset(x = shipXOffset.value, y = shipYOffset.value),
+            size = Size(width = shipSize.value, height = shipSize.value)
+        )
+    }
 
     private var movingLeft by mutableStateOf(false)
     private var movingRight by mutableStateOf(false)
@@ -143,6 +158,15 @@ class GameState(
 
     fun moveShipRight(movingShipRight: Boolean) {
         movingRight = movingShipRight
+    }
+
+    private val monitorShipSpaceObjectsOverlapId = UUID.randomUUID().toString()
+    private fun monitorShipSpaceObjectsOverlap() {
+        spaceObjects.forEachIndexed { spaceObjectIndex, spaceObject ->
+            if (spaceObject.rect.overlaps(shipRect) && spaceObject.collectable) {
+                spaceObjects[spaceObjectIndex].destroyObject()
+            }
+        }
     }
 
     /**
@@ -157,12 +181,10 @@ class GameState(
             .toMutableList()
             .apply {
                 val laser = ShipLaser(
-                    xOffset = shipOffsetX,
+                    xOffset = shipXOffset + shipSize / 2,
                     yRange = screenHeightDp,
-                    screenWidth = screenWidthDp,
                     screenHeight = screenHeightDp,
-                    onDestroyLaser = { destroyLaser(it) },
-                    coroutineScope = coroutineScope
+                    onDestroyLaser = { destroyLaser(it) }
                 )
                 add(laser)
             }
