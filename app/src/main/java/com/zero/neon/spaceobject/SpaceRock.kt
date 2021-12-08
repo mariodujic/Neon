@@ -26,14 +26,8 @@ class SpaceRock(
     override val collectable: Boolean = false
     override var yOffset by mutableStateOf(1.dp)
     private val randomDrawableIndex = Random.nextInt(0, RockType.values().size)
-    override val drawableId: Int = RockType.values().get(randomDrawableIndex).drawableId
+    override val drawableId: Int = RockType.values()[randomDrawableIndex].drawableId
     override var floating by mutableStateOf(false)
-    override val rect by derivedStateOf {
-        Rect(
-            offset = Offset(x = xOffset.value, y = yOffset.value),
-            size = Size(width = size.value, height = size.value)
-        )
-    }
     override var hp: Int = size.value.toInt()
 
     override fun moveObject() {

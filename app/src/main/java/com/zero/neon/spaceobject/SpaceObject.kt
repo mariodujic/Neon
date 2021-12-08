@@ -10,7 +10,6 @@ interface SpaceObject {
     var size: Dp
     val drawableId: Int
     var floating: Boolean
-    val rect: Rect
     val destroyable: Boolean
     val collectable: Boolean
     var hp: Int

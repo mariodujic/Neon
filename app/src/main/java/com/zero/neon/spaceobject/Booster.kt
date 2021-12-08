@@ -28,12 +28,6 @@ class Booster(
     private val randomDrawableIndex = Random.nextInt(0, BoosterType.values().size)
     override val drawableId: Int = BoosterType.values()[randomDrawableIndex].drawableId
     override var floating by mutableStateOf(false)
-    override val rect by derivedStateOf {
-        Rect(
-            offset = Offset(x = xOffset.value, y = yOffset.value),
-            size = Size(width = size.value, height = size.value)
-        )
-    }
     override var hp: Int = 1
 
     override fun moveObject() {

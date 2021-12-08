@@ -82,26 +82,21 @@ class GameState(
                             triggerMillis = 4000,
                             doWork = { addBooster() }
                         )
+                        tinker(
+                            id = moveSpaceObjectsId,
+                            triggerMillis = 5,
+                            doWork = { moveSpaceObjects() }
+                        )
+                        tinker(
+                            id = monitorSpaceObjectHitsId,
+                            triggerMillis = 1,
+                            doWork = {
+                                monitorLaserSpaceObjectsHit()
+                            }
+                        )
                     }
                     delay(1)
                 }
-            }
-            while (true) {
-                if (gameContinuity == GameContinuity.RUNNING) {
-                    tinker(
-                        id = monitorSpaceObjectHitsId,
-                        triggerMillis = 10,
-                        doWork = {
-                            monitorLaserSpaceObjectsHit()
-                        }
-                    )
-                    tinker(
-                        id = moveSpaceObjectsId,
-                        triggerMillis = 5,
-                        doWork = { moveSpaceObjects() }
-                    )
-                }
-                delay(5)
             }
         }
     }
@@ -128,10 +123,10 @@ class GameState(
     private val moveShipId = UUID.randomUUID().toString()
 
     private fun moveShip() {
-        if (movingLeft && shipXOffset >= 0.dp) {
+        if (movingLeft && shipXOffset >= 0.dp - shipSize / 4) {
             shipXOffset -= shipXMovementSpeed
         } else movingLeft = false
-        if (movingRight && shipXOffset <= screenWidthDp - shipSize) {
+        if (movingRight && shipXOffset <= screenWidthDp - (shipSize.value / 1.5).dp) {
             shipXOffset += shipXMovementSpeed
         } else movingRight = false
     }
@@ -161,9 +156,14 @@ class GameState(
     private val monitorShipSpaceObjectsOverlapId = UUID.randomUUID().toString()
     private fun monitorShipSpaceObjectsOverlap() {
         spaceObjects.forEachIndexed { spaceObjectIndex, spaceObject ->
-            if (spaceObject.rect.overlaps(shipRect) && spaceObject.collectable) {
+            var spaceRect: Rect? = Rect(
+                offset = Offset(x = spaceObject.xOffset.value, y = spaceObject.yOffset.value),
+                size = Size(width = spaceObject.size.value, height = spaceObject.size.value)
+            )
+            if (spaceRect!!.overlaps(shipRect) && spaceObject.collectable) {
                 spaceObjects[spaceObjectIndex].onObjectImpact(spaceShipCollidePower)
             }
+            spaceRect = null
         }
     }
 
@@ -181,7 +181,6 @@ class GameState(
                 val laser = ShipLaser(
                     xOffset = shipXOffset + shipSize / 2,
                     yRange = screenHeightDp,
-                    screenHeight = screenHeightDp,
                     onDestroyLaser = { destroyLaser(it) }
                 )
                 add(laser)
@@ -205,7 +204,15 @@ class GameState(
     private fun monitorLaserSpaceObjectsHit() {
         spaceObjects.forEachIndexed { rockIndex, spaceObject ->
             lasers.forEachIndexed { laserIndex, laser ->
-                if (spaceObject.destroyable && spaceObject.rect.contains(laser.offset)) {
+                var laserRect: Offset? = Offset(
+                    x = laser.xOffset.value,
+                    y = laser.yOffset.value + screenHeightDp.value
+                )
+                var spaceRect: Rect? = Rect(
+                    offset = Offset(x = spaceObject.xOffset.value, y = spaceObject.yOffset.value),
+                    size = Size(width = spaceObject.size.value, height = spaceObject.size.value)
+                )
+                if (spaceObject.destroyable && spaceRect!!.contains(laserRect!!)) {
                     /**
                      * SpaceObject list throws IndexOutOfBoundsException if multiple lasers hit
                      * object fast. TODO Handle it without try-catch block.
@@ -216,6 +223,8 @@ class GameState(
                     } catch (e: IndexOutOfBoundsException) {
                     }
                 }
+                laserRect = null
+                spaceRect = null
             }
         }
     }
