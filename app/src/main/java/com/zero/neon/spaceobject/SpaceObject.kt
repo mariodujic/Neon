@@ -13,7 +13,8 @@ interface SpaceObject {
     val rect: Rect
     val destroyable: Boolean
     val collectable: Boolean
+    var hp: Int
 
     fun moveObject()
-    fun destroyObject()
+    fun onObjectImpact(impactPower: Int)
 }

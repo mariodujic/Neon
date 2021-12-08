@@ -34,6 +34,7 @@ class Booster(
             size = Size(width = size.value, height = size.value)
         )
     }
+    override var hp: Int = 1
 
     override fun moveObject() {
         floating = true
@@ -45,7 +46,14 @@ class Booster(
         }
     }
 
-    override fun destroyObject() {
+    override fun onObjectImpact(impactPower: Int) {
+        hp -= impactPower
+        if (hp <= 0) {
+            destroyObject()
+        }
+    }
+
+    private fun destroyObject() {
         floating = false
         onDestroyBooster(id)
     }

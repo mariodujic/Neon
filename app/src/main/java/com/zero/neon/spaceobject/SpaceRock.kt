@@ -34,18 +34,25 @@ class SpaceRock(
             size = Size(width = size.value, height = size.value)
         )
     }
+    override var hp: Int = size.value.toInt()
 
     override fun moveObject() {
         floating = true
         if (yOffset < screenHeight + 100.dp && floating) {
             yOffset += 1.dp
         } else {
-            floating = false
             destroyObject()
         }
     }
 
-    override fun destroyObject() {
+    override fun onObjectImpact(impactPower: Int) {
+        hp -= impactPower
+        if (hp <= 0) {
+            destroyObject()
+        }
+    }
+
+    private fun destroyObject() {
         floating = false
         onDestroyRock(id)
     }

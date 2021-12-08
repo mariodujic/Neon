@@ -7,16 +7,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import java.util.*
 
 class ShipLaser(
     override var xOffset: Dp,
     private val yRange: Dp,
     private val screenHeight: Dp,
-    private val onDestroyLaser: (laserId: String) -> Unit,
+    private val onDestroyLaser: (laserId: String) -> Unit
 ) : Laser {
 
     override val id: String = UUID.randomUUID().toString()
@@ -28,6 +25,7 @@ class ShipLaser(
             y = yOffset.value + screenHeight.value
         )
     }
+    override var powerImpact: Int by mutableStateOf(5)
 
     fun moveLaser() {
         shooting = true
@@ -49,6 +47,7 @@ interface Laser {
     var xOffset: Dp
     var yOffset: Dp
     var shooting: Boolean
+    var powerImpact: Int
 
     fun destroyLaser()
 }

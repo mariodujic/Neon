@@ -82,11 +82,6 @@ class GameState(
                             triggerMillis = 4000,
                             doWork = { addBooster() }
                         )
-                        tinker(
-                            id = moveSpaceObjectsId,
-                            triggerMillis = 5,
-                            doWork = { moveSpaceObjects() }
-                        )
                     }
                     delay(1)
                 }
@@ -97,14 +92,16 @@ class GameState(
                         id = monitorSpaceObjectHitsId,
                         triggerMillis = 10,
                         doWork = {
-                            monitorLaserSpaceObjectsHit(
-                                spaceObjects = spaceObjects,
-                                laserOffsets = lasers.map { it.offset }
-                            )
+                            monitorLaserSpaceObjectsHit()
                         }
                     )
+                    tinker(
+                        id = moveSpaceObjectsId,
+                        triggerMillis = 5,
+                        doWork = { moveSpaceObjects() }
+                    )
                 }
-                delay(10)
+                delay(5)
             }
         }
     }
@@ -142,6 +139,7 @@ class GameState(
     var shipXOffset by mutableStateOf(screenWidthDp / 2 - shipSize / 2)
     var shipYOffset by mutableStateOf(screenHeightDp - shipSize)
     val shipYRotation by derivedStateOf { 0f }
+    private val spaceShipCollidePower = 100
     private val shipRect by derivedStateOf {
         Rect(
             offset = Offset(x = shipXOffset.value, y = shipYOffset.value),
@@ -164,7 +162,7 @@ class GameState(
     private fun monitorShipSpaceObjectsOverlap() {
         spaceObjects.forEachIndexed { spaceObjectIndex, spaceObject ->
             if (spaceObject.rect.overlaps(shipRect) && spaceObject.collectable) {
-                spaceObjects[spaceObjectIndex].destroyObject()
+                spaceObjects[spaceObjectIndex].onObjectImpact(spaceShipCollidePower)
             }
         }
     }
@@ -204,19 +202,16 @@ class GameState(
     }
 
     private val monitorSpaceObjectHitsId = UUID.randomUUID().toString()
-    private fun monitorLaserSpaceObjectsHit(
-        spaceObjects: List<SpaceObject>,
-        laserOffsets: List<Offset>
-    ) {
+    private fun monitorLaserSpaceObjectsHit() {
         spaceObjects.forEachIndexed { rockIndex, spaceObject ->
-            laserOffsets.forEachIndexed { laserIndex, offset ->
-                if (spaceObject.destroyable && spaceObject.rect.contains(offset)) {
+            lasers.forEachIndexed { laserIndex, laser ->
+                if (spaceObject.destroyable && spaceObject.rect.contains(laser.offset)) {
                     /**
                      * SpaceObject list throws IndexOutOfBoundsException if multiple lasers hit
                      * object fast. TODO Handle it without try-catch block.
                      */
                     try {
-                        spaceObjects[rockIndex].destroyObject()
+                        spaceObjects[rockIndex].onObjectImpact(laser.powerImpact)
                         lasers[laserIndex].destroyLaser()
                     } catch (e: IndexOutOfBoundsException) {
                     }
