@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import com.zero.neon.controls.HpIndicator
 import com.zero.neon.controls.MovementButtons
 import com.zero.neon.controls.SettingsButton
 import com.zero.neon.ui.theme.Blue
@@ -26,6 +27,11 @@ fun GameScreen() {
             .fillMaxSize()
             .background(brush = Brush.verticalGradient(colors = listOf(Blue, Pink)))
     ) {
+        HpIndicator(
+            hp = 5, modifier = Modifier
+                .align(Alignment.TopStart)
+                .zIndex(300f)
+        )
         SettingsButton(
             modifier = Modifier
                 .align(Alignment.TopEnd)
