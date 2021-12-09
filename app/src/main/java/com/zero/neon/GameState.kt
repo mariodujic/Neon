@@ -15,7 +15,6 @@ import com.zero.neon.spaceobject.SpaceObject
 import com.zero.neon.spaceobject.SpaceRock
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.random.Random
@@ -35,7 +34,8 @@ class GameState(
     private val coroutineScope: CoroutineScope
 ) {
 
-    private var gameContinuity by mutableStateOf(GameContinuity.RUNNING)
+    private var gameContinuity = GameContinuity.RUNNING
+    var refreshRate by mutableStateOf<Long>(0)
 
     init {
         coroutineScope.launch {
@@ -58,9 +58,9 @@ class GameState(
                             doWork = { moveShip() }
                         )
                         tinker(
-                            id = monitorShipSpaceObjectsOverlapId,
-                            triggerMillis = 3,
-                            doWork = { monitorShipSpaceObjectsOverlap() }
+                            id = monitorShipSpaceObjectsCollisionId,
+                            triggerMillis = 100,
+                            doWork = { monitorShipSpaceObjectsCollision() }
                         )
                         tinker(
                             id = fireLaserId,
@@ -95,7 +95,7 @@ class GameState(
                             }
                         )
                     }
-                    delay(1)
+                    refreshRate = System.currentTimeMillis()
                 }
             }
         }
@@ -119,7 +119,7 @@ class GameState(
      * Ship movement
      */
     val shipSize = 120.dp
-    var shipHp by mutableStateOf(500)
+    var shipHp = 1000
     private val shipXMovementSpeed = 2.dp
     private val moveShipId = UUID.randomUUID().toString()
 
@@ -132,19 +132,12 @@ class GameState(
         } else movingRight = false
     }
 
-    var shipXOffset by mutableStateOf(screenWidthDp / 2 - shipSize / 2)
-    var shipYOffset by mutableStateOf(screenHeightDp - shipSize)
-    val shipYRotation by derivedStateOf { 0f }
+    var shipXOffset = screenWidthDp / 2 - shipSize / 2
+    var shipYOffset = screenHeightDp - shipSize
     private val spaceShipCollidePower = 100
-    private val shipRect by derivedStateOf {
-        Rect(
-            offset = Offset(x = shipXOffset.value, y = shipYOffset.value),
-            size = Size(width = shipSize.value, height = shipSize.value)
-        )
-    }
 
-    private var movingLeft by mutableStateOf(false)
-    private var movingRight by mutableStateOf(false)
+    private var movingLeft = false
+    private var movingRight = false
 
     fun moveShipLeft(movingShipLeft: Boolean) {
         movingLeft = movingShipLeft
@@ -154,25 +147,28 @@ class GameState(
         movingRight = movingShipRight
     }
 
-    private val monitorShipSpaceObjectsOverlapId = UUID.randomUUID().toString()
-    private fun monitorShipSpaceObjectsOverlap() {
+    private val monitorShipSpaceObjectsCollisionId = UUID.randomUUID().toString()
+    private fun monitorShipSpaceObjectsCollision() {
+        val shipRect = Rect(
+            offset = Offset(x = shipXOffset.value, y = shipYOffset.value),
+            size = Size(width = shipSize.value, height = shipSize.value)
+        )
         spaceObjects.forEachIndexed { spaceObjectIndex, spaceObject ->
-            var spaceRect: Rect? = Rect(
+            val spaceRect = Rect(
                 offset = Offset(x = spaceObject.xOffset.value, y = spaceObject.yOffset.value),
                 size = Size(width = spaceObject.size.value, height = spaceObject.size.value)
             )
-            if (spaceRect!!.overlaps(shipRect)) {
+            if (spaceRect.overlaps(shipRect)) {
                 spaceObjects[spaceObjectIndex].onObjectImpact(spaceShipCollidePower)
                 shipHp -= spaceObject.impactPower
             }
-            spaceRect = null
         }
     }
 
     /**
      * Ship laser
      */
-    var lasers by mutableStateOf<List<ShipLaser>>(listOf())
+    var lasers: List<ShipLaser> = listOf()
         private set
     private val fireLaserId = UUID.randomUUID().toString()
     private fun fireLasers() {
@@ -195,7 +191,9 @@ class GameState(
     }
 
     private fun destroyLaser(laserId: String) {
-        lasers.toMutableList().removeAll { it.id == laserId }
+        lasers = lasers.toMutableList().apply {
+            removeAll { it.id == laserId }
+        }
     }
 
     private val monitorSpaceObjectHitsId = UUID.randomUUID().toString()
@@ -230,7 +228,7 @@ class GameState(
     /**
      * Constellation
      */
-    var stars by mutableStateOf<List<Star>>(listOf())
+    var stars: List<Star> = listOf()
         private set
 
     private fun createStars(screenWidth: Int, screenHeight: Int, coroutineScope: CoroutineScope) {
@@ -255,7 +253,7 @@ class GameState(
     /**
      * Space objects
      */
-    var spaceObjects by mutableStateOf<List<SpaceObject>>(listOf())
+    var spaceObjects: List<SpaceObject> = listOf()
         private set
     private val minRockSize = 20
     private val maxRockSize = 80
@@ -297,7 +295,9 @@ class GameState(
     }
 
     private fun destroySpaceObject(rockId: String) {
-        spaceObjects.toMutableList().removeAll { it.id == rockId }
+        spaceObjects = spaceObjects.toMutableList().apply {
+            removeAll { it.id == rockId }
+        }
     }
 
     private val moveSpaceObjectsId = UUID.randomUUID().toString()

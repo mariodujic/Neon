@@ -27,6 +27,7 @@ fun GameScreen() {
             .fillMaxSize()
             .background(brush = Brush.verticalGradient(colors = listOf(Blue, Pink)))
     ) {
+        gameState.refreshRate
         HpIndicator(
             hp = gameState.shipHp,
             modifier = Modifier
@@ -43,7 +44,6 @@ fun GameScreen() {
                 shipSize = gameState.shipSize,
                 shipXOffset = gameState.shipXOffset,
                 shipYOffset = gameState.shipYOffset,
-                shipYRotation = gameState.shipYRotation,
                 shipLasers = gameState.lasers,
                 stars = gameState.stars,
                 spaceObjects = gameState.spaceObjects,

@@ -13,7 +13,7 @@ class ShipLaser(
     override val id: String = UUID.randomUUID().toString()
     override var yOffset: Dp = (-10).dp
     override var shooting: Boolean = false
-    override var powerImpact: Int = 5
+    override var powerImpact: Int = 25
 
     fun moveLaser() {
         shooting = true
