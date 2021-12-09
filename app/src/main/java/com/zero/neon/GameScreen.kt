@@ -28,7 +28,8 @@ fun GameScreen() {
             .background(brush = Brush.verticalGradient(colors = listOf(Blue, Pink)))
     ) {
         HpIndicator(
-            hp = 5, modifier = Modifier
+            hp = gameState.shipHp,
+            modifier = Modifier
                 .align(Alignment.TopStart)
                 .zIndex(300f)
         )

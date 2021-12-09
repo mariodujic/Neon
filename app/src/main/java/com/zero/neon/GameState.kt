@@ -119,6 +119,7 @@ class GameState(
      * Ship movement
      */
     val shipSize = 120.dp
+    var shipHp by mutableStateOf(500)
     private val shipXMovementSpeed = 2.dp
     private val moveShipId = UUID.randomUUID().toString()
 
@@ -160,8 +161,9 @@ class GameState(
                 offset = Offset(x = spaceObject.xOffset.value, y = spaceObject.yOffset.value),
                 size = Size(width = spaceObject.size.value, height = spaceObject.size.value)
             )
-            if (spaceRect!!.overlaps(shipRect) && spaceObject.collectable) {
+            if (spaceRect!!.overlaps(shipRect)) {
                 spaceObjects[spaceObjectIndex].onObjectImpact(spaceShipCollidePower)
+                shipHp -= spaceObject.impactPower
             }
             spaceRect = null
         }

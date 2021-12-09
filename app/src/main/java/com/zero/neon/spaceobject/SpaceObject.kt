@@ -1,6 +1,5 @@
 package com.zero.neon.spaceobject
 
-import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.unit.Dp
 
 interface SpaceObject {
@@ -13,6 +12,7 @@ interface SpaceObject {
     val destroyable: Boolean
     val collectable: Boolean
     var hp: Int
+    val impactPower: Int
 
     fun moveObject()
     fun onObjectImpact(impactPower: Int)

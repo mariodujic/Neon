@@ -29,6 +29,7 @@ class Booster(
     override val drawableId: Int = BoosterType.values()[randomDrawableIndex].drawableId
     override var floating by mutableStateOf(false)
     override var hp: Int = 1
+    override val impactPower = 0
 
     override fun moveObject() {
         floating = true

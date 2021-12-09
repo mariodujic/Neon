@@ -2,8 +2,8 @@ package com.zero.neon.controls
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,12 +22,12 @@ fun HpIndicator(hp: Int, modifier: Modifier = Modifier) {
 
     val buttonPaddingEnd = dimensionResource(id = R.dimen.button_padding)
     val buttonPaddingTop = buttonPaddingEnd * 2
-    val buttonSize = 60.dp
+    val height = 60.dp
 
     Box(
         modifier = modifier
             .padding(start = buttonPaddingEnd, top = buttonPaddingTop)
-            .size(buttonSize)
+            .height(height = height)
     ) {
         Image(
             painter = painterResource(id = R.drawable.hp_indicator),
@@ -37,7 +37,7 @@ fun HpIndicator(hp: Int, modifier: Modifier = Modifier) {
         Text(
             text = "${hp}hp",
             color = Color.White,
-            fontSize = 18.sp,
+            fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.align(Alignment.Center)
         )
