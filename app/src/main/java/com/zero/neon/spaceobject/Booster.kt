@@ -1,13 +1,9 @@
 package com.zero.neon.spaceobject
 
 import androidx.annotation.DrawableRes
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.zero.neon.R
@@ -29,7 +25,13 @@ class Booster(
     override val drawableId: Int = BoosterType.values()[randomDrawableIndex].drawableId
     override var floating by mutableStateOf(false)
     override var hp: Int = 1
-    override val impactPower = 0
+    override val impactPower = when (randomDrawableIndex) {
+        /**
+         * This booster type heals space ship on impact.
+         */
+        BoosterType.HEALTH_BOOSTER.ordinal -> -50
+        else -> 0
+    }
 
     override fun moveObject() {
         floating = true
