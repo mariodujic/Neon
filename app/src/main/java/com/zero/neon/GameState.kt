@@ -74,7 +74,7 @@ class GameState(
                         )
                         tinker(
                             id = spaceRockId,
-                            triggerMillis = 2000,
+                            triggerMillis = 500,
                             doWork = { addSpaceRock() }
                         )
                         tinker(
@@ -195,16 +195,12 @@ class GameState(
     }
 
     private fun destroyLaser(laserId: String) {
-        lasers = lasers
-            .toMutableList()
-            .apply {
-                removeAll { it.id == laserId }
-            }
+        lasers.toMutableList().removeAll { it.id == laserId }
     }
 
     private val monitorSpaceObjectHitsId = UUID.randomUUID().toString()
     private fun monitorLaserSpaceObjectsHit() {
-        spaceObjects.forEachIndexed { rockIndex, spaceObject ->
+        spaceObjects.forEachIndexed { spaceObjectIndex, spaceObject ->
             lasers.forEachIndexed { laserIndex, laser ->
                 var laserRect: Offset? = Offset(
                     x = laser.xOffset.value,
@@ -220,7 +216,7 @@ class GameState(
                      * object fast. TODO Handle it without try-catch block.
                      */
                     try {
-                        spaceObjects[rockIndex].onObjectImpact(laser.powerImpact)
+                        spaceObjects[spaceObjectIndex].onObjectImpact(laser.powerImpact)
                         lasers[laserIndex].destroyLaser()
                     } catch (e: IndexOutOfBoundsException) {
                     }
@@ -276,7 +272,7 @@ class GameState(
                     xOffset = rockXOffset,
                     size = rockSize.dp,
                     screenHeight = screenHeightDp,
-                    onDestroyRock = { destroyRock(it) }
+                    onDestroyRock = { destroySpaceObject(it) }
                 )
                 add(spaceRock)
             }
@@ -294,16 +290,14 @@ class GameState(
                     xOffset = boosterXOffset,
                     size = size.dp,
                     screenHeight = screenHeightDp,
-                    onDestroyBooster = { destroyRock(it) }
+                    onDestroyBooster = { destroySpaceObject(it) }
                 )
                 add(booster)
             }
     }
 
-    private fun destroyRock(rockId: String) {
-        spaceObjects = spaceObjects
-            .toMutableList()
-            .apply { removeAll { it.id == rockId } }
+    private fun destroySpaceObject(rockId: String) {
+        spaceObjects.toMutableList().removeAll { it.id == rockId }
     }
 
     private val moveSpaceObjectsId = UUID.randomUUID().toString()

@@ -1,8 +1,5 @@
 package com.zero.neon.ship
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import java.util.*
@@ -14,16 +11,16 @@ class ShipLaser(
 ) : Laser {
 
     override val id: String = UUID.randomUUID().toString()
-    override var yOffset: Dp by mutableStateOf((-10).dp)
+    override var yOffset: Dp = (-10).dp
     override var shooting: Boolean = false
-    override var powerImpact: Int by mutableStateOf(5)
+    override var powerImpact: Int = 5
 
     fun moveLaser() {
         shooting = true
-        if (yOffset > -yRange || !shooting) {
+        if (yOffset > -yRange && shooting) {
             yOffset -= 7.dp
         } else {
-            shooting = false
+            destroyLaser()
         }
     }
 
