@@ -1,11 +1,14 @@
 package com.zero.neon
 
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -22,12 +25,21 @@ fun GameWorld(
     shipSize: Dp = 40.dp,
     shipXOffset: Dp = 0.dp,
     shipYOffset: Dp = 0.dp,
-    shipYRotation: Float = 0f,
     shipLasers: List<Laser>,
+    ultimateLasers: List<Laser>,
     stars: List<Star>,
     spaceObjects: List<SpaceObject>,
     modifier: Modifier = Modifier
 ) {
+
+    val infiniteRotation = rememberInfiniteTransition()
+    val rotationAngle by infiniteRotation.animateFloat(
+        initialValue = 0F,
+        targetValue = 360F,
+        animationSpec = infiniteRepeatable(
+            animation = tween(2000, easing = LinearEasing)
+        )
+    )
 
     BoxWithConstraints(modifier = modifier.fillMaxSize()) {
         shipLasers.forEach {
@@ -36,7 +48,19 @@ fun GameWorld(
                 contentDescription = stringResource(id = R.string.laser),
                 modifier = Modifier
                     .absoluteOffset(x = it.xOffset, y = it.yOffset)
+                    .size(width = it.width, height = it.height)
                     .align(Alignment.BottomStart)
+            )
+        }
+        ultimateLasers.forEach {
+            Image(
+                painterResource(id = R.drawable.laser_blue_11),
+                contentDescription = stringResource(id = R.string.laser),
+                modifier = Modifier
+                    .absoluteOffset(x = it.xOffset, y = it.yOffset)
+                    .size(width = it.width, height = it.height)
+                    .align(Alignment.BottomStart)
+                    .rotate(rotationAngle)
             )
         }
         stars.forEach {

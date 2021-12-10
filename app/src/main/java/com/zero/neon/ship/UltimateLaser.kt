@@ -4,7 +4,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import java.util.*
 
-class ShipLaser(
+class UltimateLaser(
     override var xOffset: Dp,
     private val yRange: Dp,
     private val onDestroyLaser: (laserId: String) -> Unit
@@ -13,9 +13,11 @@ class ShipLaser(
     override val id: String = UUID.randomUUID().toString()
     override var yOffset: Dp = (-10).dp
     override var shooting: Boolean = false
-    override var powerImpact: Int = 25
+    override var width: Dp = 30.dp
+    override var height: Dp = 30.dp
+    override var powerImpact: Int = 1000
 
-    fun moveLaser() {
+    override fun moveLaser() {
         shooting = true
         if (yOffset > -yRange && shooting) {
             yOffset -= 7.dp
@@ -28,14 +30,4 @@ class ShipLaser(
         shooting = false
         onDestroyLaser(id)
     }
-}
-
-interface Laser {
-    val id: String
-    var xOffset: Dp
-    var yOffset: Dp
-    var shooting: Boolean
-    var powerImpact: Int
-
-    fun destroyLaser()
 }

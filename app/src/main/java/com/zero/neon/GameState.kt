@@ -9,7 +9,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.zero.neon.constellation.Star
 import com.zero.neon.core.tinker
+import com.zero.neon.ship.Laser
 import com.zero.neon.ship.ShipLaser
+import com.zero.neon.ship.UltimateLaser
 import com.zero.neon.spaceobject.Booster
 import com.zero.neon.spaceobject.SpaceObject
 import com.zero.neon.spaceobject.SpaceRock
@@ -71,6 +73,11 @@ class GameState(
                             id = moveLasersId,
                             triggerMillis = 5,
                             doWork = { moveLasers() }
+                        )
+                        tinker(
+                            id = moveUltimateLasersId,
+                            triggerMillis = 40,
+                            doWork = { moveUltimateLasers() }
                         )
                         tinker(
                             id = spaceRockId,
@@ -161,6 +168,10 @@ class GameState(
             if (spaceRect.overlaps(shipRect)) {
                 spaceObjects[spaceObjectIndex].onObjectImpact(spaceShipCollidePower)
                 shipHp -= spaceObject.impactPower
+
+                if (spaceObject.drawableId == Booster.BoosterType.ULTIMATE_WEAPON_BOOSTER.drawableId) {
+                    fireUltimateLaser()
+                }
             }
         }
     }
@@ -168,11 +179,11 @@ class GameState(
     /**
      * Ship laser
      */
-    var lasers: List<ShipLaser> = listOf()
+    var shipLasers: List<Laser> = listOf()
         private set
     private val fireLaserId = UUID.randomUUID().toString()
     private fun fireLasers() {
-        lasers = lasers
+        shipLasers = shipLasers
             .filter { it.shooting }
             .toMutableList()
             .apply {
@@ -187,11 +198,40 @@ class GameState(
 
     private val moveLasersId = UUID.randomUUID().toString()
     private fun moveLasers() {
-        lasers.forEach { it.moveLaser() }
+        shipLasers.forEach { it.moveLaser() }
     }
 
     private fun destroyLaser(laserId: String) {
-        lasers = lasers.toMutableList().apply {
+        shipLasers = shipLasers.toMutableList().apply {
+            removeAll { it.id == laserId }
+        }
+    }
+
+    var ultimateLasers: List<Laser> = listOf()
+        private set
+
+    private fun fireUltimateLaser() {
+        val ultimateLaserList = mutableListOf<UltimateLaser>()
+        val laserCount = 10
+        val horizontalLaserDistance = screenWidthDp / laserCount
+        for (i in 0..laserCount) {
+            val ultimateLaser = UltimateLaser(
+                xOffset = horizontalLaserDistance * i,
+                yRange = screenHeightDp,
+                onDestroyLaser = { destroyUltimateLaser(it) }
+            )
+            ultimateLaserList.add(ultimateLaser)
+        }
+        ultimateLasers = ultimateLaserList
+    }
+
+    private val moveUltimateLasersId = UUID.randomUUID().toString()
+    private fun moveUltimateLasers() {
+        ultimateLasers.forEach { it.moveLaser() }
+    }
+
+    private fun destroyUltimateLaser(laserId: String) {
+        ultimateLasers = ultimateLasers.toMutableList().apply {
             removeAll { it.id == laserId }
         }
     }
@@ -199,28 +239,29 @@ class GameState(
     private val monitorSpaceObjectHitsId = UUID.randomUUID().toString()
     private fun monitorLaserSpaceObjectsHit() {
         spaceObjects.forEachIndexed { spaceObjectIndex, spaceObject ->
-            lasers.forEachIndexed { laserIndex, laser ->
-                var laserRect: Offset? = Offset(
-                    x = laser.xOffset.value,
-                    y = laser.yOffset.value + screenHeightDp.value
+            (shipLasers + ultimateLasers).forEachIndexed { laserIndex, laser ->
+                val laserRect = Rect(
+                    offset = Offset(
+                        x = laser.xOffset.value,
+                        y = laser.yOffset.value + screenHeightDp.value
+                    ),
+                    size = Size(width = laser.width.value, height = laser.height.value)
                 )
-                var spaceRect: Rect? = Rect(
+                val spaceRect = Rect(
                     offset = Offset(x = spaceObject.xOffset.value, y = spaceObject.yOffset.value),
                     size = Size(width = spaceObject.size.value, height = spaceObject.size.value)
                 )
-                if (spaceObject.destroyable && spaceRect!!.contains(laserRect!!)) {
+                if (spaceObject.destroyable && spaceRect.overlaps(laserRect)) {
                     /**
                      * SpaceObject list throws IndexOutOfBoundsException if multiple lasers hit
                      * object fast. TODO Handle it without try-catch block.
                      */
                     try {
                         spaceObjects[spaceObjectIndex].onObjectImpact(laser.powerImpact)
-                        lasers[laserIndex].destroyLaser()
+                        shipLasers[laserIndex].destroyLaser()
                     } catch (e: IndexOutOfBoundsException) {
                     }
                 }
-                laserRect = null
-                spaceRect = null
             }
         }
     }

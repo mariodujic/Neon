@@ -44,7 +44,8 @@ fun GameScreen() {
                 shipSize = gameState.shipSize,
                 shipXOffset = gameState.shipXOffset,
                 shipYOffset = gameState.shipYOffset,
-                shipLasers = gameState.lasers,
+                shipLasers = gameState.shipLasers,
+                ultimateLasers = gameState.ultimateLasers,
                 stars = gameState.stars,
                 spaceObjects = gameState.spaceObjects,
                 modifier = Modifier.weight(1f)
