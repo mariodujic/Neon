@@ -1,4 +1,4 @@
-package com.zero.neon.spaceobject
+package com.zero.neon.game.spaceobject
 
 import androidx.compose.ui.unit.Dp
 

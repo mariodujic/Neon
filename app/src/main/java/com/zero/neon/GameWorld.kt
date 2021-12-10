@@ -14,17 +14,14 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
-import com.zero.neon.constellation.Star
-import com.zero.neon.ship.Laser
-import com.zero.neon.spaceobject.SpaceObject
+import com.zero.neon.game.constellation.Star
+import com.zero.neon.game.ship.ship.Ship
+import com.zero.neon.game.ship.weapons.Laser
+import com.zero.neon.game.spaceobject.SpaceObject
 
 @Composable
 fun GameWorld(
-    shipSize: Dp = 40.dp,
-    shipXOffset: Dp = 0.dp,
-    shipYOffset: Dp = 0.dp,
+    ship: Ship,
     shipLasers: List<Laser>,
     ultimateLasers: List<Laser>,
     stars: List<Star>,
@@ -90,8 +87,8 @@ fun GameWorld(
             painterResource(id = R.drawable.ship_blue),
             contentDescription = stringResource(id = R.string.ship),
             modifier = Modifier
-                .width(shipSize)
-                .offset(x = shipXOffset, y = shipYOffset)
+                .width(ship.size)
+                .offset(x = ship.xOffset, y = ship.yOffset)
         )
     }
 }

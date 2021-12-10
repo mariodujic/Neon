@@ -1,4 +1,4 @@
-package com.zero.neon.constellation
+package com.zero.neon.game.constellation
 
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -11,7 +11,7 @@ class Star(var xOffset: Dp, var yOffset: Dp, private val maxYOffset: Dp, var siz
 
     fun animateStar() {
 
-        yOffset += 2.dp
+        yOffset += 0.5.dp
         if (yOffset >= maxYOffset) {
             yOffset = 0.dp
         }

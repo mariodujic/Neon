@@ -1,4 +1,4 @@
-package com.zero.neon.controls
+package com.zero.neon.game.controls
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable

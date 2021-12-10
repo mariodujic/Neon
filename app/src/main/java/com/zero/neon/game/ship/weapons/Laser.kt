@@ -1,4 +1,4 @@
-package com.zero.neon.ship
+package com.zero.neon.game.ship.weapons
 
 import androidx.compose.ui.unit.Dp
 

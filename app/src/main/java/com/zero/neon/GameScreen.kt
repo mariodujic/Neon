@@ -11,9 +11,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import com.zero.neon.controls.HpIndicator
-import com.zero.neon.controls.MovementButtons
-import com.zero.neon.controls.SettingsButton
+import com.zero.neon.game.controls.HpIndicator
+import com.zero.neon.game.controls.MovementButtons
+import com.zero.neon.game.controls.SettingsButton
+import com.zero.neon.game.state.rememberGameState
 import com.zero.neon.ui.theme.Blue
 import com.zero.neon.ui.theme.Pink
 
@@ -27,9 +28,9 @@ fun GameScreen() {
             .fillMaxSize()
             .background(brush = Brush.verticalGradient(colors = listOf(Blue, Pink)))
     ) {
-        gameState.refreshRate
+        gameState.refreshHandler
         HpIndicator(
-            hp = gameState.shipHp,
+            hp = gameState.ship.hp,
             modifier = Modifier
                 .align(Alignment.TopStart)
                 .zIndex(300f)
@@ -41,9 +42,7 @@ fun GameScreen() {
         ) { gameState.toggleGamePause() }
         Column(modifier = Modifier.fillMaxSize()) {
             GameWorld(
-                shipSize = gameState.shipSize,
-                shipXOffset = gameState.shipXOffset,
-                shipYOffset = gameState.shipYOffset,
+                ship = gameState.ship,
                 shipLasers = gameState.shipLasers,
                 ultimateLasers = gameState.ultimateLasers,
                 stars = gameState.stars,
@@ -51,8 +50,8 @@ fun GameScreen() {
                 modifier = Modifier.weight(1f)
             )
             MovementButtons(
-                onMoveLeft = { gameState.moveShipLeft(it) },
-                onMoveRight = { gameState.moveShipRight(it) },
+                onMoveLeft = { gameState.ship.moveLeft(it) },
+                onMoveRight = { gameState.ship.moveRight(it) },
                 modifier = Modifier.padding(bottom = 24.dp)
             )
         }
