@@ -238,7 +238,12 @@ class GameState(
                 val starXOffset = Random.nextInt(0, screenWidth).dp
                 val starYOffset = Random.nextInt(0, screenHeight).dp
                 val starSize = Random.nextInt(1, 12).dp
-                val star = Star(xOffset = starXOffset, yOffset = starYOffset, size = starSize)
+                val star = Star(
+                    xOffset = starXOffset,
+                    yOffset = starYOffset,
+                    maxYOffset = screenHeight.dp,
+                    size = starSize
+                )
                 starList.add(star)
             }
             stars = starList.toList()
