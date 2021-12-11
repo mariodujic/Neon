@@ -32,6 +32,7 @@ class Booster(
         BoosterType.HEALTH_BOOSTER.ordinal -> -50
         else -> 0
     }
+    override var rotation = 0f
 
     override fun moveObject() {
         floating = true

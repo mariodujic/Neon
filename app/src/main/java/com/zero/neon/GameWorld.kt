@@ -81,6 +81,7 @@ fun GameWorld(
                 modifier = Modifier
                     .size(it.size)
                     .offset(x = it.xOffset, y = it.yOffset)
+                    .rotate(degrees = it.rotation)
             )
         }
         Image(

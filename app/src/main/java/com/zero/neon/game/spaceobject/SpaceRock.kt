@@ -26,9 +26,17 @@ class SpaceRock(
     override var floating by mutableStateOf(false)
     override var hp: Int = size.value.toInt()
     override val impactPower = size.value.toInt()
+    private var rotateClockWise = Random.nextBoolean()
+    override var rotation = 0f
+    private val minRotationSpeed = 0.05f
+    private val maxRotationSpeed = 0.20f
+    private val rotationSpeed = Random.nextFloat() * (maxRotationSpeed - minRotationSpeed) + minRotationSpeed
 
     override fun moveObject() {
         floating = true
+
+        if (rotateClockWise) rotation += rotationSpeed else rotation -= rotationSpeed
+
         if (yOffset < screenHeight + 100.dp && floating) {
             yOffset += 1.dp
         } else {

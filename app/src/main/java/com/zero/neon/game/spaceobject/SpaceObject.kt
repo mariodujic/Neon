@@ -13,6 +13,7 @@ interface SpaceObject {
     val collectable: Boolean
     var hp: Int
     val impactPower: Int
+    var rotation: Float
 
     fun moveObject()
     fun onObjectImpact(impactPower: Int)
