@@ -1,7 +1,7 @@
 package com.zero.neon.core
 
 /**
- * Stores unique work by id as key and start time in milliseconds as value.
+ * Stores unique work id as key and start time in milliseconds as value.
  */
 private val tinkerMap = mutableMapOf<String, Long>()
 

@@ -10,6 +10,7 @@ interface Laser {
     var height: Dp
     var shooting: Boolean
     var powerImpact: Int
+    val drawableId: Int
 
     fun destroyLaser()
     fun moveLaser()

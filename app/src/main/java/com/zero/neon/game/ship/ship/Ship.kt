@@ -7,6 +7,7 @@ data class Ship(
     val size: Dp,
     val shieldSize: Dp,
     var shieldEnabled: Boolean,
+    var laserBoosterEnabled: Boolean,
     var xOffset: Dp,
     var yOffset: Dp,
     var hp: Int = 1000,

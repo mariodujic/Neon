@@ -4,6 +4,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.zero.neon.game.ship.ship.Ship
 import com.zero.neon.game.spaceobject.SpaceObject
 import java.util.*
@@ -21,15 +22,29 @@ class LaserManager(
 
     val fireLaserId = UUID.randomUUID().toString()
     fun fireLasers(ship: Ship) {
+
+        val laser = if (ship.laserBoosterEnabled) {
+            val width = 8.dp
+            ShipBoostedLaser(
+                xOffset = ship.xOffset + ship.size / 2 - width,
+                yRange = screenHeightDp,
+                width = width,
+                onDestroyLaser = { destroyShipLaser(it) }
+            )
+        } else {
+            val width = 5.dp
+            ShipLaser(
+                xOffset = ship.xOffset + ship.size / 2 - width,
+                yRange = screenHeightDp,
+                width = width,
+                onDestroyLaser = { destroyShipLaser(it) }
+            )
+        }
+
         shipLasers = shipLasers
             .filter { it.shooting }
             .toMutableList()
             .apply {
-                val laser = ShipLaser(
-                    xOffset = ship.xOffset + ship.size / 2,
-                    yRange = screenHeightDp,
-                    onDestroyLaser = { destroyShipLaser(it) }
-                )
                 add(laser)
             }
         updateShipLasersUI()

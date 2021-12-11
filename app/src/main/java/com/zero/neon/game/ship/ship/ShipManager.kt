@@ -15,6 +15,7 @@ class ShipManager(private val screenWidthDp: Dp, screenHeightDp: Dp) {
     val ship = Ship(
         size = shipSize,
         shieldEnabled = false,
+        laserBoosterEnabled = false,
         shieldSize = shipSize * 2,
         xOffset = screenWidthDp / 2 - shipSize / 2,
         yOffset = screenHeightDp - 140.dp,
@@ -46,13 +47,23 @@ class ShipManager(private val screenWidthDp: Dp, screenHeightDp: Dp) {
         } else movingRight = false
     }
 
-    private var shieldEnabledGlobalTimeMillis: Long = 0
-    private val shieldDurationMillis: Long = 10000
-    private fun shieldEndDurationMillis() = shieldEnabledGlobalTimeMillis + shieldDurationMillis
+    private var shieldBoosterStartMillis: Long = 0
+    private val shieldBoosterTimeMillis: Long = 10000
+    private fun shieldEndDurationMillis() = shieldBoosterStartMillis + shieldBoosterTimeMillis
     private fun enableShield(enable: Boolean) {
         ship.shieldEnabled = enable
         if (enable) {
-            shieldEnabledGlobalTimeMillis = System.currentTimeMillis()
+            shieldBoosterStartMillis = System.currentTimeMillis()
+        }
+    }
+
+    private var laserBoosterStartMillis: Long = 0
+    private val laserBoosterTimeMillis: Long = 15000
+    private fun laserBoosterEndDurationMillis() = laserBoosterStartMillis + laserBoosterTimeMillis
+    private fun enableLaserBooster(enable: Boolean) {
+        ship.laserBoosterEnabled = enable
+        if (enable) {
+            laserBoosterStartMillis = System.currentTimeMillis()
         }
     }
 
@@ -81,20 +92,24 @@ class ShipManager(private val screenWidthDp: Dp, screenHeightDp: Dp) {
             if (spaceRect.overlaps(if (ship.shieldEnabled) shipShieldRect else shipRect)) {
                 spaceObjects[spaceObjectIndex].onObjectImpact(spaceShipCollidePower)
 
-                if (!ship.shieldEnabled) {
-                    ship.hp -= spaceObject.impactPower
-                }
+                ship.hp -= if (ship.shieldEnabled && spaceObject.impactPower > 0) 0 else spaceObject.impactPower
 
                 if (spaceObject.drawableId == Booster.BoosterType.ULTIMATE_WEAPON_BOOSTER.drawableId) {
                     fileUltimateLaser()
                 } else if (spaceObject.drawableId == Booster.BoosterType.SHIELD_BOOSTER.drawableId) {
                     enableShield(enable = true)
+                } else if (spaceObject.drawableId == Booster.BoosterType.LASER_BOOSTER.drawableId) {
+                    enableLaserBooster(enable = true)
                 }
             }
         }
 
         if (shieldEndDurationMillis() < System.currentTimeMillis()) {
             enableShield(enable = false)
+        }
+
+        if (laserBoosterEndDurationMillis() < System.currentTimeMillis()) {
+            enableLaserBooster(enable = false)
         }
     }
 }

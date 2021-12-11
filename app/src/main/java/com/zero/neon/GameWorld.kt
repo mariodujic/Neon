@@ -32,18 +32,15 @@ fun GameWorld(
     modifier: Modifier = Modifier
 ) {
 
-    val infiniteRotation = rememberInfiniteTransition()
-    val rotationAngle by infiniteRotation.animateFloat(
+    val infiniteTransition = rememberInfiniteTransition()
+    val rockRotation by infiniteTransition.animateFloat(
         initialValue = 0F,
         targetValue = 360F,
         animationSpec = infiniteRepeatable(
             animation = tween(2000, easing = LinearEasing)
         )
     )
-
-
-    val spaceShieldColorTransition = rememberInfiniteTransition()
-    val spaceShieldColor by spaceShieldColorTransition.animateColor(
+    val shipShieldColor by infiniteTransition.animateColor(
         initialValue = shipShieldOne,
         targetValue = shipShieldTwo,
         animationSpec = infiniteRepeatable(
@@ -55,7 +52,7 @@ fun GameWorld(
     BoxWithConstraints(modifier = modifier.fillMaxSize()) {
         shipLasers.forEach {
             Image(
-                painterResource(id = R.drawable.laser_blue_7),
+                painterResource(id = it.drawableId),
                 contentDescription = stringResource(id = R.string.laser),
                 modifier = Modifier
                     .absoluteOffset(x = it.xOffset, y = it.yOffset)
@@ -65,13 +62,13 @@ fun GameWorld(
         }
         ultimateLasers.forEach {
             Image(
-                painterResource(id = R.drawable.laser_blue_11),
+                painterResource(id = it.drawableId),
                 contentDescription = stringResource(id = R.string.laser),
                 modifier = Modifier
                     .absoluteOffset(x = it.xOffset, y = it.yOffset)
                     .size(width = it.width, height = it.height)
                     .align(Alignment.BottomStart)
-                    .rotate(rotationAngle)
+                    .rotate(degrees = rockRotation)
             )
         }
         stars.forEach {
@@ -113,7 +110,7 @@ fun GameWorld(
                                 Color.Transparent,
                                 Color.Transparent,
                                 Color.Transparent,
-                                spaceShieldColor
+                                shipShieldColor
                             )
                         drawCircle(
                             radius = ship.shieldSize.value,

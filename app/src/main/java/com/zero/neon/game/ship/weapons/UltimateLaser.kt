@@ -2,6 +2,7 @@ package com.zero.neon.game.ship.weapons
 
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.zero.neon.R
 import java.util.*
 
 class UltimateLaser(
@@ -16,6 +17,7 @@ class UltimateLaser(
     override var width: Dp = 30.dp
     override var height: Dp = 30.dp
     override var powerImpact: Int = 1000
+    override val drawableId: Int = R.drawable.laser_blue_11
 
     override fun moveLaser() {
         shooting = true

@@ -9,7 +9,8 @@ class LaserToLaserUIMapper {
                 xOffset = xOffset,
                 yOffset = yOffset,
                 width = width,
-                height = height
+                height = height,
+                drawableId = drawableId
             )
         }
     }

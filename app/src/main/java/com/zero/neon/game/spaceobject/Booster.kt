@@ -57,8 +57,9 @@ class Booster(
     }
 
     enum class BoosterType(@DrawableRes val drawableId: Int) {
-        ULTIMATE_WEAPON_BOOSTER(R.drawable.booster_green),
-        SHIELD_BOOSTER(R.drawable.booster_1),
-        HEALTH_BOOSTER(R.drawable.booster_health_2),
+        ULTIMATE_WEAPON_BOOSTER(R.drawable.booster_ultimate_weapon),
+        SHIELD_BOOSTER(R.drawable.booster_shield),
+        HEALTH_BOOSTER(R.drawable.booster_health),
+        LASER_BOOSTER(R.drawable.booster_red_lasers)
     }
 }
