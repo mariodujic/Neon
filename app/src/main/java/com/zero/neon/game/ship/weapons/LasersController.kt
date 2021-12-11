@@ -9,7 +9,7 @@ import com.zero.neon.game.ship.ship.Ship
 import com.zero.neon.game.spaceobject.SpaceObject
 import java.util.*
 
-class LaserManager(
+class LasersController(
     private val screenWidthDp: Dp,
     private val screenHeightDp: Dp,
     private val setShipLasersUI: (List<LaserUI>) -> Unit,

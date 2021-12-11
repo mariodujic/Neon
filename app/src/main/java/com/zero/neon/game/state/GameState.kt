@@ -5,13 +5,13 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.zero.neon.core.tinker
-import com.zero.neon.game.constellation.ConstellationManager
+import com.zero.neon.game.constellation.ConstellationController
 import com.zero.neon.game.constellation.Star
-import com.zero.neon.game.ship.ship.ShipManager
-import com.zero.neon.game.ship.weapons.LaserManager
+import com.zero.neon.game.ship.ship.ShipController
 import com.zero.neon.game.ship.weapons.LaserUI
+import com.zero.neon.game.ship.weapons.LasersController
 import com.zero.neon.game.spaceobject.SpaceObjectUI
-import com.zero.neon.game.spaceobject.SpaceObjectsManager
+import com.zero.neon.game.spaceobject.SpaceObjectsController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -39,7 +39,7 @@ class GameState(
      */
     var stars: List<Star> = emptyList()
         private set
-    private val constellationManager = ConstellationManager(
+    private val constellationController = ConstellationController(
         stars = { stars },
         setStars = { stars = it }
     )
@@ -47,16 +47,16 @@ class GameState(
     /**
      * Ship
      */
-    private val shipManager = ShipManager(
+    private val shipController = ShipController(
         screenWidthDp = screenWidthDp,
         screenHeightDp = screenHeightDp
     )
-    val ship = shipManager.ship
+    val ship = shipController.ship
     var shipLasers: List<LaserUI> = emptyList()
         private set
     var ultimateLasers: List<LaserUI> = emptyList()
         private set
-    private val laserManager = LaserManager(
+    private val lasersController = LasersController(
         screenWidthDp = screenWidthDp,
         screenHeightDp = screenHeightDp,
         setShipLasersUI = { shipLasers = it },
@@ -67,7 +67,7 @@ class GameState(
      * Space objects
      */
     var spaceObjects: List<SpaceObjectUI> = emptyList()
-    private val spaceObjectsManager = SpaceObjectsManager(
+    private val spaceObjectsController = SpaceObjectsController(
         screenWidthDp = screenWidthDp,
         screenHeightDp = screenHeightDp,
         setSpaceObjectsUi = { spaceObjects = it }
@@ -75,7 +75,7 @@ class GameState(
 
     init {
         coroutineScope.launch {
-            constellationManager.createStars(
+            constellationController.createStars(
                 screenHeight = screenHeightDp.value.toInt(),
                 screenWidth = screenWidthDp.value.toInt(),
                 coroutineScope = coroutineScope
@@ -84,59 +84,59 @@ class GameState(
                 while (true) {
                     if (gameContinuity == GameContinuity.RUNNING) {
                         tinker(
-                            id = constellationManager.animateStarsId,
+                            id = constellationController.animateStarsId,
                             triggerMillis = 50,
-                            doWork = { constellationManager.animateStars() }
+                            doWork = { constellationController.animateStars() }
                         )
                         tinker(
-                            id = shipManager.moveShipId,
+                            id = shipController.moveShipId,
                             triggerMillis = 3,
-                            doWork = { shipManager.moveShip() }
+                            doWork = { shipController.moveShip() }
                         )
                         tinker(
-                            id = shipManager.monitorShipSpaceObjectsCollisionId,
+                            id = shipController.monitorShipSpaceObjectsCollisionId,
                             triggerMillis = 100,
                             doWork = {
-                                shipManager.monitorShipSpaceObjectsCollision(spaceObjects = spaceObjectsManager.spaceObjects) {
-                                    laserManager.fireUltimateLaser()
+                                shipController.monitorShipSpaceObjectsCollision(spaceObjects = spaceObjectsController.spaceObjects) {
+                                    lasersController.fireUltimateLaser()
                                 }
                             }
                         )
                         tinker(
-                            id = laserManager.fireLaserId,
+                            id = lasersController.fireLaserId,
                             triggerMillis = 100,
-                            doWork = { laserManager.fireLasers(ship = ship) }
+                            doWork = { lasersController.fireLasers(ship = ship) }
                         )
                         tinker(
-                            id = laserManager.moveShipLasersId,
+                            id = lasersController.moveShipLasersId,
                             triggerMillis = 5,
-                            doWork = { laserManager.moveShipLasers() }
+                            doWork = { lasersController.moveShipLasers() }
                         )
                         tinker(
-                            id = laserManager.moveUltimateLasersId,
+                            id = lasersController.moveUltimateLasersId,
                             triggerMillis = 40,
-                            doWork = { laserManager.moveUltimateLasers() }
+                            doWork = { lasersController.moveUltimateLasers() }
                         )
                         tinker(
-                            id = spaceObjectsManager.addSpaceRockId,
+                            id = spaceObjectsController.addSpaceRockId,
                             triggerMillis = 500,
-                            doWork = { spaceObjectsManager.addSpaceRock() }
+                            doWork = { spaceObjectsController.addSpaceRock() }
                         )
                         tinker(
-                            id = spaceObjectsManager.addBoosterId,
+                            id = spaceObjectsController.addBoosterId,
                             triggerMillis = 4000,
-                            doWork = { spaceObjectsManager.addBooster() }
+                            doWork = { spaceObjectsController.addBooster() }
                         )
                         tinker(
-                            id = spaceObjectsManager.moveSpaceObjectsId,
+                            id = spaceObjectsController.moveSpaceObjectsId,
                             triggerMillis = 5,
-                            doWork = { spaceObjectsManager.moveSpaceObjects() }
+                            doWork = { spaceObjectsController.moveSpaceObjects() }
                         )
                         tinker(
-                            id = laserManager.monitorLaserSpaceObjectHitsId,
+                            id = lasersController.monitorLaserSpaceObjectHitsId,
                             triggerMillis = 1,
                             doWork = {
-                                laserManager.monitorLaserSpaceObjectsHit(spaceObjects = spaceObjectsManager.spaceObjects)
+                                lasersController.monitorLaserSpaceObjectsHit(spaceObjects = spaceObjectsController.spaceObjects)
                             }
                         )
                     }

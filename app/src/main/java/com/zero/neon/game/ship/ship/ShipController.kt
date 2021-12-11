@@ -9,7 +9,7 @@ import com.zero.neon.game.spaceobject.Booster
 import com.zero.neon.game.spaceobject.SpaceObject
 import java.util.*
 
-class ShipManager(private val screenWidthDp: Dp, screenHeightDp: Dp) {
+class ShipController(private val screenWidthDp: Dp, screenHeightDp: Dp) {
 
     private val shipSize = 90.dp
     val ship = Ship(

@@ -5,7 +5,7 @@ import androidx.compose.ui.unit.dp
 import java.util.*
 import kotlin.random.Random
 
-class SpaceObjectsManager(
+class SpaceObjectsController(
     private val screenWidthDp: Dp,
     private val screenHeightDp: Dp,
     private val setSpaceObjectsUi: (List<SpaceObjectUI>) -> Unit

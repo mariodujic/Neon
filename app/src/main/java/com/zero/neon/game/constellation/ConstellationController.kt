@@ -7,7 +7,7 @@ import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.random.Random
 
-class ConstellationManager(
+class ConstellationController(
     private val stars: () -> List<Star>,
     private val setStars: (List<Star>) -> Unit
 ) {
