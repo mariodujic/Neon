@@ -1,5 +1,6 @@
 package com.zero.neon
 
+import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -18,6 +19,8 @@ import com.zero.neon.game.constellation.Star
 import com.zero.neon.game.ship.ship.Ship
 import com.zero.neon.game.ship.weapons.LaserUI
 import com.zero.neon.game.spaceobject.SpaceObjectUI
+import com.zero.neon.ui.theme.shipShieldOne
+import com.zero.neon.ui.theme.shipShieldTwo
 
 @Composable
 fun GameWorld(
@@ -35,6 +38,17 @@ fun GameWorld(
         targetValue = 360F,
         animationSpec = infiniteRepeatable(
             animation = tween(2000, easing = LinearEasing)
+        )
+    )
+
+
+    val spaceShieldColorTransition = rememberInfiniteTransition()
+    val spaceShieldColor by spaceShieldColorTransition.animateColor(
+        initialValue = shipShieldOne,
+        targetValue = shipShieldTwo,
+        animationSpec = infiniteRepeatable(
+            animation = tween(500, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
         )
     )
 
@@ -72,7 +86,8 @@ fun GameWorld(
                         brush = Brush.radialGradient(colors),
                         blendMode = BlendMode.Luminosity
                     )
-                })
+                }
+            )
         }
         spaceObjects.forEach {
             Image(
@@ -84,12 +99,38 @@ fun GameWorld(
                     .rotate(degrees = it.rotation)
             )
         }
-        Image(
-            painterResource(id = R.drawable.ship_blue),
-            contentDescription = stringResource(id = R.string.ship),
+        Box(
             modifier = Modifier
-                .size(ship.size)
+                .size(ship.shieldSize)
                 .offset(x = ship.xOffset, y = ship.yOffset)
-        )
+        ) {
+            if (ship.shieldEnabled) {
+                Canvas(
+                    modifier = Modifier.size(size = ship.size),
+                    onDraw = {
+                        val colors =
+                            listOf(
+                                Color.Transparent,
+                                Color.Transparent,
+                                Color.Transparent,
+                                spaceShieldColor
+                            )
+                        drawCircle(
+                            radius = ship.shieldSize.value,
+                            brush = Brush.radialGradient(
+                                colors = colors,
+                                radius = ship.size.value * 2.5f
+                            ),
+                            blendMode = BlendMode.Hardlight
+                        )
+                    }
+                )
+            }
+            Image(
+                painterResource(id = R.drawable.ship_blue),
+                contentDescription = stringResource(id = R.string.ship),
+                modifier = Modifier.size(ship.size)
+            )
+        }
     }
 }
