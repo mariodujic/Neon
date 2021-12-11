@@ -4,13 +4,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.zero.neon.core.tinker
 import com.zero.neon.game.constellation.ConstellationManager
 import com.zero.neon.game.constellation.Star
-import com.zero.neon.core.tinker
 import com.zero.neon.game.ship.ship.ShipManager
-import com.zero.neon.game.ship.weapons.Laser
 import com.zero.neon.game.ship.weapons.LaserManager
-import com.zero.neon.game.spaceobject.SpaceObject
+import com.zero.neon.game.ship.weapons.LaserUI
+import com.zero.neon.game.spaceobject.SpaceObjectUI
 import com.zero.neon.game.spaceobject.SpaceObjectsManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
@@ -52,28 +52,25 @@ class GameState(
         screenHeightDp = screenHeightDp
     )
     val ship = shipManager.ship
-    var shipLasers: List<Laser> = emptyList()
+    var shipLasers: List<LaserUI> = emptyList()
         private set
-    var ultimateLasers: List<Laser> = emptyList()
+    var ultimateLasers: List<LaserUI> = emptyList()
         private set
     private val laserManager = LaserManager(
         screenWidthDp = screenWidthDp,
         screenHeightDp = screenHeightDp,
-        shipLasers = { shipLasers },
-        ultimateLasers = { ultimateLasers },
-        setShipLasers = { shipLasers = it },
-        setUltimateLasers = { ultimateLasers = it }
+        setShipLasersUI = { shipLasers = it },
+        setUltimateLasersUI = { ultimateLasers = it }
     )
 
     /**
      * Space objects
      */
-    var spaceObjects: List<SpaceObject> = emptyList()
+    var spaceObjects: List<SpaceObjectUI> = emptyList()
     private val spaceObjectsManager = SpaceObjectsManager(
         screenWidthDp = screenWidthDp,
         screenHeightDp = screenHeightDp,
-        spaceObjects = { spaceObjects },
-        setSpaceObject = { spaceObjects = it }
+        setSpaceObjectsUi = { spaceObjects = it }
     )
 
     init {
@@ -100,7 +97,7 @@ class GameState(
                             id = shipManager.monitorShipSpaceObjectsCollisionId,
                             triggerMillis = 100,
                             doWork = {
-                                shipManager.monitorShipSpaceObjectsCollision(spaceObjects = spaceObjects) {
+                                shipManager.monitorShipSpaceObjectsCollision(spaceObjects = spaceObjectsManager.spaceObjects) {
                                     laserManager.fireUltimateLaser()
                                 }
                             }
@@ -121,7 +118,7 @@ class GameState(
                             doWork = { laserManager.moveUltimateLasers() }
                         )
                         tinker(
-                            id = spaceObjectsManager.spaceRockId,
+                            id = spaceObjectsManager.addSpaceRockId,
                             triggerMillis = 500,
                             doWork = { spaceObjectsManager.addSpaceRock() }
                         )
@@ -139,7 +136,7 @@ class GameState(
                             id = laserManager.monitorLaserSpaceObjectHitsId,
                             triggerMillis = 1,
                             doWork = {
-                                laserManager.monitorLaserSpaceObjectsHit(spaceObjects = spaceObjects)
+                                laserManager.monitorLaserSpaceObjectsHit(spaceObjects = spaceObjectsManager.spaceObjects)
                             }
                         )
                     }

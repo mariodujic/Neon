@@ -11,10 +11,10 @@ import java.util.*
 
 class ShipManager(private val screenWidthDp: Dp, screenHeightDp: Dp) {
 
-    private val shipSize = 120.dp
+    private val shipSize = 90.dp
     val ship = Ship(
         xOffset = screenWidthDp / 2 - shipSize / 2,
-        yOffset = screenHeightDp - shipSize,
+        yOffset = screenHeightDp - 140.dp,
         size = shipSize,
         moveLeft = { moveShipLeft(it) },
         moveRight = { moveShipRight(it) }

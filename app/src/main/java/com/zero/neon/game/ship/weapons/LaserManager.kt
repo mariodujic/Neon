@@ -11,40 +11,41 @@ import java.util.*
 class LaserManager(
     private val screenWidthDp: Dp,
     private val screenHeightDp: Dp,
-    private val shipLasers: () -> List<Laser>,
-    private val ultimateLasers: () -> List<Laser>,
-    private val setShipLasers: (List<Laser>) -> Unit,
-    private val setUltimateLasers: (List<Laser>) -> Unit
+    private val setShipLasersUI: (List<LaserUI>) -> Unit,
+    private val setUltimateLasersUI: (List<LaserUI>) -> Unit
 ) {
+
+    private var shipLasers: List<Laser> = emptyList()
+    private var ultimateLasers: List<Laser> = emptyList()
+    private val mapper = LaserToLaserUIMapper()
 
     val fireLaserId = UUID.randomUUID().toString()
     fun fireLasers(ship: Ship) {
-        setShipLasers(
-            shipLasers()
-                .filter { it.shooting }
-                .toMutableList()
-                .apply {
-                    val laser = ShipLaser(
-                        xOffset = ship.xOffset + ship.size / 2,
-                        yRange = screenHeightDp,
-                        onDestroyLaser = { destroyLaser(it) }
-                    )
-                    add(laser)
-                }
-        )
+        shipLasers = shipLasers
+            .filter { it.shooting }
+            .toMutableList()
+            .apply {
+                val laser = ShipLaser(
+                    xOffset = ship.xOffset + ship.size / 2,
+                    yRange = screenHeightDp,
+                    onDestroyLaser = { destroyShipLaser(it) }
+                )
+                add(laser)
+            }
+        updateShipLasersUI()
     }
 
     val moveShipLasersId = UUID.randomUUID().toString()
     fun moveShipLasers() {
-        shipLasers().forEach { it.moveLaser() }
+        shipLasers.forEach { it.moveLaser() }
+        updateShipLasersUI()
     }
 
-    private fun destroyLaser(laserId: String) {
-        setShipLasers(
-            shipLasers().toMutableList().apply {
-                removeAll { it.id == laserId }
-            }
-        )
+    private fun destroyShipLaser(laserId: String) {
+        shipLasers = shipLasers.toMutableList().apply {
+            removeAll { it.id == laserId }
+        }
+        updateShipLasersUI()
     }
 
     fun fireUltimateLaser() {
@@ -59,26 +60,27 @@ class LaserManager(
             )
             ultimateLaserList.add(ultimateLaser)
         }
-        setUltimateLasers(ultimateLaserList)
+        ultimateLasers = ultimateLaserList
+        updateUltimateLasersUI()
     }
 
     val moveUltimateLasersId = UUID.randomUUID().toString()
     fun moveUltimateLasers() {
-        ultimateLasers().forEach { it.moveLaser() }
+        ultimateLasers.forEach { it.moveLaser() }
+        updateUltimateLasersUI()
     }
 
     private fun destroyUltimateLaser(laserId: String) {
-        setUltimateLasers(
-            ultimateLasers().toMutableList().apply {
-                removeAll { it.id == laserId }
-            }
-        )
+        ultimateLasers = ultimateLasers.toMutableList().apply {
+            removeAll { it.id == laserId }
+        }
+        updateUltimateLasersUI()
     }
 
     val monitorLaserSpaceObjectHitsId = UUID.randomUUID().toString()
     fun monitorLaserSpaceObjectsHit(spaceObjects: List<SpaceObject>) {
         spaceObjects.forEachIndexed { spaceObjectIndex, spaceObject ->
-            (shipLasers() + ultimateLasers()).forEachIndexed { laserIndex, laser ->
+            (shipLasers + ultimateLasers).forEachIndexed { laserIndex, laser ->
                 val laserRect = Rect(
                     offset = Offset(
                         x = laser.xOffset.value,
@@ -96,14 +98,21 @@ class LaserManager(
                      * object fast. TODO Handle it without try-catch block.
                      */
                     try {
-                        spaceObjects[spaceObjectIndex].onObjectImpact(
-                            laser.powerImpact
-                        )
-                        shipLasers()[laserIndex].destroyLaser()
+                        spaceObjects[spaceObjectIndex].onObjectImpact(laser.powerImpact)
+                        shipLasers[laserIndex].destroyLaser()
+                        updateShipLasersUI()
                     } catch (e: IndexOutOfBoundsException) {
                     }
                 }
             }
         }
+    }
+
+    private fun updateShipLasersUI() {
+        setShipLasersUI(shipLasers.map { mapper(it) })
+    }
+
+    private fun updateUltimateLasersUI() {
+        setUltimateLasersUI(ultimateLasers.map { mapper(it) })
     }
 }

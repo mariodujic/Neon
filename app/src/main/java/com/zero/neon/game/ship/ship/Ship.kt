@@ -4,7 +4,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 data class Ship(
-    val size: Dp = 40.dp,
+    val size: Dp,
     var xOffset: Dp,
     var yOffset: Dp,
     var hp: Int = 1000,

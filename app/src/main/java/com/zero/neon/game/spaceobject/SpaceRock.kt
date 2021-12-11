@@ -16,7 +16,6 @@ class SpaceRock(
     private val screenHeight: Dp,
     private val onDestroyRock: (rockId: String) -> Unit
 ) : SpaceObject {
-
     override val id: String = UUID.randomUUID().toString()
     override val destroyable: Boolean = true
     override val collectable: Boolean = false
