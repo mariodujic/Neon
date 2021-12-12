@@ -1,12 +1,10 @@
 package com.zero.neon.game.spaceobject
 
-import androidx.annotation.DrawableRes
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.zero.neon.R
 import java.util.*
 import kotlin.random.Random
 
@@ -54,12 +52,5 @@ class Booster(
     private fun destroyObject() {
         floating = false
         onDestroyBooster(id)
-    }
-
-    enum class BoosterType(@DrawableRes val drawableId: Int) {
-        ULTIMATE_WEAPON_BOOSTER(R.drawable.booster_ultimate_weapon),
-        SHIELD_BOOSTER(R.drawable.booster_shield),
-        HEALTH_BOOSTER(R.drawable.booster_health),
-        LASER_BOOSTER(R.drawable.booster_red_lasers)
     }
 }

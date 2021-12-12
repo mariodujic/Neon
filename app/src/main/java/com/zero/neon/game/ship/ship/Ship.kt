@@ -1,13 +1,12 @@
 package com.zero.neon.game.ship.ship
 
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 
 data class Ship(
     val size: Dp,
-    val shieldSize: Dp,
-    var shieldEnabled: Boolean,
-    var laserBoosterEnabled: Boolean,
+    val shieldSize: Dp = size * 2,
+    var shieldEnabled: Boolean = false,
+    var laserBoosterEnabled: Boolean = false,
     var xOffset: Dp,
     var yOffset: Dp,
     var hp: Int = 1000,

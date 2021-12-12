@@ -7,6 +7,7 @@ import androidx.compose.ui.unit.dp
 import com.zero.neon.core.tinker
 import com.zero.neon.game.constellation.ConstellationController
 import com.zero.neon.game.constellation.Star
+import com.zero.neon.game.settings.GameStatus
 import com.zero.neon.game.ship.ship.ShipController
 import com.zero.neon.game.ship.weapons.LaserUI
 import com.zero.neon.game.ship.weapons.LasersController
@@ -31,7 +32,7 @@ class GameState(
     private val coroutineScope: CoroutineScope
 ) {
 
-    private var gameContinuity = GameContinuity.RUNNING
+    private var gameStatus = GameStatus.RUNNING
     var refreshHandler by mutableStateOf<Long>(0)
 
     /**
@@ -82,7 +83,7 @@ class GameState(
             )
             launch(IO) {
                 while (true) {
-                    if (gameContinuity == GameContinuity.RUNNING) {
+                    if (gameStatus == GameStatus.RUNNING) {
                         tinker(
                             id = constellationController.animateStarsId,
                             triggerMillis = 50,
@@ -146,17 +147,9 @@ class GameState(
         }
     }
 
-    /**
-     * General settings
-     */
-    fun toggleGamePause() {
-        gameContinuity = if (gameContinuity == GameContinuity.RUNNING) {
-            GameContinuity.PAUSE
-        } else GameContinuity.RUNNING
-    }
-
-    enum class GameContinuity {
-        RUNNING,
-        PAUSE
+    fun toggleGameStatus() {
+        gameStatus = if (gameStatus == GameStatus.RUNNING) {
+            GameStatus.PAUSE
+        } else GameStatus.RUNNING
     }
 }

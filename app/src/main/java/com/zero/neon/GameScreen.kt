@@ -39,7 +39,7 @@ fun GameScreen() {
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .zIndex(300f)
-        ) { gameState.toggleGamePause() }
+        ) { gameState.toggleGameStatus() }
         Column(modifier = Modifier.fillMaxSize()) {
             GameWorld(
                 ship = gameState.ship,
