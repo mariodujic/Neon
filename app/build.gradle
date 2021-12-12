@@ -64,4 +64,6 @@ dependencies {
     testImplementation "junit:junit:$junit_version"
     testImplementation "org.mockito:mockito-core:$mockito_version"
     testImplementation "org.mockito:mockito-inline:$mockito_version"
+    /*Audio player*/
+    implementation "com.google.android.exoplayer:exoplayer:$exoplayer_version"
 }

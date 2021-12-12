@@ -4,6 +4,7 @@ buildscript {
         mockito_version = '4.1.0'
         junit_version = '4.13.2'
         accompanist_version = '0.20.3'
+        exoplayer_version = '2.16.1'
     }
     repositories {
         google()
