@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import com.zero.neon.game.audio.AudioPlayer
 import com.zero.neon.game.controls.HpIndicator
 import com.zero.neon.game.controls.MovementButtons
 import com.zero.neon.game.controls.SettingsButton
@@ -23,6 +24,7 @@ fun GameScreen() {
 
     val gameState = rememberGameState()
 
+    AudioPlayer(gameStatus = gameState.gameStatus)
     Box(
         modifier = Modifier
             .fillMaxSize()

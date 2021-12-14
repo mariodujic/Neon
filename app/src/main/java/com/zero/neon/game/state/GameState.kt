@@ -32,7 +32,8 @@ class GameState(
     private val coroutineScope: CoroutineScope
 ) {
 
-    private var gameStatus = GameStatus.RUNNING
+    var gameStatus = GameStatus.RUNNING
+        private set
     var refreshHandler by mutableStateOf<Long>(0)
 
     /**
