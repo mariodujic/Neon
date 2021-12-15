@@ -13,6 +13,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.zero.neon.game.constellation.Star
@@ -96,7 +97,9 @@ fun GameWorld(
         ) {
             if (ship.shieldEnabled) {
                 Canvas(
-                    modifier = Modifier.size(size = ship.size),
+                    modifier = Modifier
+                        .size(size = ship.width)
+                        .offset(y = (ship.height - ship.width) / 2),
                     onDraw = {
                         val colors =
                             listOf(
@@ -109,7 +112,7 @@ fun GameWorld(
                             radius = ship.shieldSize.value,
                             brush = Brush.radialGradient(
                                 colors = colors,
-                                radius = ship.size.value * 2.5f
+                                radius = ship.height.value * 2.5f
                             ),
                             blendMode = BlendMode.Hardlight
                         )
@@ -117,9 +120,12 @@ fun GameWorld(
                 )
             }
             Image(
-                painterResource(id = R.drawable.ship_blue),
+                painterResource(id = ship.drawableId),
                 contentDescription = stringResource(id = R.string.ship),
-                modifier = Modifier.size(ship.size)
+                contentScale = ContentScale.FillBounds,
+                modifier = Modifier
+                    .width(ship.width)
+                    .height(ship.height)
             )
         }
     }

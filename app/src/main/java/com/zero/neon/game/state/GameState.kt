@@ -49,11 +49,10 @@ class GameState(
     /**
      * Ship
      */
-    private val shipController = ShipController(
+    val shipController = ShipController(
         screenWidthDp = screenWidthDp,
         screenHeightDp = screenHeightDp
     )
-    val ship = shipController.ship
     var shipLasers: List<LaserUI> = emptyList()
         private set
     var ultimateLasers: List<LaserUI> = emptyList()
@@ -107,7 +106,7 @@ class GameState(
                         tinker(
                             id = lasersController.fireLaserId,
                             triggerMillis = 100,
-                            doWork = { lasersController.fireLasers(ship = ship) }
+                            doWork = { lasersController.fireLasers(ship = shipController.ship) }
                         )
                         tinker(
                             id = lasersController.moveShipLasersId,

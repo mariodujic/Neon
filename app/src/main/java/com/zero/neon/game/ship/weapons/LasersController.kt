@@ -26,7 +26,7 @@ class LasersController(
         val laser = if (ship.laserBoosterEnabled) {
             val width = 8.dp
             ShipBoostedLaser(
-                xOffset = ship.xOffset + ship.size / 2 - width,
+                xOffset = ship.xOffset + ship.width / 2 - width / 2,
                 yRange = screenHeightDp,
                 width = width,
                 onDestroyLaser = { destroyShipLaser(it) }
@@ -34,7 +34,7 @@ class LasersController(
         } else {
             val width = 5.dp
             ShipLaser(
-                xOffset = ship.xOffset + ship.size / 2 - width,
+                xOffset = ship.xOffset + ship.width / 2 - width / 2,
                 yRange = screenHeightDp,
                 width = width,
                 onDestroyLaser = { destroyShipLaser(it) }

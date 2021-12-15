@@ -32,7 +32,7 @@ fun GameScreen() {
     ) {
         gameState.refreshHandler
         HpIndicator(
-            hp = gameState.ship.hp,
+            hp = gameState.shipController.ship.hp,
             modifier = Modifier
                 .align(Alignment.TopStart)
                 .zIndex(300f)
@@ -44,7 +44,7 @@ fun GameScreen() {
         ) { gameState.toggleGameStatus() }
         Column(modifier = Modifier.fillMaxSize()) {
             GameWorld(
-                ship = gameState.ship,
+                ship = gameState.shipController.ship,
                 shipLasers = gameState.shipLasers,
                 ultimateLasers = gameState.ultimateLasers,
                 stars = gameState.stars,
@@ -52,8 +52,8 @@ fun GameScreen() {
                 modifier = Modifier.weight(1f)
             )
             MovementButtons(
-                onMoveLeft = { gameState.ship.moveLeft(it) },
-                onMoveRight = { gameState.ship.moveRight(it) },
+                onMoveLeft = { gameState.shipController.moveShipLeft(it) },
+                onMoveRight = { gameState.shipController.moveShipRight(it) },
                 modifier = Modifier.padding(bottom = 24.dp)
             )
         }
