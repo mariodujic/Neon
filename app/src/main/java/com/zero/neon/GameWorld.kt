@@ -33,13 +33,6 @@ fun GameWorld(
 ) {
 
     val infiniteTransition = rememberInfiniteTransition()
-    val rockRotation by infiniteTransition.animateFloat(
-        initialValue = 0F,
-        targetValue = 360F,
-        animationSpec = infiniteRepeatable(
-            animation = tween(2000, easing = LinearEasing)
-        )
-    )
     val shipShieldColor by infiniteTransition.animateColor(
         initialValue = shipShieldOne,
         targetValue = shipShieldTwo,
@@ -68,7 +61,7 @@ fun GameWorld(
                     .absoluteOffset(x = it.xOffset, y = it.yOffset)
                     .size(width = it.width, height = it.height)
                     .align(Alignment.BottomStart)
-                    .rotate(degrees = rockRotation)
+                    .rotate(degrees = it.rotation)
             )
         }
         stars.forEach {

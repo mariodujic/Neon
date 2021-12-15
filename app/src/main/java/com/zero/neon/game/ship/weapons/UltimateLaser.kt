@@ -16,11 +16,16 @@ class UltimateLaser(
     override var shooting: Boolean = false
     override var width: Dp = 30.dp
     override var height: Dp = 30.dp
+    override var rotation: Float = 0f
     override var powerImpact: Int = 1000
     override val drawableId: Int = R.drawable.laser_blue_11
 
     override fun moveLaser() {
         shooting = true
+
+        rotation += 7f
+        if (rotation > 360f) rotation = 0f
+
         if (yOffset > -yRange && shooting) {
             yOffset -= 7.dp
         } else {

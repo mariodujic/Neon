@@ -11,5 +11,6 @@ class LaserUI(
     val yOffset: Dp,
     val width: Dp,
     val height: Dp,
+    val rotation: Float,
     @DrawableRes val drawableId: Int
 )

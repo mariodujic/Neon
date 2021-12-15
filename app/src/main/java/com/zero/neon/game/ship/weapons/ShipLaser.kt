@@ -16,6 +16,7 @@ class ShipLaser(
     override var yOffset: Dp = (-10).dp
     override var shooting: Boolean = false
     override var height: Dp = 20.dp
+    override var rotation: Float = 0f
     override var powerImpact: Int = 25
     override val drawableId: Int = R.drawable.laser_blue_7
 

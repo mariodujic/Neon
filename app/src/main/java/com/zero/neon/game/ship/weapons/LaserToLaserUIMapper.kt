@@ -10,6 +10,7 @@ class LaserToLaserUIMapper {
                 yOffset = yOffset,
                 width = width,
                 height = height,
+                rotation = rotation,
                 drawableId = drawableId
             )
         }

@@ -8,6 +8,7 @@ interface Laser {
     var yOffset: Dp
     var width: Dp
     var height: Dp
+    var rotation: Float
     var shooting: Boolean
     var powerImpact: Int
     val drawableId: Int
