@@ -16,6 +16,7 @@ import com.zero.neon.game.spaceobject.SpaceObjectsController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
+import java.util.*
 
 @Composable
 fun rememberGameState(): GameState {
@@ -140,6 +141,11 @@ class GameState(
                                 lasersController.monitorLaserSpaceObjectsHit(spaceObjects = spaceObjectsController.spaceObjects)
                             }
                         )
+                        tinker(
+                            id = updateGameTimeId,
+                            triggerMillis = 1000,
+                            doWork = { updateGameTime() }
+                        )
                     }
                     refreshHandler = System.currentTimeMillis()
                 }
@@ -151,5 +157,17 @@ class GameState(
         gameStatus = if (gameStatus == GameStatus.RUNNING) {
             GameStatus.PAUSE
         } else GameStatus.RUNNING
+    }
+
+    private var gameTime by mutableStateOf<Long>(0)
+    private val updateGameTimeId = UUID.randomUUID().toString()
+    private fun updateGameTime() {
+        gameTime += 1
+    }
+
+    val gameTimeSec by derivedStateOf {
+        val second = String.format("%02d", gameTime % 60)
+        val minute = String.format("%02d", gameTime / (60) % 60)
+        "$minute:$second"
     }
 }

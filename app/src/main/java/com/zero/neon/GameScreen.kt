@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.zero.neon.game.audio.AudioPlayer
-import com.zero.neon.game.controls.HpIndicator
+import com.zero.neon.game.controls.StatusIndicator
 import com.zero.neon.game.controls.MovementButtons
 import com.zero.neon.game.controls.SettingsButton
 import com.zero.neon.game.state.rememberGameState
@@ -31,7 +31,8 @@ fun GameScreen() {
             .background(brush = Brush.verticalGradient(colors = listOf(Blue, Pink)))
     ) {
         gameState.refreshHandler
-        HpIndicator(
+        StatusIndicator(
+            gameTime = gameState.gameTimeSec,
             hp = gameState.shipController.ship.hp,
             modifier = Modifier
                 .align(Alignment.TopStart)

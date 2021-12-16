@@ -18,7 +18,11 @@ import androidx.compose.ui.unit.sp
 import com.zero.neon.R
 
 @Composable
-fun HpIndicator(hp: Int, modifier: Modifier = Modifier) {
+fun StatusIndicator(
+    gameTime: String,
+    hp: Int,
+    modifier: Modifier = Modifier
+) {
 
     val buttonPaddingEnd = dimensionResource(id = R.dimen.button_padding)
     val buttonPaddingTop = buttonPaddingEnd * 2
@@ -37,9 +41,20 @@ fun HpIndicator(hp: Int, modifier: Modifier = Modifier) {
         Text(
             text = "${hp}hp",
             color = Color.White,
-            fontSize = 20.sp,
+            fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.align(Alignment.Center)
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .padding(top = 8.dp, end = 14.dp)
+        )
+        Text(
+            text = gameTime,
+            color = Color.White.copy(alpha = 0.8f),
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(start = 8.dp, bottom = 9.dp)
         )
     }
 }
