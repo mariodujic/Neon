@@ -99,15 +99,18 @@ class LasersController(
                 val laserRect = Rect(
                     offset = Offset(
                         x = laser.xOffset.value,
-                        y = laser.yOffset.value + screenHeightDp.value
+                        y = laser.yOffset.value + screenHeightDp.value - 50
                     ),
                     size = Size(width = laser.width.value, height = laser.height.value)
                 )
-                val spaceRect = Rect(
-                    offset = Offset(x = spaceObject.xOffset.value, y = spaceObject.yOffset.value),
-                    size = Size(width = spaceObject.size.value, height = spaceObject.size.value)
+                val spaceObjectRect = Rect(
+                    center = Offset(
+                        x = spaceObject.xOffset.value + spaceObject.size.value / 2,
+                        y = spaceObject.yOffset.value + spaceObject.size.value / 2
+                    ),
+                    radius = spaceObject.size.value / 2
                 )
-                if (spaceObject.destroyable && spaceRect.overlaps(laserRect)) {
+                if (spaceObject.destroyable && spaceObjectRect.overlaps(laserRect)) {
                     /**
                      * SpaceObject list throws IndexOutOfBoundsException if multiple lasers hit
                      * object fast. TODO Handle it without try-catch block.

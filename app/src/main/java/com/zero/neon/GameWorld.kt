@@ -48,6 +48,7 @@ fun GameWorld(
             Image(
                 painterResource(id = it.drawableId),
                 contentDescription = stringResource(id = R.string.laser),
+                contentScale = ContentScale.FillBounds,
                 modifier = Modifier
                     .absoluteOffset(x = it.xOffset, y = it.yOffset)
                     .size(width = it.width, height = it.height)
