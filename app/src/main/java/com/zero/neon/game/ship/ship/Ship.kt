@@ -1,16 +1,18 @@
 package com.zero.neon.game.ship.ship
 
 import androidx.annotation.DrawableRes
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.unit.Dp
 
+@Immutable
 data class Ship(
     val width: Dp,
     val height: Dp,
     val shieldSize: Dp,
-    var shieldEnabled: Boolean,
-    var laserBoosterEnabled: Boolean,
-    var xOffset: Dp,
-    var yOffset: Dp,
-    var hp: Int,
+    val shieldEnabled: Boolean,
+    val laserBoosterEnabled: Boolean,
+    val xOffset: Dp,
+    val yOffset: Dp,
+    val hp: Int,
     @DrawableRes val drawableId: Int
 )
