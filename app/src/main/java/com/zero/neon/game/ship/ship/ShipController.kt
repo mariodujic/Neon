@@ -1,15 +1,10 @@
 package com.zero.neon.game.ship.ship
 
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.zero.neon.R
 import com.zero.neon.game.spaceobject.BoosterType
 import com.zero.neon.game.spaceobject.SpaceObject
 import java.util.*
@@ -19,24 +14,17 @@ class ShipController(private val screenWidthDp: Dp, screenHeightDp: Dp) {
     private val width: Dp = 85.dp
     private val height: Dp = 90.dp
     private val shieldSize: Dp = height * 2
-    private var shieldEnabled: Boolean by mutableStateOf(false)
-    private var laserBoosterEnabled: Boolean by mutableStateOf(false)
-    private var xOffset: Dp by mutableStateOf(screenWidthDp / 2 - width / 2)
-    private val yOffset: Dp = screenHeightDp - 140.dp
-    private var hp: Int by mutableStateOf(1000)
-    val ship by derivedStateOf {
-        Ship(
-            width = width,
-            height = height,
-            shieldSize = shieldSize,
-            shieldEnabled = shieldEnabled,
-            laserBoosterEnabled = laserBoosterEnabled,
-            xOffset = xOffset,
-            yOffset = yOffset,
-            hp = hp,
-            drawableId = if (laserBoosterEnabled) R.drawable.ship_boosted_laser else R.drawable.ship_regular_laser
-        )
-    }
+    var ship = Ship(
+        width = width,
+        height = height,
+        shieldSize = shieldSize,
+        shieldEnabled = false,
+        laserBoosterEnabled = false,
+        xOffset = screenWidthDp / 2 - width / 2,
+        yOffset = screenHeightDp - 140.dp,
+        hp = 1000,
+    )
+        private set
 
     private val spaceShipCollidePower = 100
     private val movementSpeed: Dp = 2.dp
@@ -54,11 +42,11 @@ class ShipController(private val screenWidthDp: Dp, screenHeightDp: Dp) {
 
     val moveShipId = UUID.randomUUID().toString()
     fun moveShip() {
-        if (movingLeft && xOffset >= 0.dp - width / 4) {
-            xOffset -= movementSpeed
+        if (movingLeft && ship.xOffset >= 0.dp - width / 4) {
+            updateXOffset(ship.xOffset - movementSpeed)
         } else movingLeft = false
-        if (movingRight && xOffset <= screenWidthDp - (width.value / 1.5).dp) {
-            xOffset += movementSpeed
+        if (movingRight && ship.xOffset <= screenWidthDp - (width.value / 1.5).dp) {
+            updateXOffset(ship.xOffset + movementSpeed)
         } else movingRight = false
     }
 
@@ -66,7 +54,7 @@ class ShipController(private val screenWidthDp: Dp, screenHeightDp: Dp) {
     private val shieldBoosterTimeMillis: Long = 10000
     private var shieldEndDurationMillis: Long = 0
     private fun enableShield(enable: Boolean) {
-        shieldEnabled = enable
+        updateShieldEnabled(enable)
         if (enable) {
             shieldBoosterStartMillis = System.currentTimeMillis()
             shieldEndDurationMillis = shieldBoosterStartMillis + shieldBoosterTimeMillis
@@ -77,7 +65,7 @@ class ShipController(private val screenWidthDp: Dp, screenHeightDp: Dp) {
     private val laserBoosterTimeMillis: Long = 15000
     private var laserBoosterEndDurationMillis: Long = 0
     private fun enableLaserBooster(enable: Boolean) {
-        laserBoosterEnabled = enable
+        updateLaserBoosterEnabled(enable)
         if (enable) {
             laserBoosterStartMillis = System.currentTimeMillis()
             laserBoosterEndDurationMillis = laserBoosterStartMillis + laserBoosterTimeMillis
@@ -91,7 +79,7 @@ class ShipController(private val screenWidthDp: Dp, screenHeightDp: Dp) {
     ) {
         val shipRect by lazy {
             Rect(
-                offset = Offset(x = xOffset.value, y = yOffset.value),
+                offset = Offset(x = ship.xOffset.value, y = ship.yOffset.value),
                 size = Size(width = width.value, height = height.value)
             )
         }
@@ -99,8 +87,8 @@ class ShipController(private val screenWidthDp: Dp, screenHeightDp: Dp) {
             val shipRadius = width.value / 2
             Rect(
                 center = Offset(
-                    x = xOffset.value + shipRadius,
-                    y = yOffset.value + shipRadius
+                    x = ship.xOffset.value + shipRadius,
+                    y = ship.yOffset.value + shipRadius
                 ),
                 radius = shipRadius
             )
@@ -113,10 +101,14 @@ class ShipController(private val screenWidthDp: Dp, screenHeightDp: Dp) {
                     size = Size(width = spaceObject.size.value, height = spaceObject.size.value)
                 )
             }
-            if (spaceRect.overlaps(if (shieldEnabled) shipShieldRect else shipRect)) {
+            if (spaceRect.overlaps(if (ship.shieldEnabled) shipShieldRect else shipRect)) {
                 spaceObjects[spaceObjectIndex].onObjectImpact(spaceShipCollidePower)
 
-                hp -= if (shieldEnabled && spaceObject.impactPower > 0) 0 else spaceObject.impactPower
+                val hpImpact = when (ship.shieldEnabled && spaceObject.impactPower > 0) {
+                    true -> 0
+                    false -> spaceObject.impactPower
+                }
+                updateHp(ship.hp - hpImpact)
 
                 when (spaceObject.drawableId) {
                     BoosterType.ULTIMATE_WEAPON_BOOSTER.drawableId -> fileUltimateLaser()
@@ -129,5 +121,21 @@ class ShipController(private val screenWidthDp: Dp, screenHeightDp: Dp) {
         val currentTime = System.currentTimeMillis()
         if (shieldEndDurationMillis < currentTime) enableShield(enable = false)
         if (laserBoosterEndDurationMillis < currentTime) enableLaserBooster(enable = false)
+    }
+
+    private fun updateShieldEnabled(enable: Boolean) {
+        ship = ship.copy(shieldEnabled = enable)
+    }
+
+    private fun updateLaserBoosterEnabled(enable: Boolean) {
+        ship = ship.copy(laserBoosterEnabled = enable)
+    }
+
+    private fun updateXOffset(xOffset: Dp) {
+        ship = ship.copy(xOffset = xOffset)
+    }
+
+    private fun updateHp(hp: Int) {
+        ship = ship.copy(hp = hp)
     }
 }
