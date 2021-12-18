@@ -16,14 +16,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import com.zero.neon.common.theme.shipShieldOne
+import com.zero.neon.common.theme.shipShieldTwo
 import com.zero.neon.game.constellation.Star
-import com.zero.neon.game.enemy.Enemy
 import com.zero.neon.game.enemy.EnemyUI
 import com.zero.neon.game.ship.ship.Ship
 import com.zero.neon.game.ship.weapons.LaserUI
 import com.zero.neon.game.spaceobject.SpaceObjectUI
-import com.zero.neon.ui.theme.shipShieldOne
-import com.zero.neon.ui.theme.shipShieldTwo
 
 @Composable
 fun GameWorld(

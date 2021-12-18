@@ -1,4 +1,4 @@
-package com.zero.neon.ui.theme
+package com.zero.neon.common.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme

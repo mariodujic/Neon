@@ -15,6 +15,7 @@ import com.zero.neon.game.ship.weapons.LaserUI
 import com.zero.neon.game.ship.weapons.LasersController
 import com.zero.neon.game.spaceobject.SpaceObjectUI
 import com.zero.neon.game.spaceobject.SpaceObjectsController
+import com.zero.neon.game.stage.Stage.Companion.getCurrentGameStage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -111,9 +112,9 @@ class GameState(
                             id = shipController.monitorShipSpaceObjectsCollisionId,
                             triggerMillis = 100,
                             doWork = {
-                                shipController.monitorShipSpaceObjectsCollision(spaceObjects = spaceObjectsController.spaceObjects) {
-                                    lasersController.fireUltimateLaser()
-                                }
+                                shipController.monitorShipSpaceObjectsCollision(
+                                    spaceObjects = spaceObjectsController.spaceObjects
+                                ) { lasersController.fireUltimateLaser() }
                             }
                         )
                         tinker(
@@ -133,12 +134,12 @@ class GameState(
                         )
                         tinker(
                             id = spaceObjectsController.addSpaceRockId,
-                            triggerMillis = 500,
+                            triggerMillis = gameStage.spaceRockSpawnRateMillis,
                             doWork = { spaceObjectsController.addSpaceRock() }
                         )
                         tinker(
                             id = enemyController.addEnemyId,
-                            triggerMillis = 1000,
+                            triggerMillis = gameStage.enemySpawnRateMillis,
                             doWork = { enemyController.addEnemy() }
                         )
                         tinker(
@@ -184,6 +185,9 @@ class GameState(
         } else GameStatus.RUNNING
     }
 
+    /**
+     * Game time
+     */
     private var gameTime by mutableStateOf<Long>(0)
     private val updateGameTimeId = UUID.randomUUID().toString()
     private fun updateGameTime() {
@@ -194,5 +198,13 @@ class GameState(
         val second = String.format("%02d", gameTime % 60)
         val minute = String.format("%02d", gameTime / (60) % 60)
         "$minute:$second"
+    }
+
+    /**
+     * Game stages
+     */
+    private val gameStage by derivedStateOf {
+        val currentTimeSec = gameTime % 60
+        getCurrentGameStage(currentTimeSec = currentTimeSec)
     }
 }

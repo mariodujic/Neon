@@ -6,8 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.ui.graphics.Color
 import androidx.core.view.WindowCompat
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.zero.neon.game.audio.AudioPlayer
-import com.zero.neon.ui.theme.NeonTheme
+import com.zero.neon.common.theme.NeonTheme
 
 class MainActivity : ComponentActivity() {
 

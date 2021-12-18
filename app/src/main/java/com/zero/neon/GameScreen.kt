@@ -16,8 +16,8 @@ import com.zero.neon.game.controls.StatusIndicator
 import com.zero.neon.game.controls.MovementButtons
 import com.zero.neon.game.controls.SettingsButton
 import com.zero.neon.game.state.rememberGameState
-import com.zero.neon.ui.theme.Blue
-import com.zero.neon.ui.theme.Pink
+import com.zero.neon.common.theme.Blue
+import com.zero.neon.common.theme.Pink
 
 @Composable
 fun GameScreen() {

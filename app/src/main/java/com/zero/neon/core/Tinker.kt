@@ -15,7 +15,7 @@ private val tinkerMap = mutableMapOf<String, Long>()
  *  @param doWork any periodic work
  */
 fun tinker(id: String, triggerMillis: Int, doWork: () -> Unit) {
-    if (triggerMillis <= 0) throw IllegalArgumentException("Trigger time can not be 0 or less.")
+    if (triggerMillis <= 0) return
     if (!tinkerMap.containsKey(id)) {
         tinkerMap[id] = System.currentTimeMillis()
     }
