@@ -7,6 +7,8 @@ import androidx.compose.ui.unit.dp
 import com.zero.neon.core.tinker
 import com.zero.neon.game.constellation.ConstellationController
 import com.zero.neon.game.constellation.Star
+import com.zero.neon.game.enemy.EnemyController
+import com.zero.neon.game.enemy.EnemyUI
 import com.zero.neon.game.settings.GameStatus
 import com.zero.neon.game.ship.ship.ShipController
 import com.zero.neon.game.ship.weapons.LaserUI
@@ -75,6 +77,16 @@ class GameState(
         setSpaceObjectsUi = { spaceObjects = it }
     )
 
+    /**
+     * Enemies
+     */
+    var enemies: List<EnemyUI> = emptyList()
+        private set
+    private val enemyController = EnemyController(
+        screenWidthDp = screenWidthDp,
+        screenHeightDp = screenHeightDp
+    ) { enemies = it }
+
     init {
         coroutineScope.launch {
             constellationController.createStars(
@@ -125,6 +137,11 @@ class GameState(
                             doWork = { spaceObjectsController.addSpaceRock() }
                         )
                         tinker(
+                            id = enemyController.addEnemyId,
+                            triggerMillis = 1000,
+                            doWork = { enemyController.addEnemy() }
+                        )
+                        tinker(
                             id = spaceObjectsController.addBoosterId,
                             triggerMillis = 4000,
                             doWork = { spaceObjectsController.addBooster() }
@@ -135,10 +152,18 @@ class GameState(
                             doWork = { spaceObjectsController.moveSpaceObjects() }
                         )
                         tinker(
+                            id = enemyController.moveEnemiesId,
+                            triggerMillis = 5,
+                            doWork = { enemyController.moveEnemies() }
+                        )
+                        tinker(
                             id = lasersController.monitorLaserSpaceObjectHitsId,
                             triggerMillis = 1,
                             doWork = {
-                                lasersController.monitorLaserSpaceObjectsHit(spaceObjects = spaceObjectsController.spaceObjects)
+                                lasersController.monitorLaserSpaceObjectsHit(
+                                    spaceObjects = spaceObjectsController.spaceObjects,
+                                    enemies = enemyController.enemies
+                                )
                             }
                         )
                         tinker(

@@ -17,6 +17,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.zero.neon.game.constellation.Star
+import com.zero.neon.game.enemy.Enemy
+import com.zero.neon.game.enemy.EnemyUI
 import com.zero.neon.game.ship.ship.Ship
 import com.zero.neon.game.ship.weapons.LaserUI
 import com.zero.neon.game.spaceobject.SpaceObjectUI
@@ -30,6 +32,7 @@ fun GameWorld(
     ultimateLasers: List<LaserUI>,
     stars: List<Star>,
     spaceObjects: List<SpaceObjectUI>,
+    enemies: List<EnemyUI>,
     modifier: Modifier = Modifier
 ) {
 
@@ -127,6 +130,15 @@ fun GameWorld(
                 modifier = Modifier
                     .width(ship.width)
                     .height(ship.height)
+            )
+        }
+        enemies.forEach {
+            Image(
+                painterResource(id = R.drawable.enemy_ship),
+                contentDescription = stringResource(id = R.string.enemy),
+                modifier = Modifier
+                    .size(width = it.width, height = it.height)
+                    .offset(x = it.xOffset, y = it.yOffset)
             )
         }
     }

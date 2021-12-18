@@ -50,6 +50,7 @@ fun GameScreen() {
                 ultimateLasers = gameState.ultimateLasers,
                 stars = gameState.stars,
                 spaceObjects = gameState.spaceObjects,
+                enemies = gameState.enemies,
                 modifier = Modifier.weight(1f)
             )
             MovementButtons(
