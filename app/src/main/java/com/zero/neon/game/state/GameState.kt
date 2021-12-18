@@ -169,9 +169,9 @@ class GameState(
                             }
                         )
                         tinker(
-                            id = updateGameTimeId,
+                            id = monitorLoopInSecId,
                             triggerMillis = 1000,
-                            doWork = { updateGameTime() }
+                            doWork = { monitorLoopInSec() }
                         )
                     }
                     refreshHandler = System.currentTimeMillis()
@@ -186,26 +186,37 @@ class GameState(
         } else GameStatus.RUNNING
     }
 
+    private val monitorLoopInSecId = UUID.randomUUID().toString()
+    private fun monitorLoopInSec() {
+        updateGameTime()
+        updateGameTimeIndicator()
+        updateGameStage()
+
+    }
+
     /**
      * Game time
      */
-    private var gameTime by mutableStateOf<Long>(0)
-    private val updateGameTimeId = UUID.randomUUID().toString()
+    private var gameTimeSec: Long = 0
+    var gameTimeIndicator: String = "00:00"
+        private set
+
     private fun updateGameTime() {
-        gameTime += 1
+        gameTimeSec += 1
     }
 
-    val gameTimeSec by derivedStateOf {
-        val second = String.format("%02d", gameTime % 60)
-        val minute = String.format("%02d", gameTime / (60) % 60)
-        "$minute:$second"
+    private fun updateGameTimeIndicator() {
+        val second = String.format("%02d", gameTimeSec % 60)
+        val minute = String.format("%02d", gameTimeSec / (60) % 60)
+        gameTimeIndicator = "$minute:$second"
     }
 
     /**
-     * Game stages
+     * Game stage
      */
-    private val gameStage by derivedStateOf {
-        val currentTimeSec = gameTime % 60
-        getCurrentGameStage(currentTimeSec = currentTimeSec)
+    private var gameStage = getCurrentGameStage(currentTimeSec = gameTimeSec)
+
+    private fun updateGameStage() {
+        gameStage = getCurrentGameStage(currentTimeSec = gameTimeSec)
     }
 }

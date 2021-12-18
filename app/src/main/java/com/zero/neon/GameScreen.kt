@@ -32,7 +32,7 @@ fun GameScreen() {
     ) {
         gameState.refreshHandler
         StatusIndicator(
-            gameTime = gameState.gameTimeSec,
+            gameTime = gameState.gameTimeIndicator,
             hp = gameState.shipController.ship.hp,
             modifier = Modifier
                 .align(Alignment.TopStart)
