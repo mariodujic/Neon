@@ -1,6 +1,7 @@
 package com.zero.neon.game.enemy
 
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 
 interface Enemy {
     val enemyId: String
@@ -9,7 +10,13 @@ interface Enemy {
     var xOffset: Dp
     var yOffset: Dp
     var hp: Int
+    val impactPower: Int
 
     fun move()
     fun onObjectImpact(impactPower: Int)
+
+    companion object{
+         val DEFAULT_X_OFFSET_MOVE_SPEED = 0.5.dp
+         val DEFAULT_Y_OFFSET_MOVE_SPEED = 0.2.dp
+    }
 }

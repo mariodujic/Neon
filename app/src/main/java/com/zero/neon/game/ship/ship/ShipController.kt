@@ -5,6 +5,7 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.zero.neon.game.enemy.Enemy
 import com.zero.neon.game.spaceobject.BoosterType
 import com.zero.neon.game.spaceobject.SpaceObject
 import java.util.*
@@ -72,9 +73,10 @@ class ShipController(private val screenWidthDp: Dp, screenHeightDp: Dp) {
         }
     }
 
-    val monitorShipSpaceObjectsCollisionId = UUID.randomUUID().toString()
-    fun monitorShipSpaceObjectsCollision(
+    val monitorShipCollisionsId = UUID.randomUUID().toString()
+    fun monitorShipCollisions(
         spaceObjects: List<SpaceObject>,
+        enemies: List<Enemy>,
         fileUltimateLaser: () -> Unit
     ) {
         val shipRect by lazy {
@@ -115,6 +117,23 @@ class ShipController(private val screenWidthDp: Dp, screenHeightDp: Dp) {
                     BoosterType.SHIELD_BOOSTER.drawableId -> enableShield(enable = true)
                     BoosterType.LASER_BOOSTER.drawableId -> enableLaserBooster(enable = true)
                 }
+            }
+        }
+        enemies.forEachIndexed { enemyIndex, enemy ->
+            val enemyRect by lazy {
+                Rect(
+                    offset = Offset(x = enemy.xOffset.value, y = enemy.yOffset.value),
+                    size = Size(width = enemy.width.value, height = enemy.height.value)
+                )
+            }
+            if (enemyRect.overlaps(if (ship.shieldEnabled) shipShieldRect else shipRect)) {
+                enemies[enemyIndex].onObjectImpact(spaceShipCollidePower)
+
+                val hpImpact = when (ship.shieldEnabled && enemy.impactPower > 0) {
+                    true -> 0
+                    false -> enemy.impactPower
+                }
+                updateHp(ship.hp - hpImpact)
             }
         }
 

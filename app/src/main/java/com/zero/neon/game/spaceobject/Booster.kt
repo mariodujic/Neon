@@ -21,7 +21,6 @@ class Booster(
     override var yOffset by mutableStateOf(1.dp)
     private val randomDrawableIndex = Random.nextInt(0, BoosterType.values().size)
     override val drawableId: Int = BoosterType.values()[randomDrawableIndex].drawableId
-    override var floating by mutableStateOf(false)
     override var hp: Int = 1
     override val impactPower = when (randomDrawableIndex) {
         /**
@@ -33,24 +32,17 @@ class Booster(
     override var rotation = 0f
 
     override fun moveObject() {
-        floating = true
-        if (yOffset < screenHeight + 100.dp && floating) {
+        if (yOffset < screenHeight + 100.dp) {
             yOffset += 1.dp
         } else {
-            floating = false
-            destroyObject()
+            onDestroyBooster(id)
         }
     }
 
     override fun onObjectImpact(impactPower: Int) {
         hp -= impactPower
         if (hp <= 0) {
-            destroyObject()
+            onDestroyBooster(id)
         }
-    }
-
-    private fun destroyObject() {
-        floating = false
-        onDestroyBooster(id)
     }
 }

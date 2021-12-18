@@ -8,7 +8,6 @@ interface SpaceObject {
     var yOffset: Dp
     var size: Dp
     val drawableId: Int
-    var floating: Boolean
     val destroyable: Boolean
     val collectable: Boolean
     var hp: Int

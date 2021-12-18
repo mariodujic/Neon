@@ -14,10 +14,11 @@ class EnemyController(
     private val mapper = EnemyToEnemyUIMapper()
 
     val addEnemyId = UUID.randomUUID().toString()
-    fun addEnemy() {
+    fun addEnemy(enemySpawnAttributes: EnemySpawnAttributes?) {
         val enemy = RegularEnemy(
             screenWidthDp = screenWidthDp,
             screenHeightDp = screenHeightDp,
+            enemySpawnAttributes = enemySpawnAttributes,
             onDestroyEnemy = { onDestroyEnemy(it) })
         enemies = enemies.toMutableList().apply {
             add(enemy)

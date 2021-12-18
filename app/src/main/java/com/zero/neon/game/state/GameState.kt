@@ -109,11 +109,12 @@ class GameState(
                             doWork = { shipController.moveShip() }
                         )
                         tinker(
-                            id = shipController.monitorShipSpaceObjectsCollisionId,
+                            id = shipController.monitorShipCollisionsId,
                             triggerMillis = 100,
                             doWork = {
-                                shipController.monitorShipSpaceObjectsCollision(
-                                    spaceObjects = spaceObjectsController.spaceObjects
+                                shipController.monitorShipCollisions(
+                                    spaceObjects = spaceObjectsController.spaceObjects,
+                                    enemies = enemyController.enemies
                                 ) { lasersController.fireUltimateLaser() }
                             }
                         )
@@ -140,7 +141,7 @@ class GameState(
                         tinker(
                             id = enemyController.addEnemyId,
                             triggerMillis = gameStage.enemySpawnRateMillis,
-                            doWork = { enemyController.addEnemy() }
+                            doWork = { enemyController.addEnemy(gameStage.enemyEnemySpawnAttributes) }
                         )
                         tinker(
                             id = spaceObjectsController.addBoosterId,
