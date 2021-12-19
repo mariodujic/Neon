@@ -30,10 +30,9 @@ fun GameScreen() {
             .fillMaxSize()
             .background(brush = Brush.verticalGradient(colors = listOf(Blue, Pink)))
     ) {
-        gameState.refreshHandler
         StatusIndicator(
             gameTime = gameState.gameTimeIndicator,
-            hp = gameState.shipController.ship.hp,
+            hp = gameState.ship.hp,
             modifier = Modifier
                 .align(Alignment.TopStart)
                 .zIndex(300f)
@@ -45,7 +44,7 @@ fun GameScreen() {
         ) { gameState.toggleGameStatus() }
         Column(modifier = Modifier.fillMaxSize()) {
             GameWorld(
-                ship = gameState.shipController.ship,
+                ship = gameState.ship,
                 shipLasers = gameState.shipLasers,
                 ultimateLasers = gameState.ultimateLasers,
                 stars = gameState.stars,
@@ -54,8 +53,8 @@ fun GameScreen() {
                 modifier = Modifier.weight(1f)
             )
             MovementButtons(
-                onMoveLeft = { gameState.shipController.moveShipLeft(it) },
-                onMoveRight = { gameState.shipController.moveShipRight(it) },
+                onMoveLeft = { gameState.moveShipLeft(it) },
+                onMoveRight = { gameState.moveShipRight(it) },
                 modifier = Modifier.padding(bottom = 24.dp)
             )
         }

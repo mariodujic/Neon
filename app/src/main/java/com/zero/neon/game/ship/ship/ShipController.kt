@@ -10,43 +10,24 @@ import com.zero.neon.game.spaceobject.BoosterType
 import com.zero.neon.game.spaceobject.SpaceObject
 import java.util.*
 
-class ShipController(private val screenWidthDp: Dp, screenHeightDp: Dp) {
-
-    private val width: Dp = 85.dp
-    private val height: Dp = 90.dp
-    private val shieldSize: Dp = height * 2
-    var ship = Ship(
-        width = width,
-        height = height,
-        shieldSize = shieldSize,
-        shieldEnabled = false,
-        laserBoosterEnabled = false,
-        xOffset = screenWidthDp / 2 - width / 2,
-        yOffset = screenHeightDp - 140.dp,
-        hp = 1000,
-    )
-        private set
+class ShipController(
+    private val screenWidthDp: Dp,
+    private var ship: Ship,
+    private val setShip: (Ship) -> Unit
+) {
 
     private val spaceShipCollidePower = 100
     private val movementSpeed: Dp = 2.dp
 
-    private var movingLeft = false
-    private var movingRight = false
-
-    fun moveShipLeft(movingLeft: Boolean) {
-        this.movingLeft = movingLeft
-    }
-
-    fun moveShipRight(movingRight: Boolean) {
-        this.movingRight = movingRight
-    }
+    var movingLeft = false
+    var movingRight = false
 
     val moveShipId = UUID.randomUUID().toString()
     fun moveShip() {
-        if (movingLeft && ship.xOffset >= 0.dp - width / 4) {
+        if (movingLeft && ship.xOffset >= 0.dp - ship.width / 4) {
             updateXOffset(ship.xOffset - movementSpeed)
         } else movingLeft = false
-        if (movingRight && ship.xOffset <= screenWidthDp - (width.value / 1.5).dp) {
+        if (movingRight && ship.xOffset <= screenWidthDp - (ship.width.value / 1.5).dp) {
             updateXOffset(ship.xOffset + movementSpeed)
         } else movingRight = false
     }
@@ -82,11 +63,11 @@ class ShipController(private val screenWidthDp: Dp, screenHeightDp: Dp) {
         val shipRect by lazy {
             Rect(
                 offset = Offset(x = ship.xOffset.value, y = ship.yOffset.value),
-                size = Size(width = width.value, height = height.value)
+                size = Size(width = ship.width.value, height = ship.height.value)
             )
         }
         val shipShieldRect by lazy {
-            val shipRadius = width.value / 2
+            val shipRadius = ship.width.value / 2
             Rect(
                 center = Offset(
                     x = ship.xOffset.value + shipRadius,
@@ -144,17 +125,21 @@ class ShipController(private val screenWidthDp: Dp, screenHeightDp: Dp) {
 
     private fun updateShieldEnabled(enable: Boolean) {
         ship = ship.copy(shieldEnabled = enable)
+        setShip(ship)
     }
 
     private fun updateLaserBoosterEnabled(enable: Boolean) {
         ship = ship.copy(laserBoosterEnabled = enable)
+        setShip(ship)
     }
 
     private fun updateXOffset(xOffset: Dp) {
         ship = ship.copy(xOffset = xOffset)
+        setShip(ship)
     }
 
     private fun updateHp(hp: Int) {
         ship = ship.copy(hp = hp)
+        setShip(ship)
     }
 }

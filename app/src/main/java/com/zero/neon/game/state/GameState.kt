@@ -10,6 +10,7 @@ import com.zero.neon.game.constellation.Star
 import com.zero.neon.game.enemy.EnemyController
 import com.zero.neon.game.enemy.EnemyUI
 import com.zero.neon.game.settings.GameStatus
+import com.zero.neon.game.ship.ship.Ship
 import com.zero.neon.game.ship.ship.ShipController
 import com.zero.neon.game.ship.weapons.LaserUI
 import com.zero.neon.game.ship.weapons.LasersController
@@ -27,23 +28,40 @@ fun rememberGameState(): GameState {
     val screenWidthDp = configuration.screenWidthDp.dp
     val screenHeightDp = configuration.screenHeightDp.dp
     val coroutineScope = rememberCoroutineScope()
-    return remember { GameState(screenWidthDp, screenHeightDp, coroutineScope) }
+    val gameState = remember { GameStateImpl(screenWidthDp, screenHeightDp, coroutineScope) }
+    gameState.refreshHandler
+    return gameState
 }
 
-class GameState(
+interface GameState {
+    val gameStatus: GameStatus
+    val stars: List<Star>
+    val ship: Ship
+    val shipLasers: List<LaserUI>
+    val ultimateLasers: List<LaserUI>
+    val spaceObjects: List<SpaceObjectUI>
+    val enemies: List<EnemyUI>
+    val gameTimeIndicator: String
+
+    fun moveShipLeft(movingLeft: Boolean)
+    fun moveShipRight(movingRight: Boolean)
+    fun toggleGameStatus()
+}
+
+class GameStateImpl(
     private val screenWidthDp: Dp,
     private val screenHeightDp: Dp,
     private val coroutineScope: CoroutineScope
-) {
+) : GameState {
 
-    var gameStatus = GameStatus.RUNNING
+    override var gameStatus = GameStatus.RUNNING
         private set
     var refreshHandler by mutableStateOf<Long>(0)
 
     /**
      * Constellation
      */
-    var stars: List<Star> = emptyList()
+    override var stars: List<Star> = emptyList()
         private set
     private val constellationController = ConstellationController(
         stars = { stars },
@@ -53,13 +71,27 @@ class GameState(
     /**
      * Ship
      */
-    val shipController = ShipController(
-        screenWidthDp = screenWidthDp,
-        screenHeightDp = screenHeightDp
+    override var ship = Ship(
+        xOffset = screenWidthDp / 2 - 85.dp / 2,
+        yOffset = screenHeightDp - 140.dp
     )
-    var shipLasers: List<LaserUI> = emptyList()
         private set
-    var ultimateLasers: List<LaserUI> = emptyList()
+    private val shipController = ShipController(
+        screenWidthDp = screenWidthDp,
+        ship = ship,
+    ) { ship = it }
+
+    override fun moveShipLeft(movingLeft: Boolean) {
+        shipController.movingLeft = movingLeft
+    }
+
+    override fun moveShipRight(movingRight: Boolean) {
+        shipController.movingRight = movingRight
+    }
+
+    override var shipLasers: List<LaserUI> = emptyList()
+        private set
+    override var ultimateLasers: List<LaserUI> = emptyList()
         private set
     private val lasersController = LasersController(
         screenWidthDp = screenWidthDp,
@@ -71,7 +103,8 @@ class GameState(
     /**
      * Space objects
      */
-    var spaceObjects: List<SpaceObjectUI> = emptyList()
+    override var spaceObjects: List<SpaceObjectUI> = emptyList()
+        private set
     private val spaceObjectsController = SpaceObjectsController(
         screenWidthDp = screenWidthDp,
         screenHeightDp = screenHeightDp,
@@ -81,7 +114,7 @@ class GameState(
     /**
      * Enemies
      */
-    var enemies: List<EnemyUI> = emptyList()
+    override var enemies: List<EnemyUI> = emptyList()
         private set
     private val enemyController = EnemyController(
         screenWidthDp = screenWidthDp,
@@ -121,7 +154,7 @@ class GameState(
                         tinker(
                             id = lasersController.fireLaserId,
                             triggerMillis = 100,
-                            doWork = { lasersController.fireLasers(ship = shipController.ship) }
+                            doWork = { lasersController.fireLasers(ship = ship) }
                         )
                         tinker(
                             id = lasersController.moveShipLasersId,
@@ -180,7 +213,7 @@ class GameState(
         }
     }
 
-    fun toggleGameStatus() {
+    override fun toggleGameStatus() {
         gameStatus = if (gameStatus == GameStatus.RUNNING) {
             GameStatus.PAUSE
         } else GameStatus.RUNNING
@@ -198,7 +231,7 @@ class GameState(
      * Game time
      */
     private var gameTimeSec: Long = 0
-    var gameTimeIndicator: String = "00:00"
+    override var gameTimeIndicator: String = "00:00"
         private set
 
     private fun updateGameTime() {
