@@ -1,8 +1,9 @@
-package com.zero.neon.game.ship.weapons
+package com.zero.neon.game.ship.laser
 
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.zero.neon.R
+import com.zero.neon.game.laser.Laser
 import java.util.*
 
 class ShipLaser(
@@ -14,15 +15,13 @@ class ShipLaser(
 
     override val id: String = UUID.randomUUID().toString()
     override var yOffset: Dp = (-10).dp
-    override var shooting: Boolean = false
     override var height: Dp = 20.dp
     override var rotation: Float = 0f
-    override var powerImpact: Int = 25
+    override var impactPower: Int = 25
     override val drawableId: Int = R.drawable.laser_blue_7
 
     override fun moveLaser() {
-        shooting = true
-        if (yOffset > -yRange && shooting) {
+        if (yOffset > -yRange) {
             yOffset -= 7.dp
         } else {
             destroyLaser()
@@ -30,7 +29,6 @@ class ShipLaser(
     }
 
     override fun destroyLaser() {
-        shooting = false
         onDestroyLaser(id)
     }
 }

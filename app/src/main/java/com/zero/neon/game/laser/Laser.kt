@@ -1,4 +1,4 @@
-package com.zero.neon.game.ship.weapons
+package com.zero.neon.game.laser
 
 import androidx.compose.ui.unit.Dp
 
@@ -9,8 +9,7 @@ interface Laser {
     var width: Dp
     var height: Dp
     var rotation: Float
-    var shooting: Boolean
-    var powerImpact: Int
+    var impactPower: Int
     val drawableId: Int
 
     fun destroyLaser()

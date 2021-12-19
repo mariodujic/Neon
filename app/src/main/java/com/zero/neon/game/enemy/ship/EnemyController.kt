@@ -1,4 +1,4 @@
-package com.zero.neon.game.enemy
+package com.zero.neon.game.enemy.ship
 
 import androidx.compose.ui.unit.Dp
 import java.util.*

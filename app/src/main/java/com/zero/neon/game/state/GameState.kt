@@ -7,13 +7,14 @@ import androidx.compose.ui.unit.dp
 import com.zero.neon.core.tinker
 import com.zero.neon.game.constellation.ConstellationController
 import com.zero.neon.game.constellation.Star
-import com.zero.neon.game.enemy.EnemyController
-import com.zero.neon.game.enemy.EnemyUI
+import com.zero.neon.game.enemy.laser.EnemyLasersController
+import com.zero.neon.game.enemy.ship.EnemyController
+import com.zero.neon.game.enemy.ship.EnemyUI
 import com.zero.neon.game.settings.GameStatus
+import com.zero.neon.game.ship.laser.LaserUI
+import com.zero.neon.game.ship.laser.LasersController
 import com.zero.neon.game.ship.ship.Ship
 import com.zero.neon.game.ship.ship.ShipController
-import com.zero.neon.game.ship.weapons.LaserUI
-import com.zero.neon.game.ship.weapons.LasersController
 import com.zero.neon.game.spaceobject.SpaceObjectUI
 import com.zero.neon.game.spaceobject.SpaceObjectsController
 import com.zero.neon.game.stage.Stage.Companion.getCurrentGameStage
@@ -41,6 +42,7 @@ interface GameState {
     val ultimateLasers: List<LaserUI>
     val spaceObjects: List<SpaceObjectUI>
     val enemies: List<EnemyUI>
+    val enemyLasers: List<LaserUI>
     val gameTimeIndicator: String
 
     fun moveShipLeft(movingLeft: Boolean)
@@ -56,10 +58,20 @@ class GameStateImpl(
 
     override var gameStatus = GameStatus.RUNNING
         private set
+
+    override fun toggleGameStatus() {
+        gameStatus = if (gameStatus == GameStatus.RUNNING) {
+            GameStatus.PAUSE
+        } else GameStatus.RUNNING
+    }
+
     var refreshHandler by mutableStateOf<Long>(0)
 
     /**
      * Constellation
+     *
+     * These objects do not directly affect game play, are passive, and their purpose is
+     * to improve game ambient.
      */
     override var stars: List<Star> = emptyList()
         private set
@@ -70,6 +82,11 @@ class GameStateImpl(
 
     /**
      * Ship
+     *
+     * User has horizontal control of the ship. Ship can take damage by colliding with
+     * incoming objects, e.g. Enemy, EnemyLaser, SpaceRock. It can also collect different
+     * boosters. By collecting Booster object, ship will gain special ability for a limited
+     * period of time.
      */
     override var ship = Ship(
         xOffset = screenWidthDp / 2 - 85.dp / 2,
@@ -102,6 +119,10 @@ class GameStateImpl(
 
     /**
      * Space objects
+     *
+     *  Floating objects that directly affect [ship]. Colliding ship with [spaceObjects] can
+     *  have different affect upon collision, e.g. if space object is Booster, ship will
+     *  temporary gain special ability, however, if space object is SpaceRock, ship will lose hp.
      */
     override var spaceObjects: List<SpaceObjectUI> = emptyList()
         private set
@@ -111,15 +132,19 @@ class GameStateImpl(
         setSpaceObjectsUi = { spaceObjects = it }
     )
 
-    /**
-     * Enemies
-     */
     override var enemies: List<EnemyUI> = emptyList()
         private set
     private val enemyController = EnemyController(
         screenWidthDp = screenWidthDp,
         screenHeightDp = screenHeightDp
     ) { enemies = it }
+
+    override var enemyLasers: List<LaserUI> = emptyList()
+        private set
+    private val enemyLaserController = EnemyLasersController(
+        screenHeightDp = screenHeightDp,
+        screenWidthDp = screenWidthDp,
+    ) { enemyLasers = it }
 
     init {
         coroutineScope.launch {
@@ -129,6 +154,12 @@ class GameStateImpl(
                 coroutineScope = coroutineScope
             )
             launch(IO) {
+                /**
+                 * Game loop
+                 *
+                 * Periodically runs any given work. Depending on a [gameStatus], loop can be
+                 * on hold and resume any time.
+                 */
                 while (true) {
                     if (gameStatus == GameStatus.RUNNING) {
                         tinker(
@@ -147,7 +178,8 @@ class GameStateImpl(
                             doWork = {
                                 shipController.monitorShipCollisions(
                                     spaceObjects = spaceObjectsController.spaceObjects,
-                                    enemies = enemyController.enemies
+                                    enemies = enemyController.enemies,
+                                    enemyLasers = enemyLaserController.enemyLasers
                                 ) { lasersController.fireUltimateLaser() }
                             }
                         )
@@ -157,9 +189,19 @@ class GameStateImpl(
                             doWork = { lasersController.fireLasers(ship = ship) }
                         )
                         tinker(
+                            id = enemyLaserController.fireEnemyLaserId,
+                            triggerMillis = 2000,
+                            doWork = { enemyLaserController.fireEnemyLasers(enemies = enemyController.enemies) }
+                        )
+                        tinker(
                             id = lasersController.moveShipLasersId,
                             triggerMillis = 5,
                             doWork = { lasersController.moveShipLasers() }
+                        )
+                        tinker(
+                            id = enemyLaserController.moveEnemyLasersId,
+                            triggerMillis = 5,
+                            doWork = { enemyLaserController.moveEnemyLasers() }
                         )
                         tinker(
                             id = lasersController.moveUltimateLasersId,
@@ -213,23 +255,13 @@ class GameStateImpl(
         }
     }
 
-    override fun toggleGameStatus() {
-        gameStatus = if (gameStatus == GameStatus.RUNNING) {
-            GameStatus.PAUSE
-        } else GameStatus.RUNNING
-    }
-
     private val monitorLoopInSecId = UUID.randomUUID().toString()
     private fun monitorLoopInSec() {
         updateGameTime()
         updateGameTimeIndicator()
         updateGameStage()
-
     }
 
-    /**
-     * Game time
-     */
     private var gameTimeSec: Long = 0
     override var gameTimeIndicator: String = "00:00"
         private set
@@ -246,6 +278,10 @@ class GameStateImpl(
 
     /**
      * Game stage
+     *
+     * Game consists of multiple stages. Each stage has its own game settings.
+     *
+     * @see com.zero.neon.game.stage.Stage
      */
     private var gameStage = getCurrentGameStage(currentTimeSec = gameTimeSec)
 

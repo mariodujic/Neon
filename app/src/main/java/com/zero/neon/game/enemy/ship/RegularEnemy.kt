@@ -1,9 +1,9 @@
-package com.zero.neon.game.enemy
+package com.zero.neon.game.enemy.ship
 
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.zero.neon.game.enemy.Enemy.Companion.DEFAULT_X_OFFSET_MOVE_SPEED
-import com.zero.neon.game.enemy.Enemy.Companion.DEFAULT_Y_OFFSET_MOVE_SPEED
+import com.zero.neon.game.enemy.ship.Enemy.Companion.DEFAULT_X_OFFSET_MOVE_SPEED
+import com.zero.neon.game.enemy.ship.Enemy.Companion.DEFAULT_Y_OFFSET_MOVE_SPEED
 import java.util.*
 
 class RegularEnemy(

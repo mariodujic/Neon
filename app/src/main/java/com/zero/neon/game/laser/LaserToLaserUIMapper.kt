@@ -1,4 +1,6 @@
-package com.zero.neon.game.ship.weapons
+package com.zero.neon.game.laser
+
+import com.zero.neon.game.ship.laser.LaserUI
 
 class LaserToLaserUIMapper {
 

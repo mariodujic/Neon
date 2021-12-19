@@ -5,7 +5,8 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.zero.neon.game.enemy.Enemy
+import com.zero.neon.game.enemy.ship.Enemy
+import com.zero.neon.game.laser.Laser
 import com.zero.neon.game.spaceobject.BoosterType
 import com.zero.neon.game.spaceobject.SpaceObject
 import java.util.*
@@ -58,6 +59,7 @@ class ShipController(
     fun monitorShipCollisions(
         spaceObjects: List<SpaceObject>,
         enemies: List<Enemy>,
+        enemyLasers: List<Laser>,
         fileUltimateLaser: () -> Unit
     ) {
         val shipRect by lazy {
@@ -113,6 +115,23 @@ class ShipController(
                 val hpImpact = when (ship.shieldEnabled && enemy.impactPower > 0) {
                     true -> 0
                     false -> enemy.impactPower
+                }
+                updateHp(ship.hp - hpImpact)
+            }
+        }
+        enemyLasers.forEachIndexed { enemyIndex, enemyLaser ->
+            val enemyLaserRect by lazy {
+                Rect(
+                    offset = Offset(x = enemyLaser.xOffset.value, y = enemyLaser.yOffset.value),
+                    size = Size(width = enemyLaser.width.value, height = enemyLaser.height.value)
+                )
+            }
+            if (enemyLaserRect.overlaps(if (ship.shieldEnabled) shipShieldRect else shipRect)) {
+                enemyLasers[enemyIndex].destroyLaser()
+
+                val hpImpact = when (ship.shieldEnabled && enemyLaser.impactPower > 0) {
+                    true -> 0
+                    false -> enemyLaser.impactPower
                 }
                 updateHp(ship.hp - hpImpact)
             }

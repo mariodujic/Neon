@@ -1,11 +1,13 @@
-package com.zero.neon.game.ship.weapons
+package com.zero.neon.game.ship.laser
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.zero.neon.game.enemy.Enemy
+import com.zero.neon.game.enemy.ship.Enemy
+import com.zero.neon.game.laser.Laser
+import com.zero.neon.game.laser.LaserToLaserUIMapper
 import com.zero.neon.game.ship.ship.Ship
 import com.zero.neon.game.spaceobject.SpaceObject
 import java.util.*
@@ -43,7 +45,6 @@ class LasersController(
         }
 
         shipLasers = shipLasers
-            .filter { it.shooting }
             .toMutableList()
             .apply {
                 add(laser)
@@ -120,7 +121,7 @@ class LasersController(
                      * object fast. TODO Handle it without try-catch block.
                      */
                     try {
-                        spaceObjects[spaceObjectIndex].onObjectImpact(laser.powerImpact)
+                        spaceObjects[spaceObjectIndex].onObjectImpact(laser.impactPower)
                         shipLasers[laserIndex].destroyLaser()
                         updateShipLasersUI()
                     } catch (e: IndexOutOfBoundsException) {
@@ -139,7 +140,7 @@ class LasersController(
                 )
                 if (enemyRect.overlaps(laserRect(laser))) {
                     try {
-                        enemies[enemyIndex].onObjectImpact(laser.powerImpact)
+                        enemies[enemyIndex].onObjectImpact(laser.impactPower)
                         shipLasers[laserIndex].destroyLaser()
                         updateShipLasersUI()
                     } catch (e: IndexOutOfBoundsException) {

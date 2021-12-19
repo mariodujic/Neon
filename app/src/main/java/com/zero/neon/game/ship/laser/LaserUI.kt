@@ -1,4 +1,4 @@
-package com.zero.neon.game.ship.weapons
+package com.zero.neon.game.ship.laser
 
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Immutable

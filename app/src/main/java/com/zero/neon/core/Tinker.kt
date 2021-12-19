@@ -7,9 +7,10 @@ private val tinkerMap = mutableMapOf<String, Long>()
 
 /**
  *  Runs work for a given job. Each work has unique ID and
- *  is stored in memory. If trigger time have passed, doWork
+ *  is stored in memory. If trigger time has passed, doWork
  *  will be called and new time in milliseconds will be set
  *  for a unique job.
+ *
  *  @param id unique work ID
  *  @param triggerMillis time after which work will be triggered
  *  @param doWork any periodic work

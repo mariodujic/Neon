@@ -11,13 +11,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import com.zero.neon.game.audio.AudioPlayer
-import com.zero.neon.game.controls.StatusIndicator
-import com.zero.neon.game.controls.MovementButtons
-import com.zero.neon.game.controls.SettingsButton
-import com.zero.neon.game.state.rememberGameState
 import com.zero.neon.common.theme.Blue
 import com.zero.neon.common.theme.Pink
+import com.zero.neon.game.audio.AudioPlayer
+import com.zero.neon.game.controls.MovementButtons
+import com.zero.neon.game.controls.SettingsButton
+import com.zero.neon.game.controls.StatusIndicator
+import com.zero.neon.game.state.rememberGameState
 
 @Composable
 fun GameScreen() {
@@ -50,6 +50,7 @@ fun GameScreen() {
                 stars = gameState.stars,
                 spaceObjects = gameState.spaceObjects,
                 enemies = gameState.enemies,
+                enemyLasers = gameState.enemyLasers,
                 modifier = Modifier.weight(1f)
             )
             MovementButtons(

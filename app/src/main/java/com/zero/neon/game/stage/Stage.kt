@@ -1,8 +1,8 @@
 package com.zero.neon.game.stage
 
 import androidx.compose.ui.unit.dp
-import com.zero.neon.game.enemy.EnemySpawnAttributes
-import com.zero.neon.game.enemy.EnemySpawnPosition
+import com.zero.neon.game.enemy.ship.EnemySpawnAttributes
+import com.zero.neon.game.enemy.ship.EnemySpawnPosition
 
 enum class Stage(
     val spaceRockSpawnRateMillis: Int,
