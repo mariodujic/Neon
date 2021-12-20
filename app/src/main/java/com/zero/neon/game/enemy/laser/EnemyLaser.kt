@@ -18,7 +18,7 @@ class EnemyLaser(
     override var height: Dp = 30.dp
     override var rotation: Float = 0f
     override var impactPower: Int = 100
-    override val drawableId: Int = R.drawable.laser_red_12
+    override val drawableId: Int = R.drawable.laser_red_14
 
     override fun moveLaser() {
         yOffset += 3.5.dp

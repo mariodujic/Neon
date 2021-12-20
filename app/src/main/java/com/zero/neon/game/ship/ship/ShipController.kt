@@ -5,6 +5,7 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.zero.neon.R
 import com.zero.neon.game.enemy.ship.Enemy
 import com.zero.neon.game.laser.Laser
 import com.zero.neon.game.spaceobject.BoosterType
@@ -148,7 +149,10 @@ class ShipController(
     }
 
     private fun updateLaserBoosterEnabled(enable: Boolean) {
-        ship = ship.copy(laserBoosterEnabled = enable)
+        ship = ship.copy(
+            laserBoosterEnabled = enable,
+            drawableId = if (enable) R.drawable.ship_boosted_laser else R.drawable.ship_regular_laser
+        )
         setShip(ship)
     }
 

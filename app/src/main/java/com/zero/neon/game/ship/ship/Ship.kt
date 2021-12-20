@@ -16,5 +16,5 @@ data class Ship(
     val xOffset: Dp,
     val yOffset: Dp,
     val hp: Int = 1000,
-    @DrawableRes val drawableId: Int = if (laserBoosterEnabled) R.drawable.ship_boosted_laser else R.drawable.ship_regular_laser
+    @DrawableRes val drawableId: Int = R.drawable.ship_regular_laser
 )
