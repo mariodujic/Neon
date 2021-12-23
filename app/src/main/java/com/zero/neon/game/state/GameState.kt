@@ -20,6 +20,8 @@ import com.zero.neon.game.ship.ship.ShipController
 import com.zero.neon.game.spaceobject.SpaceObjectUI
 import com.zero.neon.game.spaceobject.SpaceObjectsController
 import com.zero.neon.game.stage.Stage.Companion.getCurrentGameStage
+import com.zero.neon.game.stage.StageGamePartition
+import com.zero.neon.game.stage.StageMessagePartition
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -38,6 +40,7 @@ fun rememberGameState(): GameState {
 
 interface GameState {
     val gameStatus: GameStatus
+    val gameMessage: String
     val stars: List<Star>
     val ship: Ship
     val shipLasers: List<LaserUI>
@@ -93,11 +96,12 @@ class GameStateImpl(
      */
     override var ship = Ship(
         xOffset = screenWidthDp / 2 - 85.dp / 2,
-        yOffset = screenHeightDp - 140.dp
+        yOffset = screenHeightDp + 240.dp
     )
         private set
     private val shipController = ShipController(
         screenWidthDp = screenWidthDp,
+        screenHeightDp = screenHeightDp,
         ship = ship,
     ) { ship = it }
 
@@ -214,61 +218,6 @@ class GameStateImpl(
                             }
                         )
                         tinker(
-                            id = lasersController.fireLaserId,
-                            triggerMillis = 100,
-                            doWork = { lasersController.fireLasers(ship = ship) }
-                        )
-                        tinker(
-                            id = enemyLaserController.fireEnemyLaserId,
-                            triggerMillis = 2000,
-                            doWork = { enemyLaserController.fireEnemyLasers(enemies = enemyController.enemies) }
-                        )
-                        tinker(
-                            id = lasersController.moveShipLasersId,
-                            triggerMillis = 5,
-                            doWork = { lasersController.moveShipLasers() }
-                        )
-                        tinker(
-                            id = enemyLaserController.moveEnemyLasersId,
-                            triggerMillis = 5,
-                            doWork = { enemyLaserController.moveEnemyLasers() }
-                        )
-                        tinker(
-                            id = lasersController.moveUltimateLasersId,
-                            triggerMillis = 40,
-                            doWork = { lasersController.moveUltimateLasers() }
-                        )
-                        tinker(
-                            id = spaceObjectsController.addSpaceRockId,
-                            triggerMillis = gameStage.spaceRockSpawnRateMillis,
-                            doWork = { spaceObjectsController.addSpaceRock() }
-                        )
-                        tinker(
-                            id = enemyController.addEnemyId,
-                            triggerMillis = gameStage.enemySpawnRateMillis,
-                            doWork = { enemyController.addEnemy(gameStage.enemyEnemySpawnAttributes) }
-                        )
-                        tinker(
-                            id = boosterController.addBoosterId,
-                            triggerMillis = 4000,
-                            doWork = { boosterController.addBooster() }
-                        )
-                        tinker(
-                            id = spaceObjectsController.moveSpaceObjectsId,
-                            triggerMillis = 5,
-                            doWork = { spaceObjectsController.moveSpaceObjects() }
-                        )
-                        tinker(
-                            id = boosterController.moveBoostersId,
-                            triggerMillis = 5,
-                            doWork = { boosterController.moveBoosters() }
-                        )
-                        tinker(
-                            id = enemyController.moveEnemiesId,
-                            triggerMillis = 5,
-                            doWork = { enemyController.moveEnemies() }
-                        )
-                        tinker(
                             id = lasersController.monitorLaserSpaceObjectHitsId,
                             triggerMillis = 1,
                             doWork = {
@@ -278,6 +227,83 @@ class GameStateImpl(
                                 )
                             }
                         )
+                        if (boosterController.hasBoosters()) {
+                            tinker(
+                                id = boosterController.moveBoostersId,
+                                triggerMillis = 5,
+                                doWork = { boosterController.moveBoosters() }
+                            )
+                        }
+                        if (lasersController.hasUltimateLasers()) {
+                            tinker(
+                                id = lasersController.moveUltimateLasersId,
+                                triggerMillis = 40,
+                                doWork = { lasersController.moveUltimateLasers() }
+                            )
+                        }
+                        if (lasersController.hasShipLasers()) {
+                            tinker(
+                                id = lasersController.moveShipLasersId,
+                                triggerMillis = 5,
+                                doWork = { lasersController.moveShipLasers() }
+                            )
+                        }
+                        if (spaceObjectsController.hasSpaceObjects()) {
+                            tinker(
+                                id = spaceObjectsController.moveSpaceObjectsId,
+                                triggerMillis = 5,
+                                doWork = { spaceObjectsController.moveSpaceObjects() }
+                            )
+                        }
+                        if (enemyLaserController.hasEnemyLasers()) {
+                            tinker(
+                                id = enemyLaserController.moveEnemyLasersId,
+                                triggerMillis = 5,
+                                doWork = { enemyLaserController.moveEnemyLasers() }
+                            )
+                        }
+                        if (enemyController.hasEnemies()) {
+                            tinker(
+                                id = enemyController.moveEnemiesId,
+                                triggerMillis = 5,
+                                doWork = { enemyController.moveEnemies() }
+                            )
+                        }
+                        if (
+                            gameStage.stagePartition is StageGamePartition ||
+                            spaceObjectsController.hasSpaceObjects() ||
+                            enemyController.hasEnemies()
+                        ) {
+                            tinker(
+                                id = lasersController.fireLaserId,
+                                triggerMillis = 100,
+                                doWork = { lasersController.fireLasers(ship = ship) }
+                            )
+                        }
+                        if (gameStage.stagePartition is StageGamePartition) {
+                            with(gameStage.stagePartition as StageGamePartition) {
+                                tinker(
+                                    id = spaceObjectsController.addSpaceRockId,
+                                    triggerMillis = spaceRockSpawnRateMillis,
+                                    doWork = { spaceObjectsController.addSpaceRock() }
+                                )
+                                tinker(
+                                    id = enemyController.addEnemyId,
+                                    triggerMillis = enemySpawnRateMillis,
+                                    doWork = { enemyController.addEnemy(enemyEnemySpawnAttributes) }
+                                )
+                                tinker(
+                                    id = enemyLaserController.fireEnemyLaserId,
+                                    triggerMillis = 2000,
+                                    doWork = { enemyLaserController.fireEnemyLasers(enemies = enemyController.enemies) }
+                                )
+                                tinker(
+                                    id = boosterController.addBoosterId,
+                                    triggerMillis = 4000,
+                                    doWork = { boosterController.addBooster() }
+                                )
+                            }
+                        }
                         tinker(
                             id = monitorLoopInSecId,
                             triggerMillis = 1000,
@@ -319,8 +345,14 @@ class GameStateImpl(
      * @see com.zero.neon.game.stage.Stage
      */
     private var gameStage = getCurrentGameStage(currentTimeSec = gameTimeSec)
+    override var gameMessage: String = ""
+        private set
 
     private fun updateGameStage() {
         gameStage = getCurrentGameStage(currentTimeSec = gameTimeSec)
+        gameMessage = when (val stagePartition = gameStage.stagePartition) {
+            is StageMessagePartition -> stagePartition.message
+            else -> ""
+        }
     }
 }

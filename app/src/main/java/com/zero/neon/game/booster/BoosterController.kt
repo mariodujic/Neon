@@ -37,6 +37,8 @@ class BoosterController(
         updateBoosters()
     }
 
+    fun hasBoosters() = boosters.isNotEmpty()
+
     private fun destroyBooster(boosterId: String) {
         boosters = boosters.toMutableList().apply { removeAll { it.id == boosterId } }
         updateBoosters()

@@ -43,6 +43,8 @@ class SpaceObjectsController(
         updateSpaceObjectsUI()
     }
 
+    fun hasSpaceObjects() = spaceObjects.isNotEmpty()
+
     private fun updateSpaceObjectsUI() {
         setSpaceObjectsUi(spaceObjects.map { mapper(it) })
     }

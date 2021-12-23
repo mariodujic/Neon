@@ -15,18 +15,23 @@ import java.util.*
 
 class ShipController(
     private val screenWidthDp: Dp,
+    screenHeightDp: Dp,
     private var ship: Ship,
     private val setShip: (Ship) -> Unit
 ) {
 
     private val spaceShipCollidePower = 100
     private val movementSpeed: Dp = 2.dp
+    private val maxYOffset = screenHeightDp - 140.dp
 
     var movingLeft = false
     var movingRight = false
 
     val moveShipId = UUID.randomUUID().toString()
     fun moveShip() {
+        if (ship.yOffset > maxYOffset) {
+            updateYOffset(ship.yOffset - movementSpeed)
+        }
         if (movingLeft && ship.xOffset >= 0.dp - ship.width / 4) {
             updateXOffset(ship.xOffset - movementSpeed)
         } else movingLeft = false
@@ -201,6 +206,11 @@ class ShipController(
 
     private fun updateXOffset(xOffset: Dp) {
         ship = ship.copy(xOffset = xOffset)
+        setShip(ship)
+    }
+
+    private fun updateYOffset(yOffset: Dp) {
+        ship = ship.copy(yOffset = yOffset)
         setShip(ship)
     }
 

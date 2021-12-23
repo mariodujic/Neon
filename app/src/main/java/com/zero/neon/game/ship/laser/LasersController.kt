@@ -76,6 +76,8 @@ class LasersController(
         updateShipLasersUI()
     }
 
+    fun hasShipLasers() = shipLasers.isNotEmpty()
+
     private fun destroyShipLaser(laserId: String) {
         shipLasers = shipLasers.toMutableList().apply {
             removeAll { it.id == laserId }
@@ -104,6 +106,8 @@ class LasersController(
         ultimateLasers.forEach { it.moveLaser() }
         updateUltimateLasersUI()
     }
+
+    fun hasUltimateLasers() = ultimateLasers.isNotEmpty()
 
     private fun destroyUltimateLaser(laserId: String) {
         ultimateLasers = ultimateLasers.toMutableList().apply {

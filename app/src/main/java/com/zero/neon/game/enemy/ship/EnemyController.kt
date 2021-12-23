@@ -32,6 +32,8 @@ class EnemyController(
         updateEnemies()
     }
 
+    fun hasEnemies() = enemies.isNotEmpty()
+
     private fun onDestroyEnemy(enemyId: String) {
         enemies = enemies.toMutableList().apply {
             removeAll { it.enemyId == enemyId }

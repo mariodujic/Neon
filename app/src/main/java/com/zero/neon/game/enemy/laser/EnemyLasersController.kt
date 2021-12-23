@@ -44,6 +44,8 @@ class EnemyLasersController(
         updateShipLasersUI()
     }
 
+    fun hasEnemyLasers() = enemyLasers.isNotEmpty()
+
     private fun destroyEnemyLaser(laserId: String) {
         enemyLasers = enemyLasers.toMutableList().apply {
             removeAll { it.id == laserId }

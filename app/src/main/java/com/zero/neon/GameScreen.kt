@@ -5,10 +5,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.zero.neon.common.theme.Blue
@@ -42,6 +46,13 @@ fun GameScreen() {
                 .align(Alignment.TopEnd)
                 .zIndex(300f)
         ) { gameState.toggleGameStatus() }
+        Text(
+            text = gameState.gameMessage,
+            modifier = Modifier.align(Alignment.Center),
+            fontWeight = FontWeight.Bold,
+            color = Color.White,
+            style = MaterialTheme.typography.h3
+        )
         Column(modifier = Modifier.fillMaxSize()) {
             GameWorld(
                 ship = gameState.ship,
