@@ -13,6 +13,7 @@ data class Ship(
     val shieldSize: Dp = height * 2,
     val shieldEnabled: Boolean = false,
     val laserBoosterEnabled: Boolean = false,
+    val tripleLaserBoosterEnabled: Boolean = false,
     val xOffset: Dp,
     val yOffset: Dp,
     val hp: Int = 1000,

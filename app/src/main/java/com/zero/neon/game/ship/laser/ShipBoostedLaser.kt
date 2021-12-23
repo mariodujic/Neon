@@ -6,7 +6,7 @@ import com.zero.neon.R
 import com.zero.neon.game.laser.Laser
 import java.util.*
 
-class ShipBoostedLaser(
+data class ShipBoostedLaser(
     override var xOffset: Dp,
     private val yRange: Dp,
     override var width: Dp,

@@ -26,29 +26,45 @@ class LasersController(
     val fireLaserId = UUID.randomUUID().toString()
     fun fireLasers(ship: Ship) {
 
-        val laser = if (ship.laserBoosterEnabled) {
+        val lasers = if (ship.laserBoosterEnabled) {
             val width = 8.dp
-            ShipBoostedLaser(
+            val laser = ShipBoostedLaser(
                 xOffset = ship.xOffset + ship.width / 2 - width / 2,
                 yRange = screenHeightDp,
                 width = width,
                 onDestroyLaser = { destroyShipLaser(it) }
             )
+            if (ship.tripleLaserBoosterEnabled) {
+                val sideOffset = 20.dp
+                arrayOf(
+                    laser.copy(xOffset = laser.xOffset - sideOffset),
+                    laser.copy(xOffset = laser.xOffset),
+                    laser.copy(xOffset = laser.xOffset + sideOffset)
+                )
+            } else {
+                arrayOf(laser)
+            }
         } else {
             val width = 5.dp
-            ShipLaser(
+            val laser = ShipLaser(
                 xOffset = ship.xOffset + ship.width / 2 - width / 2,
                 yRange = screenHeightDp,
                 width = width,
                 onDestroyLaser = { destroyShipLaser(it) }
             )
+            if (ship.tripleLaserBoosterEnabled) {
+                val sideOffset = 20.dp
+                arrayOf(
+                    laser.copy(xOffset = laser.xOffset - sideOffset),
+                    laser.copy(xOffset = laser.xOffset),
+                    laser.copy(xOffset = laser.xOffset + sideOffset)
+                )
+            } else {
+                arrayOf(laser)
+            }
         }
 
-        shipLasers = shipLasers
-            .toMutableList()
-            .apply {
-                add(laser)
-            }
+        shipLasers = shipLasers + lasers
         updateShipLasersUI()
     }
 

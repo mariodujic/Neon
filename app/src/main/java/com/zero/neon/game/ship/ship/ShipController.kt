@@ -56,6 +56,18 @@ class ShipController(
         }
     }
 
+    private var tripleLaserBoosterStartMillis: Long = 0
+    private val tripleLaserBoosterTimeMillis: Long = 20000
+    private var tripleLaserBoosterEndDurationMillis: Long = 0
+    private fun enableTripleLaserBooster(enable: Boolean) {
+        updateTripleLaserBoosterEnabled(enable)
+        if (enable) {
+            tripleLaserBoosterStartMillis = System.currentTimeMillis()
+            tripleLaserBoosterEndDurationMillis =
+                tripleLaserBoosterStartMillis + tripleLaserBoosterTimeMillis
+        }
+    }
+
     val monitorShipCollisionsId = UUID.randomUUID().toString()
     fun monitorShipCollisions(
         spaceObjects: List<SpaceObject>,
@@ -100,6 +112,7 @@ class ShipController(
                     BoosterType.ULTIMATE_WEAPON_BOOSTER.drawableId -> fileUltimateLaser()
                     BoosterType.SHIELD_BOOSTER.drawableId -> enableShield(enable = true)
                     BoosterType.LASER_BOOSTER.drawableId -> enableLaserBooster(enable = true)
+                    BoosterType.TRIPLE_LASER_BOOSTER.drawableId -> enableTripleLaserBooster(enable = true)
                 }
             }
         }
@@ -141,6 +154,7 @@ class ShipController(
         val currentTime = System.currentTimeMillis()
         if (shieldEndDurationMillis < currentTime) enableShield(enable = false)
         if (laserBoosterEndDurationMillis < currentTime) enableLaserBooster(enable = false)
+        if (tripleLaserBoosterEndDurationMillis < currentTime) enableTripleLaserBooster(enable = false)
     }
 
     private fun updateShieldEnabled(enable: Boolean) {
@@ -152,6 +166,14 @@ class ShipController(
         ship = ship.copy(
             laserBoosterEnabled = enable,
             drawableId = if (enable) R.drawable.ship_boosted_laser else R.drawable.ship_regular_laser
+        )
+        setShip(ship)
+    }
+
+    private fun updateTripleLaserBoosterEnabled(enable: Boolean) {
+        ship = ship.copy(
+            tripleLaserBoosterEnabled = enable,
+            drawableId = R.drawable.ship_regular_laser
         )
         setShip(ship)
     }
