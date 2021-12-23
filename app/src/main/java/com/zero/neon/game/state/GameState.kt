@@ -19,7 +19,7 @@ import com.zero.neon.game.ship.ship.Ship
 import com.zero.neon.game.ship.ship.ShipController
 import com.zero.neon.game.spaceobject.SpaceObjectUI
 import com.zero.neon.game.spaceobject.SpaceObjectsController
-import com.zero.neon.game.stage.Stage.Companion.getCurrentGameStage
+import com.zero.neon.game.stage.Stage.Companion.getGameStage
 import com.zero.neon.game.stage.StageGamePartition
 import com.zero.neon.game.stage.StageMessagePartition
 import kotlinx.coroutines.CoroutineScope
@@ -271,8 +271,8 @@ class GameStateImpl(
                         }
                         if (
                             gameStage.stagePartition is StageGamePartition ||
-                            spaceObjectsController.hasSpaceObjects() ||
-                            enemyController.hasEnemies()
+                            enemyController.hasEnemies() ||
+                            spaceObjectsController.hasSpaceObjects()
                         ) {
                             tinker(
                                 id = lasersController.fireLaserId,
@@ -344,12 +344,14 @@ class GameStateImpl(
      *
      * @see com.zero.neon.game.stage.Stage
      */
-    private var gameStage = getCurrentGameStage(currentTimeSec = gameTimeSec)
+    private var gameStage = getGameStage(true)
     override var gameMessage: String = ""
         private set
 
     private fun updateGameStage() {
-        gameStage = getCurrentGameStage(currentTimeSec = gameTimeSec)
+        gameStage = getGameStage(
+            readyForNextStage = !enemyController.hasEnemies() && !spaceObjectsController.hasSpaceObjects()
+        )
         gameMessage = when (val stagePartition = gameStage.stagePartition) {
             is StageMessagePartition -> stagePartition.message
             else -> ""

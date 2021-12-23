@@ -29,19 +29,19 @@ enum class Stage(
         durationSec = 10
     ),
     STAGE_TWO_BREAK_ONE(
-        StageBreakPartition,
-        durationSec = 4
+        stagePartition = StageBreakPartition,
+        durationSec = 3
     ),
     STAGE_TWO_MESSAGE_ONE(
-        StageMessagePartition("Well done!"),
+        stagePartition = StageMessagePartition("Well done!"),
         durationSec = 3
     ),
     STAGE_TWO_MESSAGE_TWO(
-        StageMessagePartition("Stage 2"),
+        stagePartition = StageMessagePartition("Stage 2"),
         durationSec = 3
     ),
     STAGE_TWO_MESSAGE_THREE(
-        StageMessagePartition("GO!"),
+        stagePartition = StageMessagePartition("GO!"),
         durationSec = 1
     ),
     STAGE_TWO_GAME_ONE(
@@ -57,19 +57,19 @@ enum class Stage(
         durationSec = 10
     ),
     STAGE_THREE_BREAK_ONE(
-        StageBreakPartition,
-        durationSec = 6
+        stagePartition = StageBreakPartition,
+        durationSec = 3
     ),
     STAGE_THREE_MESSAGE_ONE(
-        StageMessagePartition("Easy.."),
+        stagePartition = StageMessagePartition("Easy.."),
         durationSec = 3
     ),
     STAGE_THREE_MESSAGE_TWO(
-        StageMessagePartition("Stage 3"),
+        stagePartition = StageMessagePartition("Stage 3"),
         durationSec = 3
     ),
     STAGE_THREE_MESSAGE_THREE(
-        StageMessagePartition("GO!"),
+        stagePartition = StageMessagePartition("GO!"),
         durationSec = 1
     ),
     GAME_THREE(
@@ -86,15 +86,23 @@ enum class Stage(
     );
 
     companion object {
-        private val stages = mutableListOf<Long>().apply {
-            values().forEachIndexed { index, stage ->
-                add((getOrNull(index - 1) ?: 0) + stage.durationSec)
-            }
-        }
+        private var stageStartSnapshotMillis: Long = System.currentTimeMillis()
+        private var stageIndex = 0
 
-        fun getCurrentGameStage(currentTimeSec: Long): Stage {
-            val index = stages.indexOfFirst { currentTimeSec < it }
-            return values().getOrNull(index) ?: values().last()
+        fun getGameStage(readyForNextStage: Boolean): Stage {
+            val currentStage = values()[stageIndex]
+            val stageTimeExpired =
+                stageStartSnapshotMillis + currentStage.durationSec * 1000 < System.currentTimeMillis()
+            val hasNextStage = stageIndex < values().lastIndex
+            if (
+                stageTimeExpired &&
+                (currentStage.stagePartition !is StageBreakPartition || readyForNextStage) &&
+                hasNextStage
+            ) {
+                stageIndex++
+                stageStartSnapshotMillis = System.currentTimeMillis()
+            }
+            return values()[stageIndex]
         }
     }
 }
