@@ -8,5 +8,6 @@
     <string name="enemy">Enemy</string>
     <string name="enemy_laser">Enemy laser</string>
     <string name="space_object">Space object</string>
+    <string name="booster">Booster</string>
     <string name="laser">Starship laser</string>
 </resources>

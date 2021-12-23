@@ -6,9 +6,10 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.zero.neon.R
+import com.zero.neon.game.booster.Booster
+import com.zero.neon.game.booster.BoosterType
 import com.zero.neon.game.enemy.ship.Enemy
 import com.zero.neon.game.laser.Laser
-import com.zero.neon.game.spaceobject.BoosterType
 import com.zero.neon.game.spaceobject.SpaceObject
 import java.util.*
 
@@ -71,6 +72,7 @@ class ShipController(
     val monitorShipCollisionsId = UUID.randomUUID().toString()
     fun monitorShipCollisions(
         spaceObjects: List<SpaceObject>,
+        boosters: List<Booster>,
         enemies: List<Enemy>,
         enemyLasers: List<Laser>,
         fileUltimateLaser: () -> Unit
@@ -113,6 +115,25 @@ class ShipController(
                     BoosterType.SHIELD_BOOSTER.drawableId -> enableShield(enable = true)
                     BoosterType.LASER_BOOSTER.drawableId -> enableLaserBooster(enable = true)
                     BoosterType.TRIPLE_LASER_BOOSTER.drawableId -> enableTripleLaserBooster(enable = true)
+                }
+            }
+        }
+
+        boosters.forEachIndexed { boosterIndex, booster ->
+            val boosterRect by lazy {
+                Rect(
+                    offset = Offset(x = booster.xOffset.value, y = booster.yOffset.value),
+                    size = Size(width = booster.size.value, height = booster.size.value)
+                )
+            }
+            if (boosterRect.overlaps(shipRect)) {
+                boosters[boosterIndex].onObjectImpact(spaceShipCollidePower)
+                updateHp(ship.hp - booster.impactPower)
+                when (booster.type) {
+                    BoosterType.ULTIMATE_WEAPON_BOOSTER -> fileUltimateLaser()
+                    BoosterType.SHIELD_BOOSTER -> enableShield(enable = true)
+                    BoosterType.LASER_BOOSTER -> enableLaserBooster(enable = true)
+                    BoosterType.TRIPLE_LASER_BOOSTER -> enableTripleLaserBooster(enable = true)
                 }
             }
         }

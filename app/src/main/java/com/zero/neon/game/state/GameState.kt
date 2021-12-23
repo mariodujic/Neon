@@ -5,6 +5,8 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.zero.neon.core.tinker
+import com.zero.neon.game.booster.BoosterController
+import com.zero.neon.game.booster.BoosterUI
 import com.zero.neon.game.constellation.ConstellationController
 import com.zero.neon.game.constellation.Star
 import com.zero.neon.game.enemy.laser.EnemyLasersController
@@ -41,6 +43,7 @@ interface GameState {
     val shipLasers: List<LaserUI>
     val ultimateLasers: List<LaserUI>
     val spaceObjects: List<SpaceObjectUI>
+    val boosters: List<BoosterUI>
     val enemies: List<EnemyUI>
     val enemyLasers: List<LaserUI>
     val gameTimeIndicator: String
@@ -120,9 +123,10 @@ class GameStateImpl(
     /**
      * Space objects
      *
-     *  Floating objects that directly affect [ship]. Colliding ship with [spaceObjects] can
-     *  have different affect upon collision, e.g. if space object is Booster, ship will
-     *  temporary gain special ability, however, if space object is SpaceRock, ship will lose hp.
+     *  Floating objects that directly affect [ship]. Colliding ship with [spaceObjects] has
+     *  negative impact on ship hp. Ship can destroy space objects.
+     *
+     *  @see com.zero.neon.game.spaceobject.SpaceObject
      */
     override var spaceObjects: List<SpaceObjectUI> = emptyList()
         private set
@@ -132,6 +136,31 @@ class GameStateImpl(
         setSpaceObjectsUi = { spaceObjects = it }
     )
 
+    /**
+     * Boosters
+     *
+     *  Floating objects that directly affect [ship]. Colliding ship with [boosters] give
+     *  ship special ability.
+     *
+     *  @see com.zero.neon.game.booster.Booster
+     */
+    override var boosters: List<BoosterUI> = emptyList()
+        private set
+    private val boosterController = BoosterController(
+        screenWidthDp = screenWidthDp,
+        screenHeightDp = screenHeightDp,
+        updateBoosters = { boosters = it }
+    )
+
+    /**
+     * Enemies
+     *
+     *  Enemies directly affect [ship]. Enemy can collide with ship and enemy can fire lasers.
+     *  Both enemy collision and laser his has negative impact on ships hp. Ship can destroy
+     *  enemies.
+     *
+     *  @see com.zero.neon.game.enemy.ship.Enemy
+     */
     override var enemies: List<EnemyUI> = emptyList()
         private set
     private val enemyController = EnemyController(
@@ -178,6 +207,7 @@ class GameStateImpl(
                             doWork = {
                                 shipController.monitorShipCollisions(
                                     spaceObjects = spaceObjectsController.spaceObjects,
+                                    boosters = boosterController.boosters,
                                     enemies = enemyController.enemies,
                                     enemyLasers = enemyLaserController.enemyLasers
                                 ) { lasersController.fireUltimateLaser() }
@@ -219,14 +249,19 @@ class GameStateImpl(
                             doWork = { enemyController.addEnemy(gameStage.enemyEnemySpawnAttributes) }
                         )
                         tinker(
-                            id = spaceObjectsController.addBoosterId,
+                            id = boosterController.addBoosterId,
                             triggerMillis = 4000,
-                            doWork = { spaceObjectsController.addBooster() }
+                            doWork = { boosterController.addBooster() }
                         )
                         tinker(
                             id = spaceObjectsController.moveSpaceObjectsId,
                             triggerMillis = 5,
                             doWork = { spaceObjectsController.moveSpaceObjects() }
+                        )
+                        tinker(
+                            id = boosterController.moveBoostersId,
+                            triggerMillis = 5,
+                            doWork = { boosterController.moveBoosters() }
                         )
                         tinker(
                             id = enemyController.moveEnemiesId,

@@ -55,32 +55,6 @@ class SpaceObjectsControllerTest {
     }
 
     @Test
-    fun `should set random UUID String to addBoosterId`() {
-        val actualValue = sut.addBoosterId
-        assertTrue(actualValue.isNotEmpty())
-    }
-
-    @Test
-    fun `should add Booster to SpaceObject list`() {
-        sut.addBooster()
-        val actualList = sut.spaceObjects
-        assertTrue(actualList.isNotEmpty())
-    }
-
-    @Test
-    fun `should call setSpaceObjectsUi with correct argument when addBooster`() {
-        sut.addBooster()
-        val argument = sut.spaceObjects.map { mapper(it) }
-        verify(setSpaceObjectsUi).invoke(argument)
-    }
-
-    @Test
-    fun `should set random UUID String to moveSpaceObjectsId`() {
-        val actualValue = sut.addBoosterId
-        assertTrue(actualValue.isNotEmpty())
-    }
-
-    @Test
     fun `should call setSpaceObjectsUi with correct argument when moveSpaceObjects`() {
         sut.moveSpaceObjects()
         val argument = sut.spaceObjects.map { mapper(it) }

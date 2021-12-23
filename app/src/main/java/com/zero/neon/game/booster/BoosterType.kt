@@ -1,4 +1,4 @@
-package com.zero.neon.game.spaceobject
+package com.zero.neon.game.booster
 
 import androidx.annotation.DrawableRes
 import com.zero.neon.R

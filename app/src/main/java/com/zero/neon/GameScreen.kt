@@ -49,6 +49,7 @@ fun GameScreen() {
                 ultimateLasers = gameState.ultimateLasers,
                 stars = gameState.stars,
                 spaceObjects = gameState.spaceObjects,
+                boosters = gameState.boosters,
                 enemies = gameState.enemies,
                 enemyLasers = gameState.enemyLasers,
                 modifier = Modifier.weight(1f)

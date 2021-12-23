@@ -17,7 +17,6 @@ class SpaceObjectsController(
 
     private val minRockSize = 20
     private val maxRockSize = 80
-    private val boosterSize = 40
 
     val addSpaceRockId = UUID.randomUUID().toString()
     fun addSpaceRock() {
@@ -30,20 +29,6 @@ class SpaceObjectsController(
             onDestroyRock = { destroySpaceObject(it) }
         )
         spaceObjects = spaceObjects.toMutableList().apply { add(spaceRock) }
-        updateSpaceObjectsUI()
-    }
-
-    val addBoosterId = UUID.randomUUID().toString()
-    fun addBooster() {
-        val boosterXOffset =
-            Random.nextInt(boosterSize, screenWidthDp.value.toInt() - boosterSize).dp
-        val booster = Booster(
-            xOffset = boosterXOffset,
-            size = boosterSize.dp,
-            screenHeight = screenHeightDp,
-            onDestroyBooster = { destroySpaceObject(it) }
-        )
-        spaceObjects = spaceObjects.toMutableList().apply { add(booster) }
         updateSpaceObjectsUI()
     }
 

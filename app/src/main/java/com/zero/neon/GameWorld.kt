@@ -18,10 +18,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.zero.neon.common.theme.shipShieldOne
 import com.zero.neon.common.theme.shipShieldTwo
+import com.zero.neon.game.booster.BoosterUI
 import com.zero.neon.game.constellation.Star
 import com.zero.neon.game.enemy.ship.EnemyUI
-import com.zero.neon.game.ship.ship.Ship
 import com.zero.neon.game.ship.laser.LaserUI
+import com.zero.neon.game.ship.ship.Ship
 import com.zero.neon.game.spaceobject.SpaceObjectUI
 
 @Composable
@@ -31,6 +32,7 @@ fun GameWorld(
     ultimateLasers: List<LaserUI>,
     stars: List<Star>,
     spaceObjects: List<SpaceObjectUI>,
+    boosters: List<BoosterUI>,
     enemies: List<EnemyUI>,
     enemyLasers: List<LaserUI>,
     modifier: Modifier = Modifier
@@ -87,11 +89,20 @@ fun GameWorld(
         spaceObjects.forEach {
             Image(
                 painterResource(id = it.drawableId),
-                contentDescription = stringResource(id = R.string.ship),
+                contentDescription = stringResource(id = R.string.space_object),
                 modifier = Modifier
                     .size(it.size)
                     .offset(x = it.xOffset, y = it.yOffset)
                     .rotate(degrees = it.rotation)
+            )
+        }
+        boosters.forEach {
+            Image(
+                painterResource(id = it.drawableId),
+                contentDescription = stringResource(id = R.string.booster),
+                modifier = Modifier
+                    .size(it.size)
+                    .offset(x = it.xOffset, y = it.yOffset)
             )
         }
         Box(
