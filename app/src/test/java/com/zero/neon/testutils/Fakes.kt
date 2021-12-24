@@ -31,3 +31,4 @@ val FAKE_SHIP_BOOSTED_LASER = with(FAKE_SHIP) {
     )
 }
 const val FAKE_UUID = "a"
+val FAKE_TIME_MILLIS = System.currentTimeMillis()
