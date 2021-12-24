@@ -21,4 +21,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    override fun onBackPressed() {}
 }
