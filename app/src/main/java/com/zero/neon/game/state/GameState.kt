@@ -2,8 +2,10 @@ package com.zero.neon.game.state
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
 import com.zero.neon.core.tinker
 import com.zero.neon.game.booster.BoosterController
 import com.zero.neon.game.booster.BoosterUI
@@ -22,6 +24,7 @@ import com.zero.neon.game.spaceobject.SpaceObjectsController
 import com.zero.neon.game.stage.Stage.Companion.getGameStage
 import com.zero.neon.game.stage.StageGameAct
 import com.zero.neon.game.stage.StageMessageAct
+import com.zero.neon.utils.observeAsState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -34,6 +37,14 @@ fun rememberGameState(): GameState {
     val screenHeightDp = configuration.screenHeightDp.dp
     val coroutineScope = rememberCoroutineScope()
     val gameState = remember { GameStateImpl(screenWidthDp, screenHeightDp, coroutineScope) }
+    val lifecycle by LocalLifecycleOwner.current.lifecycle.observeAsState()
+    LaunchedEffect(lifecycle) {
+        if (lifecycle == Lifecycle.Event.ON_PAUSE) {
+            gameState.setGameStatus(GameStatus.PAUSE)
+        } else if (lifecycle == Lifecycle.Event.ON_RESUME) {
+            gameState.setGameStatus(GameStatus.RUNNING)
+        }
+    }
     gameState.refreshHandler
     return gameState
 }
@@ -64,6 +75,10 @@ class GameStateImpl(
 
     override var gameStatus = GameStatus.RUNNING
         private set
+
+    fun setGameStatus(gameStatus: GameStatus) {
+        this.gameStatus = gameStatus
+    }
 
     override fun toggleGameStatus() {
         gameStatus = if (gameStatus == GameStatus.RUNNING) {
