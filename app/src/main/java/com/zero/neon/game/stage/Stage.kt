@@ -6,7 +6,7 @@ import com.zero.neon.game.enemy.ship.EnemySpawnPosition
 
 enum class Stage(
     val stageAct: StageAct,
-    private val durationSec: Long
+    val durationSec: Long
 ) {
     STAGE_ONE_MESSAGE_ONE(
         StageMessageAct("Stage 1"),
@@ -83,26 +83,5 @@ enum class Stage(
             )
         ),
         durationSec = 10
-    );
-
-    companion object {
-        private var stageStartSnapshotMillis: Long = System.currentTimeMillis()
-        private var stageIndex = 0
-
-        fun getGameStage(readyForNextStage: Boolean): Stage {
-            val currentStage = values()[stageIndex]
-            val stageTimeExpired =
-                stageStartSnapshotMillis + currentStage.durationSec * 1000 < System.currentTimeMillis()
-            val hasNextStage = stageIndex < values().lastIndex
-            if (
-                stageTimeExpired &&
-                (currentStage.stageAct !is StageBreakAct || readyForNextStage) &&
-                hasNextStage
-            ) {
-                stageIndex++
-                stageStartSnapshotMillis = System.currentTimeMillis()
-            }
-            return values()[stageIndex]
-        }
-    }
+    )
 }

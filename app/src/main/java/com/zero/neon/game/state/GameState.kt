@@ -21,7 +21,7 @@ import com.zero.neon.game.ship.ship.Ship
 import com.zero.neon.game.ship.ship.ShipController
 import com.zero.neon.game.spaceobject.SpaceObjectUI
 import com.zero.neon.game.spaceobject.SpaceObjectsController
-import com.zero.neon.game.stage.Stage.Companion.getGameStage
+import com.zero.neon.game.stage.StageController
 import com.zero.neon.game.stage.StageGameAct
 import com.zero.neon.game.stage.StageMessageAct
 import com.zero.neon.utils.observeAsState
@@ -357,14 +357,16 @@ class GameStateImpl(
      *
      * Game consists of multiple stages. Each stage has its own game settings.
      *
+     * @see com.zero.neon.game.stage.StageController
      * @see com.zero.neon.game.stage.Stage
      */
-    private var gameStage = getGameStage(true)
+    private val stageController = StageController()
+    private var gameStage = stageController.getGameStage(true)
     override var gameMessage: String = ""
         private set
 
     private fun updateGameStage() {
-        gameStage = getGameStage(
+        gameStage = stageController.getGameStage(
             readyForNextStage = !enemyController.hasEnemies() && !spaceObjectsController.hasSpaceObjects()
         )
         gameMessage = when (val stagePartition = gameStage.stageAct) {
