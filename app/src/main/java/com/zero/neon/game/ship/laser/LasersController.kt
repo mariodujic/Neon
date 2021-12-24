@@ -88,10 +88,10 @@ class LasersController(
 
     fun fireUltimateLaser() {
         val ultimateLaserList = mutableListOf<UltimateLaser>()
-        val laserCount = 10
-        val horizontalLaserDistance = screenWidthDp / laserCount
-        for (i in 0..laserCount) {
+        val horizontalLaserDistance = screenWidthDp / ULTIMATE_LASERS_COUNT
+        for (i in 0..ULTIMATE_LASERS_COUNT) {
             val ultimateLaser = UltimateLaser(
+                id = uuidUtils.getUuid(),
                 xOffset = horizontalLaserDistance * i,
                 yRange = screenHeightDp,
                 onDestroyLaser = { destroyUltimateLaser(it) }
@@ -179,5 +179,9 @@ class LasersController(
 
     private fun updateUltimateLasersUI() {
         setUltimateLasersUI(ultimateLasers.map { mapper(it) })
+    }
+
+    companion object {
+        const val ULTIMATE_LASERS_COUNT = 9
     }
 }

@@ -11,6 +11,7 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.zero.neon.common.theme.NeonTheme
+import com.zero.neon.game.GameScreen
 import com.zero.neon.navigation.Game
 import com.zero.neon.navigation.GamePause
 import com.zero.neon.gamepause.GamePauseDialog

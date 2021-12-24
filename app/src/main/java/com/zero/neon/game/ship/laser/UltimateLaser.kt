@@ -4,16 +4,15 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.zero.neon.R
 import com.zero.neon.game.laser.Laser
-import java.util.*
 
-class UltimateLaser(
+data class UltimateLaser(
+    override val id: String,
     override var xOffset: Dp,
+    override var yOffset: Dp = (-10).dp,
     private val yRange: Dp,
     private val onDestroyLaser: (laserId: String) -> Unit
 ) : Laser {
 
-    override val id: String = UUID.randomUUID().toString()
-    override var yOffset: Dp = (-10).dp
     override var width: Dp = 30.dp
     override var height: Dp = 30.dp
     override var rotation: Float = 0f
@@ -25,7 +24,7 @@ class UltimateLaser(
         if (rotation > 360f) rotation = 0f
 
         if (yOffset > -yRange) {
-            yOffset -= 7.dp
+            yOffset -= ULTIMATE_LASER_MOVEMENT_SPEED
         } else {
             destroyLaser()
         }
@@ -33,5 +32,9 @@ class UltimateLaser(
 
     override fun destroyLaser() {
         onDestroyLaser(id)
+    }
+
+    companion object {
+        val ULTIMATE_LASER_MOVEMENT_SPEED = 7.dp
     }
 }

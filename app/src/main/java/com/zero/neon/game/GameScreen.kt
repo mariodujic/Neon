@@ -1,4 +1,4 @@
-package com.zero.neon
+package com.zero.neon.game
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -22,6 +22,7 @@ import com.zero.neon.game.controls.MovementButtons
 import com.zero.neon.game.controls.SettingsButton
 import com.zero.neon.game.controls.StatusIndicator
 import com.zero.neon.game.state.rememberGameState
+import com.zero.neon.game.world.GameWorld
 
 @Composable
 fun GameScreen(onGamePause: () -> Unit) {

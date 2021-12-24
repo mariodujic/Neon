@@ -1,4 +1,4 @@
-package com.zero.neon
+package com.zero.neon.game.world
 
 import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.*
@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import com.zero.neon.R
 import com.zero.neon.common.theme.shipShieldOne
 import com.zero.neon.common.theme.shipShieldTwo
 import com.zero.neon.game.booster.BoosterUI

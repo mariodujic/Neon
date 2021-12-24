@@ -3,7 +3,7 @@ package com.zero.neon.game.constellation
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-class Star(var xOffset: Dp, var yOffset: Dp, private val maxYOffset: Dp, var size: Dp) {
+data class Star(var xOffset: Dp, var yOffset: Dp, private val maxYOffset: Dp, var size: Dp) {
 
     private val initialStarSize = size
     private var enlargeStar = false

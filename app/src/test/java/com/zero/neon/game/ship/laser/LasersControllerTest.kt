@@ -1,6 +1,7 @@
 package com.zero.neon.game.ship.laser
 
 import com.zero.neon.game.laser.LaserToLaserUIMapper
+import com.zero.neon.game.ship.laser.LasersController.Companion.ULTIMATE_LASERS_COUNT
 import com.zero.neon.game.ship.laser.ShipBoostedLaser.Companion.SHIP_BOOSTED_LASER_MOVEMENT
 import com.zero.neon.game.ship.laser.ShipLaser.Companion.SHIP_LASER_MOVEMENT_SPEED
 import com.zero.neon.game.ship.ship.ShipController.Companion.TRIPLE_LASER_SIDE_OFFSET
@@ -120,5 +121,38 @@ class LasersControllerTest {
     fun `should return true as ship has ShipLasers`() {
         sut.fireLasers(FAKE_SHIP)
         assertTrue(sut.hasShipLasers())
+    }
+
+    @Test
+    fun `should call setUltimateLasersUI with correct argument`() {
+        val horizontalLaserDistance = FAKE_SCREEN_WIDTH_DP / ULTIMATE_LASERS_COUNT
+        val ultimateLasers = mutableListOf<UltimateLaser>()
+        for (i in 0..ULTIMATE_LASERS_COUNT) {
+            val ultimateLaser = UltimateLaser(
+                id = FAKE_UUID,
+                xOffset = horizontalLaserDistance * i,
+                yRange = FAKE_SCREEN_HEIGHT_DP,
+                onDestroyLaser = {}
+            )
+            ultimateLasers.add(ultimateLaser)
+        }
+        sut.fireUltimateLaser()
+        verify(setUltimateLasersUI)(ultimateLasers.map { mapper(it) })
+    }
+
+    @Test
+    fun `should return moveUltimateLasersId when sut created`() {
+        assertTrue(sut.moveUltimateLasersId.isNotEmpty())
+    }
+
+    @Test
+    fun `should return true when ultimateLasers not empty`() {
+        sut.fireUltimateLaser()
+        assertTrue(sut.hasUltimateLasers())
+    }
+
+    @Test
+    fun `should return false when ultimateLasers empty`() {
+        assertFalse(sut.hasUltimateLasers())
     }
 }
