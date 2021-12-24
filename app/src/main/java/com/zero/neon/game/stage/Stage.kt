@@ -5,23 +5,23 @@ import com.zero.neon.game.enemy.ship.EnemySpawnAttributes
 import com.zero.neon.game.enemy.ship.EnemySpawnPosition
 
 enum class Stage(
-    val stagePartition: StagePartition,
+    val stageAct: StageAct,
     private val durationSec: Long
 ) {
     STAGE_ONE_MESSAGE_ONE(
-        StageMessagePartition("Stage 1"),
+        StageMessageAct("Stage 1"),
         durationSec = 3
     ),
     STAGE_ONE_MESSAGE_TWO(
-        StageMessagePartition("Get ready!"),
+        StageMessageAct("Get ready!"),
         durationSec = 3
     ),
     STAGE_ONE_MESSAGE_THREE(
-        StageMessagePartition("GO!"),
+        StageMessageAct("GO!"),
         durationSec = 1
     ),
     STAGE_ONE_GAME_ONE(
-        stagePartition = StageGamePartition(
+        stageAct = StageGameAct(
             spaceRockSpawnRateMillis = 200,
             enemySpawnRateMillis = 0,
             enemyEnemySpawnAttributes = null,
@@ -29,23 +29,23 @@ enum class Stage(
         durationSec = 10
     ),
     STAGE_TWO_BREAK_ONE(
-        stagePartition = StageBreakPartition,
+        stageAct = StageBreakAct,
         durationSec = 3
     ),
     STAGE_TWO_MESSAGE_ONE(
-        stagePartition = StageMessagePartition("Well done!"),
+        stageAct = StageMessageAct("Well done!"),
         durationSec = 3
     ),
     STAGE_TWO_MESSAGE_TWO(
-        stagePartition = StageMessagePartition("Stage 2"),
+        stageAct = StageMessageAct("Stage 2"),
         durationSec = 3
     ),
     STAGE_TWO_MESSAGE_THREE(
-        stagePartition = StageMessagePartition("GO!"),
+        stageAct = StageMessageAct("GO!"),
         durationSec = 1
     ),
     STAGE_TWO_GAME_ONE(
-        stagePartition = StageGamePartition(
+        stageAct = StageGameAct(
             spaceRockSpawnRateMillis = 0,
             enemySpawnRateMillis = 1000,
             enemyEnemySpawnAttributes = EnemySpawnAttributes(
@@ -57,23 +57,23 @@ enum class Stage(
         durationSec = 10
     ),
     STAGE_THREE_BREAK_ONE(
-        stagePartition = StageBreakPartition,
+        stageAct = StageBreakAct,
         durationSec = 3
     ),
     STAGE_THREE_MESSAGE_ONE(
-        stagePartition = StageMessagePartition("Easy.."),
+        stageAct = StageMessageAct("Easy.."),
         durationSec = 3
     ),
     STAGE_THREE_MESSAGE_TWO(
-        stagePartition = StageMessagePartition("Stage 3"),
+        stageAct = StageMessageAct("Stage 3"),
         durationSec = 3
     ),
     STAGE_THREE_MESSAGE_THREE(
-        stagePartition = StageMessagePartition("GO!"),
+        stageAct = StageMessageAct("GO!"),
         durationSec = 1
     ),
     GAME_THREE(
-        stagePartition = StageGamePartition(
+        stageAct = StageGameAct(
             spaceRockSpawnRateMillis = 500,
             enemySpawnRateMillis = 500,
             enemyEnemySpawnAttributes = EnemySpawnAttributes(
@@ -96,7 +96,7 @@ enum class Stage(
             val hasNextStage = stageIndex < values().lastIndex
             if (
                 stageTimeExpired &&
-                (currentStage.stagePartition !is StageBreakPartition || readyForNextStage) &&
+                (currentStage.stageAct !is StageBreakAct || readyForNextStage) &&
                 hasNextStage
             ) {
                 stageIndex++

@@ -2,13 +2,13 @@ package com.zero.neon.game.stage
 
 import com.zero.neon.game.enemy.ship.EnemySpawnAttributes
 
-sealed interface StagePartition
+sealed interface StageAct
 
-class StageMessagePartition(val message: String) : StagePartition
-class StageGamePartition(
+class StageMessageAct(val message: String) : StageAct
+class StageGameAct(
     val spaceRockSpawnRateMillis: Int,
     val enemySpawnRateMillis: Int,
     val enemyEnemySpawnAttributes: EnemySpawnAttributes?
-) : StagePartition
+) : StageAct
 
-object StageBreakPartition : StagePartition
+object StageBreakAct : StageAct

@@ -20,8 +20,8 @@ import com.zero.neon.game.ship.ship.ShipController
 import com.zero.neon.game.spaceobject.SpaceObjectUI
 import com.zero.neon.game.spaceobject.SpaceObjectsController
 import com.zero.neon.game.stage.Stage.Companion.getGameStage
-import com.zero.neon.game.stage.StageGamePartition
-import com.zero.neon.game.stage.StageMessagePartition
+import com.zero.neon.game.stage.StageGameAct
+import com.zero.neon.game.stage.StageMessageAct
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -270,7 +270,7 @@ class GameStateImpl(
                             )
                         }
                         if (
-                            gameStage.stagePartition is StageGamePartition ||
+                            gameStage.stageAct is StageGameAct ||
                             enemyController.hasEnemies() ||
                             spaceObjectsController.hasSpaceObjects()
                         ) {
@@ -280,8 +280,8 @@ class GameStateImpl(
                                 doWork = { lasersController.fireLasers(ship = ship) }
                             )
                         }
-                        if (gameStage.stagePartition is StageGamePartition) {
-                            with(gameStage.stagePartition as StageGamePartition) {
+                        if (gameStage.stageAct is StageGameAct) {
+                            with(gameStage.stageAct as StageGameAct) {
                                 tinker(
                                     id = spaceObjectsController.addSpaceRockId,
                                     triggerMillis = spaceRockSpawnRateMillis,
@@ -352,8 +352,8 @@ class GameStateImpl(
         gameStage = getGameStage(
             readyForNextStage = !enemyController.hasEnemies() && !spaceObjectsController.hasSpaceObjects()
         )
-        gameMessage = when (val stagePartition = gameStage.stagePartition) {
-            is StageMessagePartition -> stagePartition.message
+        gameMessage = when (val stagePartition = gameStage.stageAct) {
+            is StageMessageAct -> stagePartition.message
             else -> ""
         }
     }

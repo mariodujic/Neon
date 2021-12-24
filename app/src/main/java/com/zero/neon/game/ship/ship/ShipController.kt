@@ -218,4 +218,8 @@ class ShipController(
         ship = ship.copy(hp = hp)
         setShip(ship)
     }
+
+    companion object {
+        val TRIPLE_LASER_SIDE_OFFSET = 20.dp
+    }
 }

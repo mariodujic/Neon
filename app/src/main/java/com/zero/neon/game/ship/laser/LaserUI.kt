@@ -5,7 +5,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.ui.unit.Dp
 
 @Immutable
-class LaserUI(
+data class LaserUI(
     val id: String,
     val xOffset: Dp,
     val yOffset: Dp,
