@@ -66,4 +66,6 @@ dependencies {
     testImplementation "org.mockito:mockito-inline:$mockito_version"
     /*Audio player*/
     implementation "com.google.android.exoplayer:exoplayer:$exoplayer_version"
+    /*Navigation*/
+    implementation "androidx.navigation:navigation-compose:$navigation_version"
 }

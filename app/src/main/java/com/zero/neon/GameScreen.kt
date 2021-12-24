@@ -24,7 +24,7 @@ import com.zero.neon.game.controls.StatusIndicator
 import com.zero.neon.game.state.rememberGameState
 
 @Composable
-fun GameScreen() {
+fun GameScreen(onGamePause: () -> Unit) {
 
     val gameState = rememberGameState()
 
@@ -45,7 +45,10 @@ fun GameScreen() {
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .zIndex(300f)
-        ) { gameState.toggleGameStatus() }
+        ) {
+            gameState.toggleGameStatus()
+            onGamePause()
+        }
         Text(
             text = gameState.gameMessage,
             modifier = Modifier.align(Alignment.Center),
