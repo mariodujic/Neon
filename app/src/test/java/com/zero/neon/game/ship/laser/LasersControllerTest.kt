@@ -7,8 +7,7 @@ import com.zero.neon.game.ship.laser.ShipLaser.Companion.SHIP_LASER_MOVEMENT_SPE
 import com.zero.neon.game.ship.ship.ShipController.Companion.TRIPLE_LASER_SIDE_OFFSET
 import com.zero.neon.testutils.*
 import com.zero.neon.utils.UuidUtils
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -46,7 +45,9 @@ class LasersControllerTest {
 
     @Test
     fun `should return fireLaserId when sut created`() {
-        assertTrue(sut.fireLaserId.isNotEmpty())
+        val expectedId = FAKE_UUID
+        val actualId = sut.fireLaserId
+        assertEquals(expectedId, actualId)
     }
 
     @Test
@@ -89,7 +90,9 @@ class LasersControllerTest {
 
     @Test
     fun `should return moveShipLasersId when sut created`() {
-        assertTrue(sut.moveShipLasersId.isNotEmpty())
+        val expectedId = FAKE_UUID
+        val actualId = sut.moveShipLasersId
+        assertEquals(expectedId, actualId)
     }
 
     @Test
@@ -142,7 +145,9 @@ class LasersControllerTest {
 
     @Test
     fun `should return moveUltimateLasersId when sut created`() {
-        assertTrue(sut.moveUltimateLasersId.isNotEmpty())
+        val expectedId = FAKE_UUID
+        val actualId = sut.moveUltimateLasersId
+        assertEquals(expectedId, actualId)
     }
 
     @Test

@@ -13,7 +13,6 @@ import com.zero.neon.game.ship.ship.Ship
 import com.zero.neon.game.ship.ship.ShipController.Companion.TRIPLE_LASER_SIDE_OFFSET
 import com.zero.neon.game.spaceobject.SpaceObject
 import com.zero.neon.utils.UuidUtils
-import java.util.*
 
 class LasersController(
     private val screenWidthDp: Dp,
@@ -27,7 +26,7 @@ class LasersController(
     private var ultimateLasers: List<Laser> = emptyList()
     private val mapper = LaserToLaserUIMapper()
 
-    val fireLaserId = UUID.randomUUID().toString()
+    val fireLaserId = uuidUtils.getUuid()
     fun fireLasers(ship: Ship) {
 
         val lasers = if (ship.laserBoosterEnabled) {
@@ -70,7 +69,7 @@ class LasersController(
         updateShipLasersUI()
     }
 
-    val moveShipLasersId = UUID.randomUUID().toString()
+    val moveShipLasersId = uuidUtils.getUuid()
     fun moveShipLasers() {
         shipLasers.forEach { it.moveLaser() }
         updateShipLasersUI()
@@ -102,7 +101,7 @@ class LasersController(
         updateUltimateLasersUI()
     }
 
-    val moveUltimateLasersId = UUID.randomUUID().toString()
+    val moveUltimateLasersId = uuidUtils.getUuid()
     fun moveUltimateLasers() {
         ultimateLasers.forEach { it.moveLaser() }
         updateUltimateLasersUI()
@@ -117,58 +116,32 @@ class LasersController(
         updateUltimateLasersUI()
     }
 
-    val monitorLaserSpaceObjectHitsId = UUID.randomUUID().toString()
-    fun monitorLaserSpaceObjectsHit(spaceObjects: List<SpaceObject>, enemies: List<Enemy>) {
+    val monitorLaserCollisionId = uuidUtils.getUuid()
+    fun monitorLaserCollision(spaceObjects: List<SpaceObject>, enemies: List<Enemy>) {
         val lasers = shipLasers + ultimateLasers
+        val spaceObjectRectList = spaceObjects.map { it.spaceObjectRect() }
+        val enemyRectList = enemies.map { it.enemyRect() }
+        lasers.forEach { laser ->
 
-        fun laserRect(laser: Laser) = Rect(
-            offset = Offset(
-                x = laser.xOffset.value,
-                y = laser.yOffset.value + screenHeightDp.value - 50
-            ),
-            size = Size(width = laser.width.value, height = laser.height.value)
-        )
+            val laserRect = Rect(
+                offset = Offset(
+                    x = laser.xOffset.value,
+                    y = laser.yOffset.value + screenHeightDp.value - 50
+                ),
+                size = Size(width = laser.width.value, height = laser.height.value)
+            )
 
-        spaceObjects.forEachIndexed { spaceObjectIndex, spaceObject ->
-            lasers.forEachIndexed { laserIndex, laser ->
-                val spaceObjectRect = Rect(
-                    center = Offset(
-                        x = spaceObject.xOffset.value + spaceObject.size.value / 2,
-                        y = spaceObject.yOffset.value + spaceObject.size.value / 2
-                    ),
-                    radius = spaceObject.size.value / 2
-                )
-                if (spaceObject.destroyable && spaceObjectRect.overlaps(laserRect(laser))) {
-                    /**
-                     * SpaceObject list throws IndexOutOfBoundsException if multiple lasers hit
-                     * object fast. TODO Handle it without try-catch block.
-                     */
-                    try {
-                        spaceObjects[spaceObjectIndex].onObjectImpact(laser.impactPower)
-                        shipLasers[laserIndex].destroyLaser()
-                        updateShipLasersUI()
-                    } catch (e: IndexOutOfBoundsException) {
-                    }
-                }
+            if (spaceObjectRectList.any { it.overlaps(laserRect) }) {
+                val index = spaceObjectRectList.indexOfFirst { it.overlaps(laserRect) }
+                spaceObjects[index].onObjectImpact(laser.impactPower)
+                destroyShipLaser(laser.id)
+                updateShipLasersUI()
             }
-        }
-        enemies.forEachIndexed { enemyIndex, enemy ->
-            lasers.forEachIndexed { laserIndex, laser ->
-                val enemyRect = Rect(
-                    center = Offset(
-                        x = enemy.xOffset.value + enemy.width.value / 2,
-                        y = enemy.yOffset.value + enemy.height.value / 2
-                    ),
-                    radius = enemy.width.value / 2
-                )
-                if (enemyRect.overlaps(laserRect(laser))) {
-                    try {
-                        enemies[enemyIndex].onObjectImpact(laser.impactPower)
-                        shipLasers[laserIndex].destroyLaser()
-                        updateShipLasersUI()
-                    } catch (e: IndexOutOfBoundsException) {
-                    }
-                }
+            if (enemyRectList.any { it.overlaps(laserRect) }) {
+                val index = enemyRectList.indexOfFirst { it.overlaps(laserRect) }
+                enemies[index].onObjectImpact(laser.impactPower)
+                destroyShipLaser(laser.id)
+                updateShipLasersUI()
             }
         }
     }

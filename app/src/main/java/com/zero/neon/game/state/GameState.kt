@@ -233,10 +233,10 @@ class GameStateImpl(
                             }
                         )
                         tinker(
-                            id = lasersController.monitorLaserSpaceObjectHitsId,
+                            id = lasersController.monitorLaserCollisionId,
                             triggerMillis = 1,
                             doWork = {
-                                lasersController.monitorLaserSpaceObjectsHit(
+                                lasersController.monitorLaserCollision(
                                     spaceObjects = spaceObjectsController.spaceObjects,
                                     enemies = enemyController.enemies
                                 )

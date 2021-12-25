@@ -1,6 +1,8 @@
 package com.zero.neon.game.spaceobject
 
 import androidx.annotation.DrawableRes
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.zero.neon.R
@@ -26,6 +28,16 @@ class SpaceRock(
     private val maxRotationSpeed = 0.20f
     private val rotationSpeed =
         Random.nextFloat() * (maxRotationSpeed - minRotationSpeed) + minRotationSpeed
+
+    override fun spaceObjectRect(): Rect {
+        return Rect(
+            center = Offset(
+                x = xOffset.value + size.value / 2,
+                y = yOffset.value + size.value / 2
+            ),
+            radius = size.value / 2
+        )
+    }
 
     override fun moveObject() {
         if (rotateClockWise) rotation += rotationSpeed else rotation -= rotationSpeed

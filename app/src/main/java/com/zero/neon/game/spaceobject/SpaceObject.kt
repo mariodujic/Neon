@@ -1,5 +1,6 @@
 package com.zero.neon.game.spaceobject
 
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.unit.Dp
 
 interface SpaceObject {
@@ -13,6 +14,7 @@ interface SpaceObject {
     val impactPower: Int
     var rotation: Float
 
+    fun spaceObjectRect(): Rect
     fun moveObject()
     fun onObjectImpact(impactPower: Int)
 }

@@ -1,5 +1,7 @@
 package com.zero.neon.game.enemy.ship
 
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.zero.neon.game.enemy.ship.Enemy.Companion.DEFAULT_X_OFFSET_MOVE_SPEED
@@ -28,6 +30,16 @@ class RegularEnemy(
     private var moveRight = true
     private val xOffsetMoveSpeed = enemySpawnAttributes?.xOffsetSpeed ?: DEFAULT_X_OFFSET_MOVE_SPEED
     private val yOffsetMoveSpeed = enemySpawnAttributes?.yOffsetSpeed ?: DEFAULT_Y_OFFSET_MOVE_SPEED
+
+    override fun enemyRect(): Rect {
+        return Rect(
+            center = Offset(
+                x = xOffset.value + width.value / 2,
+                y = yOffset.value + height.value / 2
+            ),
+            radius = width.value / 2
+        )
+    }
 
     override fun move() {
         if (moveRight) {
