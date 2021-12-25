@@ -43,6 +43,8 @@ fun rememberGameState(): GameState {
             gameState.setGameStatus(GameStatus.PAUSE)
         } else if (lifecycle == Lifecycle.Event.ON_RESUME) {
             gameState.setGameStatus(GameStatus.RUNNING)
+        } else if (lifecycle == Lifecycle.Event.ON_STOP) {
+            gameState.setGameStatus(GameStatus.STOP)
         }
     }
     gameState.refreshHandler
@@ -324,6 +326,8 @@ class GameStateImpl(
                             triggerMillis = 1000,
                             doWork = { monitorLoopInSec() }
                         )
+                    } else if (gameStatus == GameStatus.STOP) {
+                        break
                     }
                     refreshHandler = System.currentTimeMillis()
                 }
