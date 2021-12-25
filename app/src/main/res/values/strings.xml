@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">neon</string>
+    <string name="app_name">Neon</string>
     <string name="game_left_button">Move left</string>
     <string name="game_settings_button">Settings</string>
     <string name="game_hp_indicator">HP indicator</string>
