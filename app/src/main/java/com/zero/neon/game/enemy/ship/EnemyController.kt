@@ -17,7 +17,7 @@ class EnemyController(
         val enemy = LevelOneEnemy(
             screenWidthDp = screenWidthDp,
             screenHeightDp = screenHeightDp,
-            attributesLevelOne = levelOneEnemyAttributes
+            attributes = levelOneEnemyAttributes
         )
         enemies = enemies.toMutableList().apply {
             add(enemy)

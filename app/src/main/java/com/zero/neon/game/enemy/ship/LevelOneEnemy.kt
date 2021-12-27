@@ -7,26 +7,26 @@ import java.util.*
 class LevelOneEnemy(
     private val screenWidthDp: Float,
     private val screenHeightDp: Float,
-    attributesLevelOne: LevelOneEnemyAttributes
+    attributes: LevelOneEnemyAttributes
 ) : Enemy {
 
     override val enemyId: String = UUID.randomUUID().toString()
-    override val width: Float = attributesLevelOne.enemyType.width
-    override val height: Float = attributesLevelOne.enemyType.height
-    override var hp: Float = attributesLevelOne.enemyType.hp
+    override val width: Float = attributes.enemyType.width
+    override val height: Float = attributes.enemyType.height
+    override var hp: Float = attributes.enemyType.hp
     override val initialHp: Float = hp
-    override val impactPower: Float = attributesLevelOne.enemyType.impactPower
-    override var xOffset: Float = attributesLevelOne.spawnPosition.let {
+    override val impactPower: Float = attributes.enemyType.impactPower
+    override var xOffset: Float = attributes.spawnPosition.let {
         when (it) {
             EnemySpawnPosition.LEFT -> 0f
             EnemySpawnPosition.RIGHT -> screenWidthDp
         }
     }
     override var yOffset: Float = 0f
-    override val drawableId: Int = attributesLevelOne.enemyType.drawableId
+    override val drawableId: Int = attributes.enemyType.drawableId
     private var moveRight = true
-    private val xOffsetMoveSpeed = attributesLevelOne.xOffsetSpeed
-    private val yOffsetMoveSpeed = attributesLevelOne.yOffsetSpeed
+    private val xOffsetMoveSpeed = attributes.xOffsetSpeed
+    private val yOffsetMoveSpeed = attributes.yOffsetSpeed
 
     override fun enemyRect(): Rect {
         return Rect(

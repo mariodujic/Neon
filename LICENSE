@@ -1,25 +1,3 @@
-<h1 align="center">Neon</h1>
-
-## Info
-
-This project is `STG` mobile game made in Android. It is a fun project I do in my free time.
-
-<div float="left">
-<img src="/preview/neon_preview.gif"  width="24%"/>
-<img src="/preview/screenshot_3.jpg"  width="24%"/>
-<img src="/preview/screenshot_2.jpg"  width="24%"/>
-<img src="/preview/screenshot_1.jpg"  width="24%"/>
-</div>
-
-## Made with
-
-- Kotlin 1.6
-- Jetpack Compose
-- Coroutines
-
-## License
-
-```
 MIT License
 
 Copyright (c) 2022 Mario Dujić
@@ -41,4 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-```
