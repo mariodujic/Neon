@@ -1,6 +1,6 @@
 package com.zero.neon.game.enemy.ship
 
-import com.zero.neon.game.common.GameTime
+import com.zero.neon.game.common.RepeatTime
 
 sealed interface EnemyAttributes
 
@@ -9,6 +9,6 @@ data class LevelOneEnemyAttributes(
     val spawnPosition: EnemySpawnPosition,
     val xOffsetSpeed: Float,
     val yOffsetSpeed: Float,
-    val enemySpawnRateMillis: GameTime,
-    val enemyFireRateMillis: GameTime
+    val enemySpawnRateMillis: RepeatTime,
+    val enemyFireRateMillis: RepeatTime
 ) : EnemyAttributes

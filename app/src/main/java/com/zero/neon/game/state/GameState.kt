@@ -262,7 +262,7 @@ fun rememberGameState(): GameState {
                             with(gameStage.stageAct as StageGameAct) {
                                 tinker(
                                     id = spaceObjectsController.addSpaceRockId,
-                                    triggerMillis = spaceRockSpawnRateMillis,
+                                    triggerMillis = spaceRockSpawnRateMillis.timeMillis,
                                     doWork = { spaceObjectsController.addSpaceRock() }
                                 )
                                 enemyAttributes?.let {

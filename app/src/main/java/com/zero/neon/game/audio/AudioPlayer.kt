@@ -49,7 +49,6 @@ fun AudioPlayer(gameStatus: GameStatus) {
 }
 
 enum class Song(val uri: String) {
-    OBLIVION_CITY("https://www.mboxdrive.com/Fury%20Weekend%20-%20Oblivion%20City.mp3"),
-    AUTOMATIC_LOVE("https://www.mboxdrive.com/Fury%20Weekend%20-%20Automatic%20Love%20(feat.%20Essenger).mp3"),
-    STAR_FIGHTER("https://www.mboxdrive.com/Wice%20-%20Star%20Fighter%20(Official%20Video)%20-%20Magnatron%202.0%20is%20OUT%20NOW%20.mp3")
+    THIS_MEANS_WAR("https://firebasestorage.googleapis.com/v0/b/neon-3872b.appspot.com/o/Volkor%20X%20-%20This%20Means%20War.mp3?alt=media&token=fe238e48-add5-4888-bb3b-d63eeae4ca27"),
+    THE_BOMB("https://firebasestorage.googleapis.com/v0/b/neon-3872b.appspot.com/o/Volkor%20X%20-%20The%20Bomb.mp3?alt=media&token=5be82681-fe7e-456c-bfc5-431dbc83bcf9")
 }

@@ -1,6 +1,6 @@
 package com.zero.neon.game.stage
 
-import com.zero.neon.game.common.GameTime
+import com.zero.neon.game.common.RepeatTime
 import com.zero.neon.game.enemy.ship.EnemySpawnPosition
 import com.zero.neon.game.enemy.ship.LevelOneEnemyAttributes
 import com.zero.neon.game.enemy.ship.LevelOneEnemyType
@@ -23,14 +23,14 @@ enum class Stage(
     ),
     STAGE_ONE_GAME_ONE(
         stageAct = StageGameAct(
-            spaceRockSpawnRateMillis = 1000,
+            spaceRockSpawnRateMillis = RepeatTime.Millis(timeMillis = 1000),
             enemyAttributes = LevelOneEnemyAttributes(
                 spawnPosition = EnemySpawnPosition.LEFT,
                 xOffsetSpeed = 0.4f,
                 yOffsetSpeed = 0.4f,
-                enemySpawnRateMillis = GameTime.Millis(timeMillis = 1000),
-                enemyFireRateMillis = GameTime.None,
-                enemyType = LevelOneEnemyType.TIER_TWO
+                enemySpawnRateMillis = RepeatTime.Millis(timeMillis = 1000),
+                enemyFireRateMillis = RepeatTime.None,
+                enemyType = LevelOneEnemyType.TIER_THREE
             )
         ),
         durationSec = 10
@@ -57,9 +57,9 @@ enum class Stage(
                 spawnPosition = EnemySpawnPosition.LEFT,
                 xOffsetSpeed = 0.6f,
                 yOffsetSpeed = 0.5f,
-                enemySpawnRateMillis = GameTime.Millis(timeMillis = 1000),
-                enemyFireRateMillis = GameTime.Millis(timeMillis = 500),
-                enemyType = LevelOneEnemyType.TIER_ONE
+                enemySpawnRateMillis = RepeatTime.Millis(timeMillis = 1000),
+                enemyFireRateMillis = RepeatTime.Millis(timeMillis = 500),
+                enemyType = LevelOneEnemyType.TIER_TWO
             )
         ),
         durationSec = 10
@@ -82,13 +82,13 @@ enum class Stage(
     ),
     GAME_THREE(
         stageAct = StageGameAct(
-            spaceRockSpawnRateMillis = 500,
+            spaceRockSpawnRateMillis = RepeatTime.Millis(timeMillis = 1000),
             enemyAttributes = LevelOneEnemyAttributes(
                 spawnPosition = EnemySpawnPosition.RIGHT,
                 xOffsetSpeed = 0.7f,
                 yOffsetSpeed = 0.5f,
-                enemySpawnRateMillis = GameTime.Millis(timeMillis = 1000),
-                enemyFireRateMillis = GameTime.Millis(timeMillis = 500),
+                enemySpawnRateMillis = RepeatTime.Millis(timeMillis = 1000),
+                enemyFireRateMillis = RepeatTime.Millis(timeMillis = 500),
                 enemyType = LevelOneEnemyType.TIER_ONE
             )
         ),
