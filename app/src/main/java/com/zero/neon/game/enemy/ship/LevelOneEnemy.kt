@@ -2,32 +2,31 @@ package com.zero.neon.game.enemy.ship
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
-import com.zero.neon.game.enemy.ship.Enemy.Companion.DEFAULT_X_OFFSET_MOVE_SPEED
-import com.zero.neon.game.enemy.ship.Enemy.Companion.DEFAULT_Y_OFFSET_MOVE_SPEED
 import java.util.*
 
-class RegularEnemy(
+class LevelOneEnemy(
     private val screenWidthDp: Float,
     private val screenHeightDp: Float,
-    enemySpawnAttributes: EnemySpawnAttributes?
+    attributesLevelOne: LevelOneEnemyAttributes
 ) : Enemy {
 
     override val enemyId: String = UUID.randomUUID().toString()
-    override val width: Float = 40f
-    override val height: Float = 40f
-    override var hp: Float = 250f
+    override val width: Float = attributesLevelOne.enemyType.width
+    override val height: Float = attributesLevelOne.enemyType.height
+    override var hp: Float = attributesLevelOne.enemyType.hp
     override val initialHp: Float = hp
-    override val impactPower: Int = 250
-    override var xOffset: Float = enemySpawnAttributes?.spawnPosition?.let {
+    override val impactPower: Float = attributesLevelOne.enemyType.impactPower
+    override var xOffset: Float = attributesLevelOne.spawnPosition.let {
         when (it) {
             EnemySpawnPosition.LEFT -> 0f
             EnemySpawnPosition.RIGHT -> screenWidthDp
         }
-    } ?: 0f
+    }
     override var yOffset: Float = 0f
+    override val drawableId: Int = attributesLevelOne.enemyType.drawableId
     private var moveRight = true
-    private val xOffsetMoveSpeed = enemySpawnAttributes?.xOffsetSpeed ?: DEFAULT_X_OFFSET_MOVE_SPEED
-    private val yOffsetMoveSpeed = enemySpawnAttributes?.yOffsetSpeed ?: DEFAULT_Y_OFFSET_MOVE_SPEED
+    private val xOffsetMoveSpeed = attributesLevelOne.xOffsetSpeed
+    private val yOffsetMoveSpeed = attributesLevelOne.yOffsetSpeed
 
     override fun enemyRect(): Rect {
         return Rect(

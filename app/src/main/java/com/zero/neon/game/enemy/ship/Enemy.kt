@@ -11,14 +11,10 @@ interface Enemy : Serializable {
     var yOffset: Float
     var hp: Float
     val initialHp: Float
-    val impactPower: Int
+    val impactPower: Float
+    val drawableId: Int
 
     fun enemyRect(): Rect
     fun move()
     fun onObjectImpact(impactPower: Int)
-
-    companion object {
-        const val DEFAULT_X_OFFSET_MOVE_SPEED: Float = 0.5f
-        const val DEFAULT_Y_OFFSET_MOVE_SPEED: Float = 0.2f
-    }
 }

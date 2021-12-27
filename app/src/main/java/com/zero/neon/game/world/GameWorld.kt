@@ -164,7 +164,7 @@ fun GameWorld(
                     )
                 }
                 Image(
-                    painterResource(id = R.drawable.enemy_ship),
+                    painterResource(id = it.drawableId),
                     contentDescription = stringResource(id = R.string.enemy),
                     modifier = Modifier.size(width = it.width.dp, height = it.height.dp)
                 )

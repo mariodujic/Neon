@@ -1,29 +1,37 @@
 package com.zero.neon.game.stage
 
-import com.zero.neon.game.enemy.ship.EnemySpawnAttributes
+import com.zero.neon.game.common.GameTime
 import com.zero.neon.game.enemy.ship.EnemySpawnPosition
+import com.zero.neon.game.enemy.ship.LevelOneEnemyAttributes
+import com.zero.neon.game.enemy.ship.LevelOneEnemyType
 
 enum class Stage(
     val stageAct: StageAct,
     val durationSec: Long
 ) {
-     STAGE_ONE_MESSAGE_ONE(
-         StageMessageAct("Stage 1"),
-         durationSec = 3
-     ),
-     STAGE_ONE_MESSAGE_TWO(
-         StageMessageAct("Get ready!"),
-         durationSec = 3
-     ),
-     STAGE_ONE_MESSAGE_THREE(
-         StageMessageAct("GO!"),
-         durationSec = 1
-     ),
+    STAGE_ONE_MESSAGE_ONE(
+        StageMessageAct("Stage 1"),
+        durationSec = 3
+    ),
+    STAGE_ONE_MESSAGE_TWO(
+        StageMessageAct("Get ready!"),
+        durationSec = 3
+    ),
+    STAGE_ONE_MESSAGE_THREE(
+        StageMessageAct("GO!"),
+        durationSec = 1
+    ),
     STAGE_ONE_GAME_ONE(
         stageAct = StageGameAct(
             spaceRockSpawnRateMillis = 1000,
-            enemySpawnRateMillis = 1000,
-            enemyEnemySpawnAttributes = null,
+            enemyAttributes = LevelOneEnemyAttributes(
+                spawnPosition = EnemySpawnPosition.LEFT,
+                xOffsetSpeed = 0.4f,
+                yOffsetSpeed = 0.4f,
+                enemySpawnRateMillis = GameTime.Millis(timeMillis = 1000),
+                enemyFireRateMillis = GameTime.None,
+                enemyType = LevelOneEnemyType.TIER_TWO
+            )
         ),
         durationSec = 10
     ),
@@ -45,12 +53,13 @@ enum class Stage(
     ),
     STAGE_TWO_GAME_ONE(
         stageAct = StageGameAct(
-            spaceRockSpawnRateMillis = 0,
-            enemySpawnRateMillis = 1000,
-            enemyEnemySpawnAttributes = EnemySpawnAttributes(
+            enemyAttributes = LevelOneEnemyAttributes(
                 spawnPosition = EnemySpawnPosition.LEFT,
                 xOffsetSpeed = 0.6f,
-                yOffsetSpeed = 0.5f
+                yOffsetSpeed = 0.5f,
+                enemySpawnRateMillis = GameTime.Millis(timeMillis = 1000),
+                enemyFireRateMillis = GameTime.Millis(timeMillis = 500),
+                enemyType = LevelOneEnemyType.TIER_ONE
             )
         ),
         durationSec = 10
@@ -74,11 +83,13 @@ enum class Stage(
     GAME_THREE(
         stageAct = StageGameAct(
             spaceRockSpawnRateMillis = 500,
-            enemySpawnRateMillis = 500,
-            enemyEnemySpawnAttributes = EnemySpawnAttributes(
+            enemyAttributes = LevelOneEnemyAttributes(
                 spawnPosition = EnemySpawnPosition.RIGHT,
                 xOffsetSpeed = 0.7f,
-                yOffsetSpeed = 0.5f
+                yOffsetSpeed = 0.5f,
+                enemySpawnRateMillis = GameTime.Millis(timeMillis = 1000),
+                enemyFireRateMillis = GameTime.Millis(timeMillis = 500),
+                enemyType = LevelOneEnemyType.TIER_ONE
             )
         ),
         durationSec = 10

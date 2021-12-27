@@ -13,11 +13,11 @@ class EnemyController(
         private set
 
     val addEnemyId = UUID.randomUUID().toString()
-    fun addEnemy(enemySpawnAttributes: EnemySpawnAttributes?) {
-        val enemy = RegularEnemy(
+    fun addEnemy(levelOneEnemyAttributes: LevelOneEnemyAttributes) {
+        val enemy = LevelOneEnemy(
             screenWidthDp = screenWidthDp,
             screenHeightDp = screenHeightDp,
-            enemySpawnAttributes = enemySpawnAttributes
+            attributesLevelOne = levelOneEnemyAttributes
         )
         enemies = enemies.toMutableList().apply {
             add(enemy)

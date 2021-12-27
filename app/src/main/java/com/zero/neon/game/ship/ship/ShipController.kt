@@ -3,12 +3,12 @@ package com.zero.neon.game.ship.ship
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
-import com.zero.neon.game.spaceobject.SpaceObject
 import com.zero.neon.R
 import com.zero.neon.game.booster.Booster
 import com.zero.neon.game.booster.BoosterType
 import com.zero.neon.game.enemy.ship.Enemy
 import com.zero.neon.game.laser.Laser
+import com.zero.neon.game.spaceobject.SpaceObject
 import java.util.*
 
 class ShipController(
@@ -107,7 +107,7 @@ class ShipController(
             if (spaceRect.overlaps(if (ship.shieldEnabled) shipShieldRect else shipRect)) {
                 spaceObjects[spaceObjectIndex].onObjectImpact(spaceShipCollidePower)
 
-                val hpImpact = when (ship.shieldEnabled && spaceObject.impactPower > 0) {
+                val hpImpact: Int = when (ship.shieldEnabled && spaceObject.impactPower > 0) {
                     true -> 0
                     false -> spaceObject.impactPower
                 }
@@ -150,9 +150,9 @@ class ShipController(
             if (enemyRect.overlaps(if (ship.shieldEnabled) shipShieldRect else shipRect)) {
                 enemies[enemyIndex].onObjectImpact(spaceShipCollidePower)
 
-                val hpImpact = when (ship.shieldEnabled && enemy.impactPower > 0) {
+                val hpImpact: Int = when (ship.shieldEnabled && enemy.impactPower > 0) {
                     true -> 0
-                    false -> enemy.impactPower
+                    false -> enemy.impactPower.toInt()
                 }
                 updateHp(ship.hp - hpImpact)
             }

@@ -14,10 +14,7 @@ import com.zero.neon.game.constellation.ConstellationController
 import com.zero.neon.game.constellation.Star
 import com.zero.neon.game.enemy.laser.EnemyLaser
 import com.zero.neon.game.enemy.laser.EnemyLasersController
-import com.zero.neon.game.enemy.ship.Enemy
-import com.zero.neon.game.enemy.ship.EnemyController
-import com.zero.neon.game.enemy.ship.EnemyToEnemyUIMapper
-import com.zero.neon.game.enemy.ship.EnemyUI
+import com.zero.neon.game.enemy.ship.*
 import com.zero.neon.game.laser.Laser
 import com.zero.neon.game.laser.LaserToLaserUIMapper
 import com.zero.neon.game.settings.GameStatus
@@ -268,16 +265,20 @@ fun rememberGameState(): GameState {
                                     triggerMillis = spaceRockSpawnRateMillis,
                                     doWork = { spaceObjectsController.addSpaceRock() }
                                 )
-                                tinker(
-                                    id = enemyController.addEnemyId,
-                                    triggerMillis = enemySpawnRateMillis,
-                                    doWork = { enemyController.addEnemy(enemyEnemySpawnAttributes) }
-                                )
-                                tinker(
-                                    id = enemyLaserController.fireEnemyLaserId,
-                                    triggerMillis = 2000,
-                                    doWork = { enemyLaserController.fireEnemyLasers(enemies = enemyController.enemies) }
-                                )
+                                enemyAttributes?.let {
+                                    if (enemyAttributes is LevelOneEnemyAttributes) {
+                                        tinker(
+                                            id = enemyController.addEnemyId,
+                                            triggerMillis = enemyAttributes.enemySpawnRateMillis.timeMillis,
+                                            doWork = { enemyController.addEnemy(enemyAttributes) }
+                                        )
+                                        tinker(
+                                            id = enemyLaserController.fireEnemyLaserId,
+                                            triggerMillis = enemyAttributes.enemyFireRateMillis.timeMillis,
+                                            doWork = { enemyLaserController.fireEnemyLasers(enemies = enemyController.enemies) }
+                                        )
+                                    }
+                                }
                                 tinker(
                                     id = boosterController.addBoosterId,
                                     triggerMillis = 4000,
