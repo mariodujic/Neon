@@ -9,7 +9,8 @@ interface Enemy : Serializable {
     val height: Float
     var xOffset: Float
     var yOffset: Float
-    var hp: Int
+    var hp: Float
+    val initialHp: Float
     val impactPower: Int
 
     fun enemyRect(): Rect

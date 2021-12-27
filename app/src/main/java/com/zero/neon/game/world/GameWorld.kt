@@ -4,11 +4,14 @@ import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
@@ -146,13 +149,26 @@ fun GameWorld(
             )
         }
         enemies.forEach {
-            Image(
-                painterResource(id = R.drawable.enemy_ship),
-                contentDescription = stringResource(id = R.string.enemy),
-                modifier = Modifier
-                    .size(width = it.width.dp, height = it.height.dp)
-                    .offset(x = it.xOffset.dp, y = it.yOffset.dp)
-            )
+            Column(modifier = Modifier.offset(x = it.xOffset.dp, y = it.yOffset.dp)) {
+                Box(
+                    modifier = Modifier
+                        .clip(MaterialTheme.shapes.small)
+                        .size(width = it.width.dp, height = 5.dp)
+                        .background(Color.White.copy(alpha = 0.7f))
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .clip(MaterialTheme.shapes.small)
+                            .size(width = it.hpBarWidth.dp, height = 5.dp)
+                            .background(Color.Red)
+                    )
+                }
+                Image(
+                    painterResource(id = R.drawable.enemy_ship),
+                    contentDescription = stringResource(id = R.string.enemy),
+                    modifier = Modifier.size(width = it.width.dp, height = it.height.dp)
+                )
+            }
         }
         enemyLasers.forEach {
             Image(

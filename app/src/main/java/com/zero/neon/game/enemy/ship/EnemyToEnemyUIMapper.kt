@@ -10,7 +10,7 @@ class EnemyToEnemyUIMapper {
                 height = height,
                 xOffset = xOffset,
                 yOffset = yOffset,
-                hp = hp
+                hpBarWidth = width / initialHp * hp
             )
         }
     }

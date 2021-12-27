@@ -15,7 +15,8 @@ class RegularEnemy(
     override val enemyId: String = UUID.randomUUID().toString()
     override val width: Float = 40f
     override val height: Float = 40f
-    override var hp: Int = 250
+    override var hp: Float = 250f
+    override val initialHp: Float = hp
     override val impactPower: Int = 250
     override var xOffset: Float = enemySpawnAttributes?.spawnPosition?.let {
         when (it) {
@@ -48,7 +49,7 @@ class RegularEnemy(
         }
         yOffset += yOffsetMoveSpeed
 
-        if (yOffset + height > screenHeightDp) hp = 0
+        if (yOffset + height > screenHeightDp) hp = 0f
     }
 
     override fun onObjectImpact(impactPower: Int) {

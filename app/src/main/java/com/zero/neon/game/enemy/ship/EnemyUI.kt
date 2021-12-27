@@ -10,5 +10,5 @@ data class EnemyUI(
     val height: Float,
     val xOffset: Float,
     val yOffset: Float,
-    val hp: Int
+    val hpBarWidth: Float
 ) : Serializable
