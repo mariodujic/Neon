@@ -22,7 +22,7 @@ class StageControllerTest {
     @Before
     fun setUp() {
         `when`(dateUtils.currentTimeMillis()).thenReturn(FAKE_TIME_MILLIS)
-        sut = StageController(dateUtils)
+        sut = StageController(dateUtils, 0, FAKE_TIME_MILLIS)
     }
 
     @Test

@@ -2,14 +2,14 @@ package com.zero.neon.game.spaceobject
 
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Immutable
-import androidx.compose.ui.unit.Dp
+import java.io.Serializable
 
 @Immutable
 data class SpaceObjectUI(
     val id: String,
-    val size: Dp,
-    val xOffset: Dp,
-    val yOffset: Dp,
+    val size: Float,
+    val xOffset: Float,
+    val yOffset: Float,
     val rotation: Float,
     @DrawableRes val drawableId: Int,
-)
+) : Serializable

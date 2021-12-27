@@ -3,10 +3,8 @@ package com.zero.neon.game.ship.laser
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.unit.Dp
 import com.zero.neon.game.enemy.ship.Enemy
 import com.zero.neon.game.laser.Laser
-import com.zero.neon.game.laser.LaserToLaserUIMapper
 import com.zero.neon.game.ship.laser.ShipBoostedLaser.Companion.SHIP_BOOSTED_LASER_WIDTH
 import com.zero.neon.game.ship.laser.ShipLaser.Companion.SHIP_LASER_WIDTH
 import com.zero.neon.game.ship.ship.Ship
@@ -15,16 +13,17 @@ import com.zero.neon.game.spaceobject.SpaceObject
 import com.zero.neon.utils.UuidUtils
 
 class LasersController(
-    private val screenWidthDp: Dp,
-    private val screenHeightDp: Dp,
+    private val screenWidthDp: Float,
+    private val screenHeightDp: Float,
     private val uuidUtils: UuidUtils = UuidUtils(),
-    private val setShipLasersUI: (List<LaserUI>) -> Unit,
-    private val setUltimateLasersUI: (List<LaserUI>) -> Unit
+    initialShipLasers: List<Laser> = listOf(),
+    initialUltimateLasers: List<Laser> = listOf(),
+    private val setShipLasers: (List<Laser>) -> Unit,
+    private val setUltimateLasers: (List<Laser>) -> Unit
 ) {
 
-    private var shipLasers: List<Laser> = emptyList()
-    private var ultimateLasers: List<Laser> = emptyList()
-    private val mapper = LaserToLaserUIMapper()
+    private var shipLasers: List<Laser> = initialShipLasers
+    private var ultimateLasers: List<Laser> = initialUltimateLasers
 
     val fireLaserId = uuidUtils.getUuid()
     fun fireLasers(ship: Ship) {
@@ -38,13 +37,13 @@ class LasersController(
                 onDestroyLaser = { destroyShipLaser(it) }
             )
             if (ship.tripleLaserBoosterEnabled) {
-                arrayOf(
+                listOf(
                     laser.copy(xOffset = laser.xOffset - TRIPLE_LASER_SIDE_OFFSET),
                     laser.copy(xOffset = laser.xOffset),
                     laser.copy(xOffset = laser.xOffset + TRIPLE_LASER_SIDE_OFFSET)
                 )
             } else {
-                arrayOf(laser)
+                listOf(laser)
             }
         } else {
             val laser = ShipLaser(
@@ -55,13 +54,13 @@ class LasersController(
                 onDestroyLaser = { destroyShipLaser(it) }
             )
             if (ship.tripleLaserBoosterEnabled) {
-                arrayOf(
+                listOf(
                     laser.copy(xOffset = laser.xOffset - TRIPLE_LASER_SIDE_OFFSET),
                     laser.copy(xOffset = laser.xOffset),
                     laser.copy(xOffset = laser.xOffset + TRIPLE_LASER_SIDE_OFFSET)
                 )
             } else {
-                arrayOf(laser)
+                listOf(laser)
             }
         }
 
@@ -125,10 +124,10 @@ class LasersController(
 
             val laserRect = Rect(
                 offset = Offset(
-                    x = laser.xOffset.value,
-                    y = laser.yOffset.value + screenHeightDp.value - 50
+                    x = laser.xOffset,
+                    y = laser.yOffset + screenHeightDp - 50
                 ),
-                size = Size(width = laser.width.value, height = laser.height.value)
+                size = Size(width = laser.width, height = laser.height)
             )
 
             if (spaceObjectRectList.any { it.overlaps(laserRect) }) {
@@ -147,11 +146,11 @@ class LasersController(
     }
 
     private fun updateShipLasersUI() {
-        setShipLasersUI(shipLasers.map { mapper(it) })
+        setShipLasers(shipLasers)
     }
 
     private fun updateUltimateLasersUI() {
-        setUltimateLasersUI(ultimateLasers.map { mapper(it) })
+        setUltimateLasers(ultimateLasers)
     }
 
     companion object {

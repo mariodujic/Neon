@@ -1,15 +1,14 @@
 package com.zero.neon.testutils
 
-import androidx.compose.ui.unit.dp
 import com.zero.neon.game.ship.laser.ShipBoostedLaser
 import com.zero.neon.game.ship.laser.ShipBoostedLaser.Companion.SHIP_BOOSTED_LASER_WIDTH
 import com.zero.neon.game.ship.laser.ShipLaser
 import com.zero.neon.game.ship.laser.ShipLaser.Companion.SHIP_LASER_WIDTH
 import com.zero.neon.game.ship.ship.Ship
 
-val FAKE_SCREEN_WIDTH_DP = 500.dp
-val FAKE_SCREEN_HEIGHT_DP = 550.dp
-val FAKE_SHIP = Ship(xOffset = 0.dp, yOffset = 0.dp)
+const val FAKE_SCREEN_WIDTH_DP = 500f
+const val FAKE_SCREEN_HEIGHT_DP = 550f
+val FAKE_SHIP = Ship(xOffset = 0f, yOffset = 0f)
 val FAKE_SHIP_LASER = with(FAKE_SHIP) {
     ShipLaser(
         id = FAKE_UUID,

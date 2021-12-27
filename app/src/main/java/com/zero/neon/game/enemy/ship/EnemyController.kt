@@ -1,47 +1,40 @@
 package com.zero.neon.game.enemy.ship
 
-import androidx.compose.ui.unit.Dp
 import java.util.*
 
 class EnemyController(
-    private val screenWidthDp: Dp,
-    private val screenHeightDp: Dp,
-    private val setEnemies: (List<EnemyUI>) -> Unit
+    private val screenWidthDp: Float,
+    private val screenHeightDp: Float,
+    initialEnemies: List<Enemy> = emptyList(),
+    private val setEnemies: (List<Enemy>) -> Unit
 ) {
 
-    var enemies: List<Enemy> = listOf()
+    var enemies: List<Enemy> = initialEnemies
         private set
-    private val mapper = EnemyToEnemyUIMapper()
 
     val addEnemyId = UUID.randomUUID().toString()
     fun addEnemy(enemySpawnAttributes: EnemySpawnAttributes?) {
         val enemy = RegularEnemy(
             screenWidthDp = screenWidthDp,
             screenHeightDp = screenHeightDp,
-            enemySpawnAttributes = enemySpawnAttributes,
-            onDestroyEnemy = { onDestroyEnemy(it) })
+            enemySpawnAttributes = enemySpawnAttributes
+        )
         enemies = enemies.toMutableList().apply {
             add(enemy)
         }
         updateEnemies()
     }
 
-    val moveEnemiesId = UUID.randomUUID().toString()
-    fun moveEnemies() {
+    val processEnemiesId = UUID.randomUUID().toString()
+    fun processEnemies() {
         enemies.forEach { it.move() }
+        enemies = enemies.toMutableList().apply { removeAll { it.hp <= 0 } }
         updateEnemies()
     }
 
     fun hasEnemies() = enemies.isNotEmpty()
 
-    private fun onDestroyEnemy(enemyId: String) {
-        enemies = enemies.toMutableList().apply {
-            removeAll { it.enemyId == enemyId }
-        }
-        updateEnemies()
-    }
-
     private fun updateEnemies() {
-        setEnemies(enemies.map { mapper(it) })
+        setEnemies(enemies)
     }
 }

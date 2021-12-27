@@ -1,27 +1,22 @@
 package com.zero.neon.game.enemy.laser
 
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import com.zero.neon.game.enemy.ship.Enemy
-import com.zero.neon.game.laser.LaserToLaserUIMapper
-import com.zero.neon.game.ship.laser.LaserUI
 import java.util.*
 
 class EnemyLasersController(
-    private val screenWidthDp: Dp,
-    private val screenHeightDp: Dp,
-    private val setShipLasersUI: (List<LaserUI>) -> Unit
+    private val screenHeightDp: Float,
+    initialEnemyLasers: List<EnemyLaser>,
+    private val setEnemyLasers: (List<EnemyLaser>) -> Unit
 ) {
 
-    var enemyLasers: List<EnemyLaser> = emptyList()
+    var enemyLasers: List<EnemyLaser> = initialEnemyLasers
         private set
-    private val mapper = LaserToLaserUIMapper()
 
     val fireEnemyLaserId = UUID.randomUUID().toString()
     fun fireEnemyLasers(enemies: List<Enemy>) {
         if (enemies.isEmpty()) return
         val enemy = enemies.random()
-        val laserWidth = 18.dp
+        val laserWidth = 18f
         val laser = EnemyLaser(
             xOffset = enemy.xOffset + enemy.width / 2 - laserWidth / 2,
             yOffset = enemy.yOffset + enemy.height,
@@ -54,6 +49,6 @@ class EnemyLasersController(
     }
 
     private fun updateShipLasersUI() {
-        setShipLasersUI(enemyLasers.map { mapper(it) })
+        setEnemyLasers(enemyLasers)
     }
 }

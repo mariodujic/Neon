@@ -2,12 +2,12 @@ package com.zero.neon.game.booster
 
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Immutable
-import androidx.compose.ui.unit.Dp
+import java.io.Serializable
 
 @Immutable
 data class BoosterUI(
-    val xOffset: Dp,
-    val yOffset: Dp,
-    val size: Dp,
+    val xOffset: Float,
+    val yOffset: Float,
+    val size: Float,
     @DrawableRes val drawableId: Int
-)
+) : Serializable

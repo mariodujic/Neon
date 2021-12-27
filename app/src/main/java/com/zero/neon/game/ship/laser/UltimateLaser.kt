@@ -1,20 +1,18 @@
 package com.zero.neon.game.ship.laser
 
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import com.zero.neon.R
 import com.zero.neon.game.laser.Laser
 
 data class UltimateLaser(
     override val id: String,
-    override var xOffset: Dp,
-    override var yOffset: Dp = (-10).dp,
-    private val yRange: Dp,
+    override var xOffset: Float,
+    override var yOffset: Float = -10f,
+    private val yRange: Float,
     private val onDestroyLaser: (laserId: String) -> Unit
 ) : Laser {
 
-    override var width: Dp = 30.dp
-    override var height: Dp = 30.dp
+    override var width: Float = 30f
+    override var height: Float = 30f
     override var rotation: Float = 0f
     override var impactPower: Int = 1000
     override val drawableId: Int = R.drawable.laser_blue_11
@@ -35,6 +33,6 @@ data class UltimateLaser(
     }
 
     companion object {
-        val ULTIMATE_LASER_MOVEMENT_SPEED = 7.dp
+        const val ULTIMATE_LASER_MOVEMENT_SPEED: Float = 7f
     }
 }

@@ -1,11 +1,13 @@
 package com.zero.neon.game.stage
 
+import androidx.compose.runtime.saveable.Saver
 import com.zero.neon.utils.DateUtils
 
-class StageController(private val dateUtils: DateUtils = DateUtils()) {
-
+class StageController(
+    private val dateUtils: DateUtils = DateUtils(),
+    private var stageIndex: Int = 0,
     private var stageStartSnapshotMillis: Long = dateUtils.currentTimeMillis()
-    private var stageIndex = 0
+) {
 
     fun getGameStage(readyForNextStage: Boolean = false): Stage {
         val stageTimeExpired =
@@ -24,5 +26,16 @@ class StageController(private val dateUtils: DateUtils = DateUtils()) {
 
     private fun getStage(): Stage {
         return Stage.values()[stageIndex]
+    }
+
+    companion object {
+        fun saver(): Saver<StageController, *> = Saver(
+            save = {
+                Pair(it.stageIndex, it.stageStartSnapshotMillis)
+            },
+            restore = {
+                StageController(stageIndex = it.first, stageStartSnapshotMillis = it.second)
+            }
+        )
     }
 }

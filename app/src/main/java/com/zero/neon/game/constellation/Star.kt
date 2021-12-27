@@ -1,19 +1,23 @@
 package com.zero.neon.game.constellation
 
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
+import java.io.Serializable
 
-data class Star(var xOffset: Dp, var yOffset: Dp, private val maxYOffset: Dp, var size: Dp) {
+data class Star(
+    var xOffset: Float,
+    var yOffset: Float,
+    private val maxYOffset: Float,
+    var size: Float
+) : Serializable {
 
     private val initialStarSize = size
     private var enlargeStar = false
-    private val resizeRate = 0.2.dp
+    private val resizeRate = 0.2f
 
     fun animateStar() {
 
-        yOffset += 0.5.dp
+        yOffset += 0.5f
         if (yOffset >= maxYOffset) {
-            yOffset = 0.dp
+            yOffset = 0f
         }
 
         if (enlargeStar) {
@@ -21,12 +25,12 @@ data class Star(var xOffset: Dp, var yOffset: Dp, private val maxYOffset: Dp, va
                 enlargeStar = false
             } else {
                 size += resizeRate
-                yOffset += 2.dp
+                yOffset += 2f
             }
         } else {
-            if (size - resizeRate > 1.dp) {
+            if (size - resizeRate > 1) {
                 size -= resizeRate
-                yOffset += 2.dp
+                yOffset += 2
             } else {
                 enlargeStar = true
             }

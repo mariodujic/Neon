@@ -43,7 +43,7 @@ fun AudioPlayer(gameStatus: GameStatus) {
     LaunchedEffect(gameStatus) {
         when (gameStatus) {
             GameStatus.RUNNING -> playAudio()
-            GameStatus.PAUSE -> stopAudio()
+            else -> stopAudio()
         }
     }
 }

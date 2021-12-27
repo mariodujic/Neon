@@ -1,13 +1,13 @@
 package com.zero.neon.game.spaceobject
 
 import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.unit.Dp
+import java.io.Serializable
 
-interface SpaceObject {
+interface SpaceObject : Serializable {
     val id: String
-    var xOffset: Dp
-    var yOffset: Dp
-    var size: Dp
+    var xOffset: Float
+    var yOffset: Float
+    var size: Float
     val drawableId: Int
     val destroyable: Boolean
     var hp: Int

@@ -31,14 +31,12 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
-        useIR = true
     }
     buildFeatures {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion compose_version
-        kotlinCompilerVersion '1.6.0'
+        kotlinCompilerExtensionVersion kotlin_compiler_extension_version
     }
     packagingOptions {
         resources {
@@ -49,10 +47,9 @@ android {
 
 dependencies {
     /*Core*/
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.4.0'
-    implementation 'com.google.android.material:material:1.4.0'
-    implementation 'androidx.activity:activity-compose:1.4.0'
+    implementation "androidx.core:core-ktx:$core_ktx_version"
+    implementation "com.google.android.material:material:$material_version"
+    implementation "androidx.activity:activity-compose:$activity_compose_version"
     /*Compose*/
     implementation "androidx.compose.ui:ui:$compose_version"
     implementation "androidx.compose.material:material:$compose_version"

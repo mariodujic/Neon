@@ -1,14 +1,14 @@
 package com.zero.neon.game.enemy.ship
 
 import androidx.compose.runtime.Immutable
-import androidx.compose.ui.unit.Dp
+import java.io.Serializable
 
 @Immutable
 data class EnemyUI(
     val enemyId: String,
-    val width: Dp,
-    val height: Dp,
-    val xOffset: Dp,
-    val yOffset: Dp,
+    val width: Float,
+    val height: Float,
+    val xOffset: Float,
+    val yOffset: Float,
     val hp: Int
-)
+) : Serializable

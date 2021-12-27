@@ -16,9 +16,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.zero.neon.R
-import com.zero.neon.common.theme.shipShieldOne
-import com.zero.neon.common.theme.shipShieldTwo
+import com.zero.neon.common.theme.ShipShieldOne
+import com.zero.neon.common.theme.ShipShieldTwo
 import com.zero.neon.game.booster.BoosterUI
 import com.zero.neon.game.constellation.Star
 import com.zero.neon.game.enemy.ship.EnemyUI
@@ -41,8 +42,8 @@ fun GameWorld(
 
     val infiniteTransition = rememberInfiniteTransition()
     val shipShieldColor by infiniteTransition.animateColor(
-        initialValue = shipShieldOne,
-        targetValue = shipShieldTwo,
+        initialValue = ShipShieldOne,
+        targetValue = ShipShieldTwo,
         animationSpec = infiniteRepeatable(
             animation = tween(500, easing = LinearEasing),
             repeatMode = RepeatMode.Reverse
@@ -56,8 +57,8 @@ fun GameWorld(
                 contentDescription = stringResource(id = R.string.laser),
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier
-                    .absoluteOffset(x = it.xOffset, y = it.yOffset)
-                    .size(width = it.width, height = it.height)
+                    .absoluteOffset(x = it.xOffset.dp, y = it.yOffset.dp)
+                    .size(width = it.width.dp, height = it.height.dp)
                     .align(Alignment.BottomStart)
             )
         }
@@ -66,8 +67,8 @@ fun GameWorld(
                 painterResource(id = it.drawableId),
                 contentDescription = stringResource(id = R.string.laser),
                 modifier = Modifier
-                    .absoluteOffset(x = it.xOffset, y = it.yOffset)
-                    .size(width = it.width, height = it.height)
+                    .absoluteOffset(x = it.xOffset.dp, y = it.yOffset.dp)
+                    .size(width = it.width.dp, height = it.height.dp)
                     .align(Alignment.BottomStart)
                     .rotate(degrees = it.rotation)
             )
@@ -75,12 +76,12 @@ fun GameWorld(
         stars.forEach {
             Canvas(
                 modifier = Modifier
-                    .size(size = it.size)
-                    .offset(x = it.xOffset, y = it.yOffset),
+                    .size(size = it.size.dp)
+                    .offset(x = it.xOffset.dp, y = it.yOffset.dp),
                 onDraw = {
                     val colors = listOf(Color.White, Color.Transparent)
                     drawCircle(
-                        radius = it.size.value,
+                        radius = it.size,
                         brush = Brush.radialGradient(colors),
                         blendMode = BlendMode.Luminosity
                     )
@@ -92,8 +93,8 @@ fun GameWorld(
                 painterResource(id = it.drawableId),
                 contentDescription = stringResource(id = R.string.space_object),
                 modifier = Modifier
-                    .size(it.size)
-                    .offset(x = it.xOffset, y = it.yOffset)
+                    .size(it.size.dp)
+                    .offset(x = it.xOffset.dp, y = it.yOffset.dp)
                     .rotate(degrees = it.rotation)
             )
         }
@@ -102,20 +103,20 @@ fun GameWorld(
                 painterResource(id = it.drawableId),
                 contentDescription = stringResource(id = R.string.booster),
                 modifier = Modifier
-                    .size(it.size)
-                    .offset(x = it.xOffset, y = it.yOffset)
+                    .size(it.size.dp)
+                    .offset(x = it.xOffset.dp, y = it.yOffset.dp)
             )
         }
         Box(
             modifier = Modifier
-                .size(ship.shieldSize)
-                .offset(x = ship.xOffset, y = ship.yOffset)
+                .size(ship.shieldSize.dp)
+                .offset(x = ship.xOffset.dp, y = ship.yOffset.dp)
         ) {
             if (ship.shieldEnabled) {
                 Canvas(
                     modifier = Modifier
-                        .size(size = ship.width)
-                        .offset(y = (ship.height - ship.width) / 2),
+                        .size(size = ship.width.dp)
+                        .offset(y = (ship.height - ship.width).dp / 2),
                     onDraw = {
                         val colors =
                             listOf(
@@ -125,10 +126,10 @@ fun GameWorld(
                                 shipShieldColor
                             )
                         drawCircle(
-                            radius = ship.shieldSize.value,
+                            radius = ship.shieldSize,
                             brush = Brush.radialGradient(
                                 colors = colors,
-                                radius = ship.height.value * 2.5f
+                                radius = ship.height * 2.5f
                             ),
                             blendMode = BlendMode.Hardlight
                         )
@@ -140,8 +141,8 @@ fun GameWorld(
                 contentDescription = stringResource(id = R.string.ship),
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier
-                    .width(ship.width)
-                    .height(ship.height)
+                    .width(ship.width.dp)
+                    .height(ship.height.dp)
             )
         }
         enemies.forEach {
@@ -149,8 +150,8 @@ fun GameWorld(
                 painterResource(id = R.drawable.enemy_ship),
                 contentDescription = stringResource(id = R.string.enemy),
                 modifier = Modifier
-                    .size(width = it.width, height = it.height)
-                    .offset(x = it.xOffset, y = it.yOffset)
+                    .size(width = it.width.dp, height = it.height.dp)
+                    .offset(x = it.xOffset.dp, y = it.yOffset.dp)
             )
         }
         enemyLasers.forEach {
@@ -158,8 +159,8 @@ fun GameWorld(
                 painterResource(id = it.drawableId),
                 contentDescription = stringResource(id = R.string.enemy_laser),
                 modifier = Modifier
-                    .size(width = it.width, height = it.height)
-                    .offset(x = it.xOffset, y = it.yOffset)
+                    .size(width = it.width.dp, height = it.height.dp)
+                    .offset(x = it.xOffset.dp, y = it.yOffset.dp)
             )
         }
     }

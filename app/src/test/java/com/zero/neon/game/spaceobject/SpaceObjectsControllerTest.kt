@@ -14,7 +14,7 @@ import org.mockito.junit.MockitoJUnitRunner
 class SpaceObjectsControllerTest {
 
     @Mock
-    private lateinit var setSpaceObjectsUi: (List<SpaceObjectUI>) -> Unit
+    private lateinit var setSpaceObjects: (List<SpaceObject>) -> Unit
 
     private val mapper = SpaceObjectToSpaceObjectUIMapper()
     private lateinit var sut: SpaceObjectsController
@@ -24,7 +24,8 @@ class SpaceObjectsControllerTest {
         sut = SpaceObjectsController(
             FAKE_SCREEN_WIDTH_DP,
             FAKE_SCREEN_HEIGHT_DP,
-            setSpaceObjectsUi
+            emptyList(),
+            setSpaceObjects
         )
     }
 
@@ -50,14 +51,14 @@ class SpaceObjectsControllerTest {
     @Test
     fun `should call setSpaceObjectsUi with correct argument when addSpaceRock`() {
         sut.addSpaceRock()
-        val argument = sut.spaceObjects.map { mapper(it) }
-        verify(setSpaceObjectsUi).invoke(argument)
+        val argument = sut.spaceObjects
+        verify(setSpaceObjects).invoke(argument)
     }
 
     @Test
-    fun `should call setSpaceObjectsUi with correct argument when moveSpaceObjects`() {
-        sut.moveSpaceObjects()
-        val argument = sut.spaceObjects.map { mapper(it) }
-        verify(setSpaceObjectsUi).invoke(argument)
+    fun `should call setSpaceObjectsUi with correct argument when processSpaceObjects`() {
+        sut.processSpaceObjects()
+        val argument = sut.spaceObjects
+        verify(setSpaceObjects).invoke(argument)
     }
 }

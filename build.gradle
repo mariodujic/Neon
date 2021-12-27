@@ -1,6 +1,12 @@
 buildscript {
     ext {
-        compose_version = '1.1.0-beta04'
+        kotlin_version = '1.6.10'
+        compose_version = '1.1.0-rc01'
+        kotlin_compiler_extension_version = '1.1.0-rc02'
+        core_ktx_version = '1.7.0'
+        material_version = '1.4.0'
+        activity_compose_version = '1.4.0'
+        gradle_plugin_version = '7.0.4'
         mockito_version = '4.1.0'
         junit_version = '4.13.2'
         accompanist_version = '0.20.3'
@@ -12,8 +18,8 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.4'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.0"
+        classpath "com.android.tools.build:gradle:$gradle_plugin_version"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 

@@ -3,25 +3,22 @@ package com.zero.neon.game.spaceobject
 import androidx.annotation.DrawableRes
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import com.zero.neon.R
 import java.util.*
 import kotlin.random.Random
 
 class SpaceRock(
-    override var xOffset: Dp,
-    override var size: Dp,
-    private val screenHeight: Dp,
-    private val onDestroyRock: (rockId: String) -> Unit
+    override var xOffset: Float,
+    override var size: Float,
+    private val screenHeight: Float
 ) : SpaceObject {
     override val id: String = UUID.randomUUID().toString()
     override val destroyable: Boolean = true
-    override var yOffset = 1.dp
+    override var yOffset: Float = 1f
     private val randomDrawableIndex = Random.nextInt(0, RockType.values().size)
     override val drawableId: Int = RockType.values()[randomDrawableIndex].drawableId
-    override var hp: Int = size.value.toInt()
-    override val impactPower = size.value.toInt()
+    override var hp: Int = size.toInt()
+    override val impactPower = size.toInt()
     private var rotateClockWise = Random.nextBoolean()
     override var rotation = 0f
     private val minRotationSpeed = 0.05f
@@ -32,28 +29,25 @@ class SpaceRock(
     override fun spaceObjectRect(): Rect {
         return Rect(
             center = Offset(
-                x = xOffset.value + size.value / 2,
-                y = yOffset.value + size.value / 2
+                x = xOffset + size / 2,
+                y = yOffset + size / 2
             ),
-            radius = size.value / 2
+            radius = size / 2
         )
     }
 
     override fun moveObject() {
         if (rotateClockWise) rotation += rotationSpeed else rotation -= rotationSpeed
 
-        if (yOffset < screenHeight + 100.dp) {
-            yOffset += 1.dp
+        if (yOffset < screenHeight + 100) {
+            yOffset += 1
         } else {
-            onDestroyRock(id)
+            hp = 0
         }
     }
 
     override fun onObjectImpact(impactPower: Int) {
         hp -= impactPower
-        if (hp <= 0) {
-            onDestroyRock(id)
-        }
     }
 
     enum class RockType(@DrawableRes val drawableId: Int) {

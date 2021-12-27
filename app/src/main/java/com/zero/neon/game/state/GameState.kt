@@ -1,216 +1,180 @@
 package com.zero.neon.game.state
 
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import com.zero.neon.core.tinker
+import com.zero.neon.game.booster.Booster
 import com.zero.neon.game.booster.BoosterController
+import com.zero.neon.game.booster.BoosterToBoosterUIMapper
 import com.zero.neon.game.booster.BoosterUI
 import com.zero.neon.game.constellation.ConstellationController
 import com.zero.neon.game.constellation.Star
+import com.zero.neon.game.enemy.laser.EnemyLaser
 import com.zero.neon.game.enemy.laser.EnemyLasersController
+import com.zero.neon.game.enemy.ship.Enemy
 import com.zero.neon.game.enemy.ship.EnemyController
+import com.zero.neon.game.enemy.ship.EnemyToEnemyUIMapper
 import com.zero.neon.game.enemy.ship.EnemyUI
+import com.zero.neon.game.laser.Laser
+import com.zero.neon.game.laser.LaserToLaserUIMapper
 import com.zero.neon.game.settings.GameStatus
 import com.zero.neon.game.ship.laser.LaserUI
 import com.zero.neon.game.ship.laser.LasersController
 import com.zero.neon.game.ship.ship.Ship
 import com.zero.neon.game.ship.ship.ShipController
+import com.zero.neon.game.spaceobject.SpaceObject
+import com.zero.neon.game.spaceobject.SpaceObjectToSpaceObjectUIMapper
 import com.zero.neon.game.spaceobject.SpaceObjectUI
 import com.zero.neon.game.spaceobject.SpaceObjectsController
 import com.zero.neon.game.stage.StageController
 import com.zero.neon.game.stage.StageGameAct
 import com.zero.neon.game.stage.StageMessageAct
 import com.zero.neon.utils.observeAsState
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import java.util.*
 
 @Composable
 fun rememberGameState(): GameState {
+
     val configuration = LocalConfiguration.current
-    val screenWidthDp = configuration.screenWidthDp.dp
-    val screenHeightDp = configuration.screenHeightDp.dp
+    val screenWidth = rememberSaveable { configuration.screenWidthDp.toFloat() }
+    val screenHeight = rememberSaveable { configuration.screenHeightDp.toFloat() }
     val coroutineScope = rememberCoroutineScope()
-    val gameState = remember { GameStateImpl(screenWidthDp, screenHeightDp, coroutineScope) }
-    val lifecycle by LocalLifecycleOwner.current.lifecycle.observeAsState()
-    LaunchedEffect(lifecycle) {
-        if (lifecycle == Lifecycle.Event.ON_PAUSE) {
-            gameState.setGameStatus(GameStatus.PAUSE)
-        } else if (lifecycle == Lifecycle.Event.ON_RESUME) {
-            gameState.setGameStatus(GameStatus.RUNNING)
-        } else if (lifecycle == Lifecycle.Event.ON_STOP) {
-            gameState.setGameStatus(GameStatus.STOP)
+
+    var stars: List<Star> by rememberSaveable { mutableStateOf(emptyList()) }
+    val constellationController = remember {
+        ConstellationController(
+            stars = { stars },
+            setStars = { stars = it }
+        )
+    }
+
+    var ship by rememberSaveable {
+        mutableStateOf(
+            Ship(xOffset = screenWidth / 2 - 85f / 2, yOffset = screenHeight + 240f)
+        )
+    }
+    val shipController = remember {
+        ShipController(
+            screenWidthDp = screenWidth,
+            screenHeightDp = screenHeight,
+            ship = ship,
+        ) { ship = it }
+    }
+
+    var shipLasers: List<Laser> by remember { mutableStateOf(emptyList()) }
+    var ultimateLasers: List<Laser> by remember { mutableStateOf(emptyList()) }
+    val lasersController = remember {
+        LasersController(
+            screenWidthDp = screenWidth,
+            screenHeightDp = screenHeight,
+            initialShipLasers = shipLasers,
+            initialUltimateLasers = ultimateLasers,
+            setShipLasers = { shipLasers = it },
+            setUltimateLasers = { ultimateLasers = it }
+        )
+    }
+
+    var spaceObjects: List<SpaceObject> by rememberSaveable { mutableStateOf(emptyList()) }
+    val spaceObjectsController = remember {
+        SpaceObjectsController(
+            screenWidthDp = screenWidth,
+            screenHeightDp = screenHeight,
+            initialSpaceObjects = spaceObjects,
+            setSpaceObjects = { spaceObjects = it }
+        )
+    }
+
+    var boosters: List<Booster> by rememberSaveable { mutableStateOf(emptyList()) }
+    val boosterController = remember {
+        BoosterController(
+            screenWidthDp = screenWidth,
+            screenHeightDp = screenHeight,
+            initialBoosters = boosters,
+            updateBoosters = { boosters = it }
+        )
+    }
+
+    var enemies: List<Enemy> by rememberSaveable { mutableStateOf(emptyList()) }
+    val enemyController = remember {
+        EnemyController(
+            screenWidthDp = screenWidth,
+            screenHeightDp = screenHeight,
+            initialEnemies = enemies,
+            setEnemies = { enemies = it }
+        )
+    }
+
+    var enemyLasers: List<EnemyLaser> by remember { mutableStateOf(emptyList()) }
+    val enemyLaserController = remember {
+        EnemyLasersController(
+            screenHeightDp = screenHeight,
+            initialEnemyLasers = enemyLasers,
+        ) { enemyLasers = it }
+    }
+
+    var gameMessage by rememberSaveable { mutableStateOf("") }
+
+    val stageController = rememberSaveable(saver = StageController.saver()) { StageController() }
+    var gameStage by rememberSaveable { mutableStateOf(stageController.getGameStage(true)) }
+    fun updateGameStage() {
+        gameStage = stageController.getGameStage(
+            readyForNextStage = !enemyController.hasEnemies() && !spaceObjectsController.hasSpaceObjects()
+        )
+        gameMessage = when (val stagePartition = gameStage.stageAct) {
+            is StageMessageAct -> stagePartition.message
+            else -> ""
         }
     }
-    gameState.refreshHandler
-    return gameState
-}
 
-interface GameState {
-    val gameStatus: GameStatus
-    val gameMessage: String
-    val stars: List<Star>
-    val ship: Ship
-    val shipLasers: List<LaserUI>
-    val ultimateLasers: List<LaserUI>
-    val spaceObjects: List<SpaceObjectUI>
-    val boosters: List<BoosterUI>
-    val enemies: List<EnemyUI>
-    val enemyLasers: List<LaserUI>
-    val gameTimeIndicator: String
-
-    fun moveShipLeft(movingLeft: Boolean)
-    fun moveShipRight(movingRight: Boolean)
-    fun toggleGameStatus()
-}
-
-class GameStateImpl(
-    private val screenWidthDp: Dp,
-    private val screenHeightDp: Dp,
-    private val coroutineScope: CoroutineScope
-) : GameState {
-
-    override var gameStatus = GameStatus.RUNNING
-        private set
-
-    fun setGameStatus(gameStatus: GameStatus) {
-        this.gameStatus = gameStatus
+    var gameStatus by rememberSaveable { mutableStateOf(GameStatus.RUNNING) }
+    fun setGameStatus(_gameStatus: GameStatus) {
+        gameStatus = _gameStatus
     }
 
-    override fun toggleGameStatus() {
-        gameStatus = if (gameStatus == GameStatus.RUNNING) {
-            GameStatus.PAUSE
-        } else GameStatus.RUNNING
+    var gameTimeSec by rememberSaveable { mutableStateOf<Long>(0) }
+    fun updateGameTime() {
+        gameTimeSec += 1
     }
 
-    var refreshHandler by mutableStateOf<Long>(0)
-
-    /**
-     * Constellation
-     *
-     * These objects do not directly affect game play, are passive, and their purpose is
-     * to improve game ambient.
-     */
-    override var stars: List<Star> = emptyList()
-        private set
-    private val constellationController = ConstellationController(
-        stars = { stars },
-        setStars = { stars = it }
-    )
-
-    /**
-     * Ship
-     *
-     * User has horizontal control of the ship. Ship can take damage by colliding with
-     * incoming objects, e.g. Enemy, EnemyLaser, SpaceRock. It can also collect different
-     * boosters. By collecting Booster object, ship will gain special ability for a limited
-     * period of time.
-     */
-    override var ship = Ship(
-        xOffset = screenWidthDp / 2 - 85.dp / 2,
-        yOffset = screenHeightDp + 240.dp
-    )
-        private set
-    private val shipController = ShipController(
-        screenWidthDp = screenWidthDp,
-        screenHeightDp = screenHeightDp,
-        ship = ship,
-    ) { ship = it }
-
-    override fun moveShipLeft(movingLeft: Boolean) {
-        shipController.movingLeft = movingLeft
+    var gameTimeIndicator by rememberSaveable { mutableStateOf("00:00") }
+    fun updateGameTimeIndicator() {
+        val second = String.format("%02d", gameTimeSec % 60)
+        val minute = String.format("%02d", gameTimeSec / (60) % 60)
+        gameTimeIndicator = "$minute:$second"
     }
 
-    override fun moveShipRight(movingRight: Boolean) {
-        shipController.movingRight = movingRight
+    val monitorLoopInSecId = rememberSaveable { UUID.randomUUID().toString() }
+    fun monitorLoopInSec() {
+        updateGameTime()
+        updateGameTimeIndicator()
+        updateGameStage()
     }
 
-    override var shipLasers: List<LaserUI> = emptyList()
-        private set
-    override var ultimateLasers: List<LaserUI> = emptyList()
-        private set
-    private val lasersController = LasersController(
-        screenWidthDp = screenWidthDp,
-        screenHeightDp = screenHeightDp,
-        setShipLasersUI = { shipLasers = it },
-        setUltimateLasersUI = { ultimateLasers = it }
-    )
+    val lifecycle by LocalLifecycleOwner.current.lifecycle.observeAsState()
+    LaunchedEffect(lifecycle) {
+        if (lifecycle == Lifecycle.Event.ON_PAUSE || lifecycle == Lifecycle.Event.ON_STOP) {
+            setGameStatus(GameStatus.PAUSE)
+        } else if (lifecycle == Lifecycle.Event.ON_RESUME || lifecycle == Lifecycle.Event.ON_START) {
+            setGameStatus(GameStatus.RUNNING)
+        }
+    }
 
-    /**
-     * Space objects
-     *
-     *  Floating objects that directly affect [ship]. Colliding ship with [spaceObjects] has
-     *  negative impact on ship hp. Ship can destroy space objects.
-     *
-     *  @see com.zero.neon.game.spaceobject.SpaceObject
-     */
-    override var spaceObjects: List<SpaceObjectUI> = emptyList()
-        private set
-    private val spaceObjectsController = SpaceObjectsController(
-        screenWidthDp = screenWidthDp,
-        screenHeightDp = screenHeightDp,
-        setSpaceObjectsUi = { spaceObjects = it }
-    )
-
-    /**
-     * Boosters
-     *
-     *  Floating objects that directly affect [ship]. Colliding ship with [boosters] give
-     *  ship special ability.
-     *
-     *  @see com.zero.neon.game.booster.Booster
-     */
-    override var boosters: List<BoosterUI> = emptyList()
-        private set
-    private val boosterController = BoosterController(
-        screenWidthDp = screenWidthDp,
-        screenHeightDp = screenHeightDp,
-        updateBoosters = { boosters = it }
-    )
-
-    /**
-     * Enemies
-     *
-     *  Enemies directly affect [ship]. Enemy can collide with ship and enemy can fire lasers.
-     *  Both enemy collision and laser his has negative impact on ships hp. Ship can destroy
-     *  enemies.
-     *
-     *  @see com.zero.neon.game.enemy.ship.Enemy
-     */
-    override var enemies: List<EnemyUI> = emptyList()
-        private set
-    private val enemyController = EnemyController(
-        screenWidthDp = screenWidthDp,
-        screenHeightDp = screenHeightDp
-    ) { enemies = it }
-
-    override var enemyLasers: List<LaserUI> = emptyList()
-        private set
-    private val enemyLaserController = EnemyLasersController(
-        screenHeightDp = screenHeightDp,
-        screenWidthDp = screenWidthDp,
-    ) { enemyLasers = it }
-
-    init {
-        coroutineScope.launch {
+    var refreshHandler by remember { mutableStateOf<Long>(0) }
+    DisposableEffect(lifecycle) {
+        var loopRunning = true
+        val job = coroutineScope.launch {
             constellationController.createStars(
-                screenHeight = screenHeightDp.value.toInt(),
-                screenWidth = screenWidthDp.value.toInt(),
+                screenHeight = screenHeight,
+                screenWidth = screenWidth,
                 coroutineScope = coroutineScope
             )
             launch(IO) {
-                /**
-                 * Game loop
-                 *
-                 * Periodically runs any given work. Depending on a [gameStatus], loop can be
-                 * on hold and resume any time.
-                 */
-                while (true) {
+                while (loopRunning) {
                     if (gameStatus == GameStatus.RUNNING) {
                         tinker(
                             id = constellationController.animateStarsId,
@@ -246,9 +210,9 @@ class GameStateImpl(
                         )
                         if (boosterController.hasBoosters()) {
                             tinker(
-                                id = boosterController.moveBoostersId,
+                                id = boosterController.processBoostersId,
                                 triggerMillis = 5,
-                                doWork = { boosterController.moveBoosters() }
+                                doWork = { boosterController.processBoosters() }
                             )
                         }
                         if (lasersController.hasUltimateLasers()) {
@@ -267,9 +231,9 @@ class GameStateImpl(
                         }
                         if (spaceObjectsController.hasSpaceObjects()) {
                             tinker(
-                                id = spaceObjectsController.moveSpaceObjectsId,
+                                id = spaceObjectsController.processSpaceObjectsId,
                                 triggerMillis = 5,
-                                doWork = { spaceObjectsController.moveSpaceObjects() }
+                                doWork = { spaceObjectsController.processSpaceObjects() }
                             )
                         }
                         if (enemyLaserController.hasEnemyLasers()) {
@@ -281,9 +245,9 @@ class GameStateImpl(
                         }
                         if (enemyController.hasEnemies()) {
                             tinker(
-                                id = enemyController.moveEnemiesId,
+                                id = enemyController.processEnemiesId,
                                 triggerMillis = 5,
-                                doWork = { enemyController.moveEnemies() }
+                                doWork = { enemyController.processEnemies() }
                             )
                         }
                         if (
@@ -333,49 +297,53 @@ class GameStateImpl(
                 }
             }
         }
-    }
-
-    private val monitorLoopInSecId = UUID.randomUUID().toString()
-    private fun monitorLoopInSec() {
-        updateGameTime()
-        updateGameTimeIndicator()
-        updateGameStage()
-    }
-
-    private var gameTimeSec: Long = 0
-    override var gameTimeIndicator: String = "00:00"
-        private set
-
-    private fun updateGameTime() {
-        gameTimeSec += 1
-    }
-
-    private fun updateGameTimeIndicator() {
-        val second = String.format("%02d", gameTimeSec % 60)
-        val minute = String.format("%02d", gameTimeSec / (60) % 60)
-        gameTimeIndicator = "$minute:$second"
-    }
-
-    /**
-     * Game stage
-     *
-     * Game consists of multiple stages. Each stage has its own game settings.
-     *
-     * @see com.zero.neon.game.stage.StageController
-     * @see com.zero.neon.game.stage.Stage
-     */
-    private val stageController = StageController()
-    private var gameStage = stageController.getGameStage(true)
-    override var gameMessage: String = ""
-        private set
-
-    private fun updateGameStage() {
-        gameStage = stageController.getGameStage(
-            readyForNextStage = !enemyController.hasEnemies() && !spaceObjectsController.hasSpaceObjects()
-        )
-        gameMessage = when (val stagePartition = gameStage.stageAct) {
-            is StageMessageAct -> stagePartition.message
-            else -> ""
+        onDispose {
+            loopRunning = false
+            job.cancel()
         }
     }
+    refreshHandler
+    return GameState(
+        gameStatus = gameStatus,
+        gameMessage = gameMessage,
+        stars = stars,
+        ship = ship,
+        shipLasers = shipLasers.map { lasersMapper(it) },
+        ultimateLasers = ultimateLasers.map { lasersMapper(it) },
+        spaceObjects = spaceObjects.map { spaceObjectsMapper(it) },
+        boosters = boosters.map { boosterMapper(it) },
+        enemies = enemies.map { enemyMapper(it) },
+        enemyLasers = enemyLasers.map { lasersMapper(it) },
+        gameTimeIndicator = gameTimeIndicator,
+        moveShipLeft = { shipController.movingLeft = it },
+        moveShipRight = { shipController.movingRight = it },
+        toggleGameStatus = {
+            gameStatus = if (gameStatus == GameStatus.RUNNING) {
+                GameStatus.PAUSE
+            } else GameStatus.RUNNING
+        }
+    )
 }
+
+data class GameState(
+    val gameStatus: GameStatus,
+    val gameMessage: String,
+    val stars: List<Star>,
+    val ship: Ship,
+    val shipLasers: List<LaserUI>,
+    val ultimateLasers: List<LaserUI>,
+    val spaceObjects: List<SpaceObjectUI>,
+    val boosters: List<BoosterUI>,
+    val enemies: List<EnemyUI>,
+    val enemyLasers: List<LaserUI>,
+    val gameTimeIndicator: String,
+    val moveShipLeft: (Boolean) -> Unit,
+    val moveShipRight: (Boolean) -> Unit,
+    val toggleGameStatus: () -> Unit
+)
+
+
+private val boosterMapper = BoosterToBoosterUIMapper()
+private val enemyMapper = EnemyToEnemyUIMapper()
+private val lasersMapper = LaserToLaserUIMapper()
+private val spaceObjectsMapper = SpaceObjectToSpaceObjectUIMapper()

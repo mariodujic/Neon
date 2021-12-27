@@ -1,19 +1,17 @@
 package com.zero.neon.game.spaceobject
 
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import java.util.*
 import kotlin.random.Random
 
 class SpaceObjectsController(
-    private val screenWidthDp: Dp,
-    private val screenHeightDp: Dp,
-    private val setSpaceObjectsUi: (List<SpaceObjectUI>) -> Unit
+    private val screenWidthDp: Float,
+    private val screenHeightDp: Float,
+    initialSpaceObjects: List<SpaceObject>,
+    private val setSpaceObjects: (List<SpaceObject>) -> Unit
 ) {
 
-    var spaceObjects: List<SpaceObject> = emptyList()
+    var spaceObjects: List<SpaceObject> = initialSpaceObjects
         private set
-    private val mapper = SpaceObjectToSpaceObjectUIMapper()
 
     private val minRockSize = 20
     private val maxRockSize = 80
@@ -21,31 +19,26 @@ class SpaceObjectsController(
     val addSpaceRockId = UUID.randomUUID().toString()
     fun addSpaceRock() {
         val rockSize = Random.nextInt(minRockSize, maxRockSize)
-        val rockXOffset = Random.nextInt(rockSize, screenWidthDp.value.toInt() - rockSize).dp
+        val rockXOffset = Random.nextInt(rockSize, screenWidthDp.toInt() - rockSize).toFloat()
         val spaceRock = SpaceRock(
             xOffset = rockXOffset,
-            size = rockSize.dp,
-            screenHeight = screenHeightDp,
-            onDestroyRock = { destroySpaceObject(it) }
+            size = rockSize.toFloat(),
+            screenHeight = screenHeightDp
         )
         spaceObjects = spaceObjects.toMutableList().apply { add(spaceRock) }
         updateSpaceObjectsUI()
     }
 
-    private fun destroySpaceObject(rockId: String) {
-        spaceObjects = spaceObjects.toMutableList().apply { removeAll { it.id == rockId } }
-        updateSpaceObjectsUI()
-    }
-
-    val moveSpaceObjectsId = UUID.randomUUID().toString()
-    fun moveSpaceObjects() {
+    val processSpaceObjectsId = UUID.randomUUID().toString()
+    fun processSpaceObjects() {
         spaceObjects.forEach { it.moveObject() }
+        spaceObjects = spaceObjects.toMutableList().apply { removeAll { it.hp <= 0 } }
         updateSpaceObjectsUI()
     }
 
     fun hasSpaceObjects() = spaceObjects.isNotEmpty()
 
     private fun updateSpaceObjectsUI() {
-        setSpaceObjectsUi(spaceObjects.map { mapper(it) })
+        setSpaceObjects(spaceObjects)
     }
 }

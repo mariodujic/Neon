@@ -1,6 +1,5 @@
 package com.zero.neon.game.stage
 
-import androidx.compose.ui.unit.dp
 import com.zero.neon.game.enemy.ship.EnemySpawnAttributes
 import com.zero.neon.game.enemy.ship.EnemySpawnPosition
 
@@ -8,22 +7,22 @@ enum class Stage(
     val stageAct: StageAct,
     val durationSec: Long
 ) {
-    STAGE_ONE_MESSAGE_ONE(
-        StageMessageAct("Stage 1"),
-        durationSec = 3
-    ),
-    STAGE_ONE_MESSAGE_TWO(
-        StageMessageAct("Get ready!"),
-        durationSec = 3
-    ),
-    STAGE_ONE_MESSAGE_THREE(
-        StageMessageAct("GO!"),
-        durationSec = 1
-    ),
+     STAGE_ONE_MESSAGE_ONE(
+         StageMessageAct("Stage 1"),
+         durationSec = 3
+     ),
+     STAGE_ONE_MESSAGE_TWO(
+         StageMessageAct("Get ready!"),
+         durationSec = 3
+     ),
+     STAGE_ONE_MESSAGE_THREE(
+         StageMessageAct("GO!"),
+         durationSec = 1
+     ),
     STAGE_ONE_GAME_ONE(
         stageAct = StageGameAct(
-            spaceRockSpawnRateMillis = 200,
-            enemySpawnRateMillis = 0,
+            spaceRockSpawnRateMillis = 1000,
+            enemySpawnRateMillis = 1000,
             enemyEnemySpawnAttributes = null,
         ),
         durationSec = 10
@@ -50,8 +49,8 @@ enum class Stage(
             enemySpawnRateMillis = 1000,
             enemyEnemySpawnAttributes = EnemySpawnAttributes(
                 spawnPosition = EnemySpawnPosition.LEFT,
-                xOffsetSpeed = 0.6.dp,
-                yOffsetSpeed = 0.5.dp
+                xOffsetSpeed = 0.6f,
+                yOffsetSpeed = 0.5f
             )
         ),
         durationSec = 10
@@ -78,8 +77,8 @@ enum class Stage(
             enemySpawnRateMillis = 500,
             enemyEnemySpawnAttributes = EnemySpawnAttributes(
                 spawnPosition = EnemySpawnPosition.RIGHT,
-                xOffsetSpeed = 0.7.dp,
-                yOffsetSpeed = 0.5.dp
+                xOffsetSpeed = 0.7f,
+                yOffsetSpeed = 0.5f
             )
         ),
         durationSec = 10

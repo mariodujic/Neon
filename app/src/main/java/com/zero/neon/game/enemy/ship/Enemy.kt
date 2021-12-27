@@ -1,15 +1,14 @@
 package com.zero.neon.game.enemy.ship
 
 import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
+import java.io.Serializable
 
-interface Enemy {
+interface Enemy : Serializable {
     val enemyId: String
-    val width: Dp
-    val height: Dp
-    var xOffset: Dp
-    var yOffset: Dp
+    val width: Float
+    val height: Float
+    var xOffset: Float
+    var yOffset: Float
     var hp: Int
     val impactPower: Int
 
@@ -18,7 +17,7 @@ interface Enemy {
     fun onObjectImpact(impactPower: Int)
 
     companion object {
-        val DEFAULT_X_OFFSET_MOVE_SPEED = 0.5.dp
-        val DEFAULT_Y_OFFSET_MOVE_SPEED = 0.2.dp
+        const val DEFAULT_X_OFFSET_MOVE_SPEED: Float = 0.5f
+        const val DEFAULT_Y_OFFSET_MOVE_SPEED: Float = 0.2f
     }
 }

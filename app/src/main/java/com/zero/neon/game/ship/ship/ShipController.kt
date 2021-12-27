@@ -3,26 +3,24 @@ package com.zero.neon.game.ship.ship
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
+import com.zero.neon.game.spaceobject.SpaceObject
 import com.zero.neon.R
 import com.zero.neon.game.booster.Booster
 import com.zero.neon.game.booster.BoosterType
 import com.zero.neon.game.enemy.ship.Enemy
 import com.zero.neon.game.laser.Laser
-import com.zero.neon.game.spaceobject.SpaceObject
 import java.util.*
 
 class ShipController(
-    private val screenWidthDp: Dp,
-    screenHeightDp: Dp,
+    private val screenWidthDp: Float,
+    screenHeightDp: Float,
     private var ship: Ship,
     private val setShip: (Ship) -> Unit
 ) {
 
     private val spaceShipCollidePower = 100
-    private val movementSpeed: Dp = 2.dp
-    private val maxYOffset = screenHeightDp - 140.dp
+    private val movementSpeed: Float = 2f
+    private val maxYOffset: Float = screenHeightDp - 140
 
     var movingLeft = false
     var movingRight = false
@@ -32,10 +30,10 @@ class ShipController(
         if (ship.yOffset > maxYOffset) {
             updateYOffset(ship.yOffset - movementSpeed)
         }
-        if (movingLeft && ship.xOffset >= 0.dp - ship.width / 4) {
+        if (movingLeft && ship.xOffset >= 0 - ship.width / 4) {
             updateXOffset(ship.xOffset - movementSpeed)
         } else movingLeft = false
-        if (movingRight && ship.xOffset <= screenWidthDp - (ship.width.value / 1.5).dp) {
+        if (movingRight && ship.xOffset <= screenWidthDp - ship.width / 1.5) {
             updateXOffset(ship.xOffset + movementSpeed)
         } else movingRight = false
     }
@@ -84,16 +82,16 @@ class ShipController(
     ) {
         val shipRect by lazy {
             Rect(
-                offset = Offset(x = ship.xOffset.value, y = ship.yOffset.value),
-                size = Size(width = ship.width.value, height = ship.height.value)
+                offset = Offset(x = ship.xOffset, y = ship.yOffset),
+                size = Size(width = ship.width, height = ship.height)
             )
         }
         val shipShieldRect by lazy {
-            val shipRadius = ship.width.value / 2
+            val shipRadius = ship.width / 2
             Rect(
                 center = Offset(
-                    x = ship.xOffset.value + shipRadius,
-                    y = ship.yOffset.value + shipRadius
+                    x = ship.xOffset + shipRadius,
+                    y = ship.yOffset + shipRadius
                 ),
                 radius = shipRadius
             )
@@ -102,8 +100,8 @@ class ShipController(
         spaceObjects.forEachIndexed { spaceObjectIndex, spaceObject ->
             val spaceRect by lazy {
                 Rect(
-                    offset = Offset(x = spaceObject.xOffset.value, y = spaceObject.yOffset.value),
-                    size = Size(width = spaceObject.size.value, height = spaceObject.size.value)
+                    offset = Offset(x = spaceObject.xOffset, y = spaceObject.yOffset),
+                    size = Size(width = spaceObject.size, height = spaceObject.size)
                 )
             }
             if (spaceRect.overlaps(if (ship.shieldEnabled) shipShieldRect else shipRect)) {
@@ -127,12 +125,12 @@ class ShipController(
         boosters.forEachIndexed { boosterIndex, booster ->
             val boosterRect by lazy {
                 Rect(
-                    offset = Offset(x = booster.xOffset.value, y = booster.yOffset.value),
-                    size = Size(width = booster.size.value, height = booster.size.value)
+                    offset = Offset(x = booster.xOffset, y = booster.yOffset),
+                    size = Size(width = booster.size, height = booster.size)
                 )
             }
             if (boosterRect.overlaps(shipRect)) {
-                boosters[boosterIndex].onObjectImpact(spaceShipCollidePower)
+                boosters[boosterIndex].collect()
                 updateHp(ship.hp - booster.impactPower)
                 when (booster.type) {
                     BoosterType.ULTIMATE_WEAPON_BOOSTER -> fileUltimateLaser()
@@ -145,8 +143,8 @@ class ShipController(
         enemies.forEachIndexed { enemyIndex, enemy ->
             val enemyRect by lazy {
                 Rect(
-                    offset = Offset(x = enemy.xOffset.value, y = enemy.yOffset.value),
-                    size = Size(width = enemy.width.value, height = enemy.height.value)
+                    offset = Offset(x = enemy.xOffset, y = enemy.yOffset),
+                    size = Size(width = enemy.width, height = enemy.height)
                 )
             }
             if (enemyRect.overlaps(if (ship.shieldEnabled) shipShieldRect else shipRect)) {
@@ -162,8 +160,8 @@ class ShipController(
         enemyLasers.forEachIndexed { enemyIndex, enemyLaser ->
             val enemyLaserRect by lazy {
                 Rect(
-                    offset = Offset(x = enemyLaser.xOffset.value, y = enemyLaser.yOffset.value),
-                    size = Size(width = enemyLaser.width.value, height = enemyLaser.height.value)
+                    offset = Offset(x = enemyLaser.xOffset, y = enemyLaser.yOffset),
+                    size = Size(width = enemyLaser.width, height = enemyLaser.height)
                 )
             }
             if (enemyLaserRect.overlaps(if (ship.shieldEnabled) shipShieldRect else shipRect)) {
@@ -204,12 +202,12 @@ class ShipController(
         setShip(ship)
     }
 
-    private fun updateXOffset(xOffset: Dp) {
+    private fun updateXOffset(xOffset: Float) {
         ship = ship.copy(xOffset = xOffset)
         setShip(ship)
     }
 
-    private fun updateYOffset(yOffset: Dp) {
+    private fun updateYOffset(yOffset: Float) {
         ship = ship.copy(yOffset = yOffset)
         setShip(ship)
     }
@@ -220,6 +218,6 @@ class ShipController(
     }
 
     companion object {
-        val TRIPLE_LASER_SIDE_OFFSET = 20.dp
+        val TRIPLE_LASER_SIDE_OFFSET: Float = 20f
     }
 }
