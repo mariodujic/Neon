@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -54,7 +53,6 @@ fun GameScreen(onGamePause: () -> Unit) {
             text = gameState.gameMessage,
             modifier = Modifier.align(Alignment.Center),
             fontWeight = FontWeight.Bold,
-            color = Color.White,
             style = MaterialTheme.typography.h3
         )
         Column(modifier = Modifier.fillMaxSize()) {

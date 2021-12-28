@@ -12,9 +12,11 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.zero.neon.common.theme.NeonTheme
 import com.zero.neon.game.GameScreen
+import com.zero.neon.gamepause.GamePauseDialog
 import com.zero.neon.navigation.Game
 import com.zero.neon.navigation.GamePause
-import com.zero.neon.gamepause.GamePauseDialog
+import com.zero.neon.navigation.Splash
+import com.zero.neon.splash.SplashScreen
 
 class MainActivity : ComponentActivity() {
 
@@ -23,29 +25,32 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             NeonTheme {
+                val navController = rememberNavController()
                 val systemUiController = rememberSystemUiController()
                 systemUiController.setSystemBarsColor(color = Color.Transparent)
 
-                val navController = rememberNavController()
-
                 NavHost(
                     navController = navController,
-                    startDestination = Game.route
+                    startDestination = Splash.route
                 ) {
+                    composable(route = Splash.route) {
+                        SplashScreen {
+                            with(navController) {
+                                popBackStack()
+                                navigate(Game.route)
+                            }
+                        }
+                    }
                     composable(route = Game.route) {
                         GameScreen(onGamePause = { navController.navigate(GamePause.route) })
                     }
                     dialog(route = GamePause.route) {
                         GamePauseDialog(onRestartGame = {
-                            navController.navigate(Game.route) {
-                                launchSingleTop = true
-                            }
+                            navController.navigate(Game.route) { popUpTo(navController.graph.id) }
                         })
                     }
                 }
             }
         }
     }
-
-    override fun onBackPressed() {}
 }

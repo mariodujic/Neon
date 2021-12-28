@@ -12,7 +12,6 @@ import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -33,16 +32,14 @@ fun GamePauseDialog(onRestartGame: () -> Unit) {
             Text(
                 text = stringResource(id = R.string.game_pause_dialog_title),
                 fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.h4,
-                color = Color.White
+                style = MaterialTheme.typography.h4
             )
             Spacer(modifier = Modifier.height(16.dp))
             TextButton(onClick = onRestartGame) {
                 Text(
                     text = stringResource(id = R.string.restart_game_button),
                     fontWeight = FontWeight.SemiBold,
-                    style = MaterialTheme.typography.h6,
-                    color = Color.White
+                    style = MaterialTheme.typography.h6
                 )
             }
         }

@@ -10,6 +10,7 @@
     <string name="space_object">Space object</string>
     <string name="booster">Booster</string>
     <string name="laser">Starship laser</string>
+    <string name="splash">Splash image</string>
     <string name="restart_game_button">Restart</string>
     <string name="game_pause_dialog_title">PAUSE</string>
 </resources>

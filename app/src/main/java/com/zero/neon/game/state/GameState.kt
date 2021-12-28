@@ -167,8 +167,7 @@ fun rememberGameState(): GameState {
         val job = coroutineScope.launch {
             constellationController.createStars(
                 screenHeight = screenHeight,
-                screenWidth = screenWidth,
-                coroutineScope = coroutineScope
+                screenWidth = screenWidth
             )
             launch(IO) {
                 while (loopRunning) {
