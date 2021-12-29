@@ -165,7 +165,7 @@ class ShipController(
                 )
             }
             if (enemyLaserRect.overlaps(if (ship.shieldEnabled) shipShieldRect else shipRect)) {
-                enemyLasers[enemyIndex].destroyLaser()
+                enemyLasers[enemyIndex].destroyed = true
 
                 val hpImpact = when (ship.shieldEnabled && enemyLaser.impactPower > 0) {
                     true -> 0

@@ -13,8 +13,8 @@ import com.zero.neon.game.spaceobject.SpaceObject
 import com.zero.neon.utils.UuidUtils
 
 class LasersController(
-    private val screenWidthDp: Float,
-    private val screenHeightDp: Float,
+    private val screenWidth: Float,
+    private val screenHeight: Float,
     private val uuidUtils: UuidUtils = UuidUtils(),
     initialShipLasers: List<Laser> = listOf(),
     initialUltimateLasers: List<Laser> = listOf(),
@@ -33,8 +33,7 @@ class LasersController(
                 id = uuidUtils.getUuid(),
                 xOffset = ship.xOffset + ship.width / 2 - SHIP_BOOSTED_LASER_WIDTH / 2,
                 yOffset = -ship.height / 2,
-                yRange = screenHeightDp,
-                onDestroyLaser = { destroyShipLaser(it) }
+                yRange = screenHeight
             )
             if (ship.tripleLaserBoosterEnabled) {
                 listOf(
@@ -50,8 +49,7 @@ class LasersController(
                 id = uuidUtils.getUuid(),
                 xOffset = ship.xOffset + ship.width / 2 - SHIP_LASER_WIDTH / 2,
                 yOffset = -ship.height / 2,
-                yRange = screenHeightDp,
-                onDestroyLaser = { destroyShipLaser(it) }
+                yRange = screenHeight
             )
             if (ship.tripleLaserBoosterEnabled) {
                 listOf(
@@ -68,51 +66,51 @@ class LasersController(
         updateShipLasersUI()
     }
 
-    val moveShipLasersId = uuidUtils.getUuid()
-    fun moveShipLasers() {
-        shipLasers.forEach { it.moveLaser() }
+    val processShipLasersId = uuidUtils.getUuid()
+    fun processShipLasers() {
+        shipLasers.forEach {
+            it.moveLaser()
+            if (it.yOffset < -screenHeight || it.destroyed) destroyShipLaser(it)
+        }
         updateShipLasersUI()
     }
 
     fun hasShipLasers() = shipLasers.isNotEmpty()
 
-    private fun destroyShipLaser(laserId: String) {
-        val laser: Laser? = shipLasers.firstOrNull { it.id == laserId }
-        laser?.let {
-            shipLasers = shipLasers - it
-            updateShipLasersUI()
-        }
+    private fun destroyShipLaser(laser: Laser) {
+        shipLasers = shipLasers - laser
+        updateShipLasersUI()
     }
 
     fun fireUltimateLaser() {
         val ultimateLaserList = mutableListOf<UltimateLaser>()
-        val horizontalLaserDistance = screenWidthDp / ULTIMATE_LASERS_COUNT
+        val horizontalLaserDistance = screenWidth / ULTIMATE_LASERS_COUNT
         for (i in 0..ULTIMATE_LASERS_COUNT) {
             val ultimateLaser = UltimateLaser(
                 id = uuidUtils.getUuid(),
                 xOffset = horizontalLaserDistance * i,
-                yRange = screenHeightDp,
-                onDestroyLaser = { destroyUltimateLaser(it) }
+                yRange = screenHeight
             )
             ultimateLaserList.add(ultimateLaser)
         }
         ultimateLasers = ultimateLaserList
-        updateUltimateLasersUI()
+        updateUltimateLasers()
     }
 
-    val moveUltimateLasersId = uuidUtils.getUuid()
-    fun moveUltimateLasers() {
-        ultimateLasers.forEach { it.moveLaser() }
-        updateUltimateLasersUI()
+    val processLasersId = uuidUtils.getUuid()
+    fun processLasers() {
+        ultimateLasers.forEach {
+            it.moveLaser()
+            if (it.yOffset < -screenHeight || it.destroyed) destroyUltimateShipLaser(it)
+        }
+        updateUltimateLasers()
     }
 
     fun hasUltimateLasers() = ultimateLasers.isNotEmpty()
 
-    private fun destroyUltimateLaser(laserId: String) {
-        ultimateLasers = ultimateLasers.toMutableList().apply {
-            removeAll { it.id == laserId }
-        }
-        updateUltimateLasersUI()
+    private fun destroyUltimateShipLaser(laser: Laser) {
+        ultimateLasers = ultimateLasers - laser
+        updateUltimateLasers()
     }
 
     val monitorLaserCollisionId = uuidUtils.getUuid()
@@ -125,7 +123,7 @@ class LasersController(
             val laserRect = Rect(
                 offset = Offset(
                     x = laser.xOffset,
-                    y = laser.yOffset + screenHeightDp - 50
+                    y = laser.yOffset + screenHeight - 50
                 ),
                 size = Size(width = laser.width, height = laser.height)
             )
@@ -133,13 +131,13 @@ class LasersController(
             if (spaceObjectRectList.any { it.overlaps(laserRect) }) {
                 val index = spaceObjectRectList.indexOfFirst { it.overlaps(laserRect) }
                 spaceObjects[index].onObjectImpact(laser.impactPower)
-                destroyShipLaser(laser.id)
+                destroyShipLaser(laser)
                 updateShipLasersUI()
             }
             if (enemyRectList.any { it.overlaps(laserRect) }) {
                 val index = enemyRectList.indexOfFirst { it.overlaps(laserRect) }
                 enemies[index].onObjectImpact(laser.impactPower)
-                destroyShipLaser(laser.id)
+                destroyShipLaser(laser)
                 updateShipLasersUI()
             }
         }
@@ -149,7 +147,7 @@ class LasersController(
         setShipLasers(shipLasers)
     }
 
-    private fun updateUltimateLasersUI() {
+    private fun updateUltimateLasers() {
         setUltimateLasers(ultimateLasers)
     }
 

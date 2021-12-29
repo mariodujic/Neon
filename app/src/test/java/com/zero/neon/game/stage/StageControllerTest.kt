@@ -27,28 +27,26 @@ class StageControllerTest {
 
     @Test
     fun `should return initial Stage`() {
-        val expectedOrdinal = Stage.values()[0]
+        val expectedOrdinal = stages[0]
         val actualOrdinal = sut.getGameStage()
         assertEquals(expectedOrdinal, actualOrdinal)
     }
 
     @Test
     fun `should return next Stage when initial stage time expired, readyForNextStage true and has next stage`() {
-        val stageList = Stage.values()
         `when`(dateUtils.currentTimeMillis())
-            .thenReturn(FAKE_TIME_MILLIS + stageList[0].durationSec * 1000 + 1)
-        val expectedOrdinal = stageList[1]
+            .thenReturn(FAKE_TIME_MILLIS + stages[0].durationSec * 1000 + 1)
+        val expectedOrdinal = stages[1]
         val actualOrdinal = sut.getGameStage(true)
         assertEquals(expectedOrdinal, actualOrdinal)
     }
 
     @Test
     fun `should not return next Stage as initial stage time has not expired`() {
-        val stageList = Stage.values()
         `when`(dateUtils.currentTimeMillis())
-            .thenReturn(FAKE_TIME_MILLIS + stageList[0].durationSec * 1000 - 1)
-        val unexpectedOrdinal = stageList[1]
-        val expectedOrdinal = stageList[0]
+            .thenReturn(FAKE_TIME_MILLIS + stages[0].durationSec * 1000 - 1)
+        val unexpectedOrdinal = stages[1]
+        val expectedOrdinal = stages[0]
         val actualOrdinal = sut.getGameStage(true)
         assertNotEquals(unexpectedOrdinal, actualOrdinal)
         assertEquals(expectedOrdinal, actualOrdinal)
@@ -56,15 +54,14 @@ class StageControllerTest {
 
     @Test
     fun `should return last Stage when has no more stages left`() {
-        val stageList = Stage.values()
         var fakeTimeMillis = FAKE_TIME_MILLIS
-        stageList.forEach {
+        stages.forEach {
             val durationTimeMillis = it.durationSec * 1000 + 1
             `when`(dateUtils.currentTimeMillis()).thenReturn(fakeTimeMillis + durationTimeMillis)
             fakeTimeMillis += durationTimeMillis
             sut.getGameStage(true)
         }
-        val expectedOrdinal = stageList.last()
+        val expectedOrdinal = stages.last()
         val actualOrdinal = sut.getGameStage(true)
         assertEquals(expectedOrdinal, actualOrdinal)
     }

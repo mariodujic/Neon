@@ -2,31 +2,33 @@ package com.zero.neon.game.enemy.ship
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
+import com.zero.neon.game.enemy.laser.EnemyLaser
+import com.zero.neon.game.laser.Laser
 import java.util.*
 
 class LevelOneEnemy(
     private val screenWidthDp: Float,
     private val screenHeightDp: Float,
-    attributes: LevelOneEnemyAttributes
+    type: LevelOneEnemyType
 ) : Enemy {
 
     override val enemyId: String = UUID.randomUUID().toString()
-    override val width: Float = attributes.enemyType.width
-    override val height: Float = attributes.enemyType.height
-    override var hp: Float = attributes.enemyType.hp
+    override val width: Float = type.width
+    override val height: Float = type.height
+    override var hp: Float = type.hp
     override val initialHp: Float = hp
-    override val impactPower: Float = attributes.enemyType.impactPower
-    override var xOffset: Float = attributes.spawnPosition.let {
+    override val impactPower: Float = type.impactPower
+    override var xOffset: Float = type.spawnPosition.let {
         when (it) {
             EnemySpawnPosition.LEFT -> 0f
             EnemySpawnPosition.RIGHT -> screenWidthDp
         }
     }
     override var yOffset: Float = 0f
-    override val drawableId: Int = attributes.enemyType.drawableId
+    override val drawableId: Int = type.drawableId
     private var moveRight = true
-    private val xOffsetMoveSpeed = attributes.xOffsetSpeed
-    private val yOffsetMoveSpeed = attributes.yOffsetSpeed
+    private val xOffsetMovementSpeed = type.xOffsetSpeed
+    private val yOffsetMovementSpeed = type.yOffsetSpeed
 
     override fun enemyRect(): Rect {
         return Rect(
@@ -40,15 +42,25 @@ class LevelOneEnemy(
 
     override fun move() {
         if (moveRight) {
-            xOffset += xOffsetMoveSpeed
+            xOffset += xOffsetMovementSpeed
             if (xOffset + width > screenWidthDp) moveRight = false
         } else {
-            xOffset -= xOffsetMoveSpeed
+            xOffset -= xOffsetMovementSpeed
             if (xOffset < 0f) moveRight = true
         }
-        yOffset += yOffsetMoveSpeed
+        yOffset += yOffsetMovementSpeed
 
         if (yOffset + height > screenHeightDp) hp = 0f
+    }
+
+    override fun generateLaser(): Laser {
+        val laserWidth = 18f
+        return EnemyLaser(
+            xOffset = xOffset + width / 2 - laserWidth / 2,
+            yOffset = yOffset + height,
+            yRange = screenHeightDp,
+            width = laserWidth
+        )
     }
 
     override fun onObjectImpact(impactPower: Int) {

@@ -9,7 +9,9 @@ interface Laser {
     var rotation: Float
     var impactPower: Int
     val drawableId: Int
+    val xOffsetMovementSpeed: Float
+    val yOffsetMovementSpeed: Float
+    var destroyed: Boolean
 
-    fun destroyLaser()
     fun moveLaser()
 }

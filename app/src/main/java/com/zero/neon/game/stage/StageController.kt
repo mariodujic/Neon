@@ -12,10 +12,10 @@ class StageController(
     fun getGameStage(readyForNextStage: Boolean = false): Stage {
         val stageTimeExpired =
             stageStartSnapshotMillis + getStage().durationSec * 1000 < dateUtils.currentTimeMillis()
-        val hasNextStage = stageIndex < Stage.values().lastIndex
+        val hasNextStage = stageIndex < stages.lastIndex
         if (
             stageTimeExpired &&
-            (getStage().stageAct !is StageBreakAct || readyForNextStage) &&
+            (getStage() !is StageBreak || readyForNextStage) &&
             hasNextStage
         ) {
             stageIndex++
@@ -25,7 +25,7 @@ class StageController(
     }
 
     private fun getStage(): Stage {
-        return Stage.values()[stageIndex]
+        return stages[stageIndex]
     }
 
     companion object {

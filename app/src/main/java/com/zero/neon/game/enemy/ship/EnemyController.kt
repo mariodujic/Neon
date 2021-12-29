@@ -1,10 +1,12 @@
 package com.zero.neon.game.enemy.ship
 
+import com.zero.neon.game.ship.ship.Ship
 import java.util.*
 
 class EnemyController(
     private val screenWidthDp: Float,
     private val screenHeightDp: Float,
+    private val getShip: () -> Ship,
     initialEnemies: List<Enemy> = emptyList(),
     private val setEnemies: (List<Enemy>) -> Unit
 ) {
@@ -13,16 +15,24 @@ class EnemyController(
         private set
 
     val addEnemyId = UUID.randomUUID().toString()
-    fun addEnemy(levelOneEnemyAttributes: LevelOneEnemyAttributes) {
-        val enemy = LevelOneEnemy(
-            screenWidthDp = screenWidthDp,
-            screenHeightDp = screenHeightDp,
-            attributes = levelOneEnemyAttributes
-        )
-        enemies = enemies.toMutableList().apply {
-            add(enemy)
+    fun addEnemy(enemyType: EnemyType) {
+        val enemy: Enemy? = if (enemyType is LevelOneEnemyType) {
+            LevelOneEnemy(
+                screenWidthDp = screenWidthDp,
+                screenHeightDp = screenHeightDp,
+                type = enemyType
+            )
+        } else if (enemyType is LevelOneBossType && enemies.isEmpty()) {
+            LevelOneBoss(
+                screenWidthDp = screenWidthDp,
+                screenHeightDp = screenHeightDp,
+                getShip = getShip
+            )
+        } else null
+        enemy?.let {
+            enemies = enemies + it
+            updateEnemies()
         }
-        updateEnemies()
     }
 
     val processEnemiesId = UUID.randomUUID().toString()

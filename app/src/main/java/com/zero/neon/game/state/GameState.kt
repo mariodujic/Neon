@@ -12,9 +12,11 @@ import com.zero.neon.game.booster.BoosterToBoosterUIMapper
 import com.zero.neon.game.booster.BoosterUI
 import com.zero.neon.game.constellation.ConstellationController
 import com.zero.neon.game.constellation.Star
-import com.zero.neon.game.enemy.laser.EnemyLaser
 import com.zero.neon.game.enemy.laser.EnemyLasersController
-import com.zero.neon.game.enemy.ship.*
+import com.zero.neon.game.enemy.ship.Enemy
+import com.zero.neon.game.enemy.ship.EnemyController
+import com.zero.neon.game.enemy.ship.EnemyToEnemyUIMapper
+import com.zero.neon.game.enemy.ship.EnemyUI
 import com.zero.neon.game.laser.Laser
 import com.zero.neon.game.laser.LaserToLaserUIMapper
 import com.zero.neon.game.settings.GameStatus
@@ -26,9 +28,10 @@ import com.zero.neon.game.spaceobject.SpaceObject
 import com.zero.neon.game.spaceobject.SpaceObjectToSpaceObjectUIMapper
 import com.zero.neon.game.spaceobject.SpaceObjectUI
 import com.zero.neon.game.spaceobject.SpaceObjectsController
+import com.zero.neon.game.stage.StageBoss
 import com.zero.neon.game.stage.StageController
-import com.zero.neon.game.stage.StageGameAct
-import com.zero.neon.game.stage.StageMessageAct
+import com.zero.neon.game.stage.StageGame
+import com.zero.neon.game.stage.StageMessage
 import com.zero.neon.utils.observeAsState
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -67,8 +70,8 @@ fun rememberGameState(): GameState {
     var ultimateLasers: List<Laser> by remember { mutableStateOf(emptyList()) }
     val lasersController = remember {
         LasersController(
-            screenWidthDp = screenWidth,
-            screenHeightDp = screenHeight,
+            screenWidth = screenWidth,
+            screenHeight = screenHeight,
             initialShipLasers = shipLasers,
             initialUltimateLasers = ultimateLasers,
             setShipLasers = { shipLasers = it },
@@ -101,16 +104,17 @@ fun rememberGameState(): GameState {
         EnemyController(
             screenWidthDp = screenWidth,
             screenHeightDp = screenHeight,
+            getShip = { ship },
             initialEnemies = enemies,
             setEnemies = { enemies = it }
         )
     }
 
-    var enemyLasers: List<EnemyLaser> by remember { mutableStateOf(emptyList()) }
+    var enemyLasers: List<Laser> by remember { mutableStateOf(emptyList()) }
     val enemyLaserController = remember {
         EnemyLasersController(
-            screenHeightDp = screenHeight,
-            initialEnemyLasers = enemyLasers,
+            screenHeight = screenHeight,
+            initialEnemyLasers = enemyLasers
         ) { enemyLasers = it }
     }
 
@@ -122,8 +126,8 @@ fun rememberGameState(): GameState {
         gameStage = stageController.getGameStage(
             readyForNextStage = !enemyController.hasEnemies() && !spaceObjectsController.hasSpaceObjects()
         )
-        gameMessage = when (val stagePartition = gameStage.stageAct) {
-            is StageMessageAct -> stagePartition.message
+        gameMessage = when (val stage = gameStage) {
+            is StageMessage -> stage.message
             else -> ""
         }
     }
@@ -204,6 +208,11 @@ fun rememberGameState(): GameState {
                                 )
                             }
                         )
+                        tinker(
+                            id = enemyLaserController.fireEnemyLaserId,
+                            triggerMillis = 1000,
+                            doWork = { enemyLaserController.fireEnemyLasers(enemies = enemyController.enemies) }
+                        )
                         if (boosterController.hasBoosters()) {
                             tinker(
                                 id = boosterController.processBoostersId,
@@ -213,16 +222,16 @@ fun rememberGameState(): GameState {
                         }
                         if (lasersController.hasUltimateLasers()) {
                             tinker(
-                                id = lasersController.moveUltimateLasersId,
+                                id = lasersController.processLasersId,
                                 triggerMillis = 40,
-                                doWork = { lasersController.moveUltimateLasers() }
+                                doWork = { lasersController.processLasers() }
                             )
                         }
                         if (lasersController.hasShipLasers()) {
                             tinker(
-                                id = lasersController.moveShipLasersId,
+                                id = lasersController.processShipLasersId,
                                 triggerMillis = 5,
-                                doWork = { lasersController.moveShipLasers() }
+                                doWork = { lasersController.processShipLasers() }
                             )
                         }
                         if (spaceObjectsController.hasSpaceObjects()) {
@@ -234,9 +243,9 @@ fun rememberGameState(): GameState {
                         }
                         if (enemyLaserController.hasEnemyLasers()) {
                             tinker(
-                                id = enemyLaserController.moveEnemyLasersId,
+                                id = enemyLaserController.processLasersId,
                                 triggerMillis = 5,
-                                doWork = { enemyLaserController.moveEnemyLasers() }
+                                doWork = { enemyLaserController.processLasers() }
                             )
                         }
                         if (enemyController.hasEnemies()) {
@@ -247,7 +256,7 @@ fun rememberGameState(): GameState {
                             )
                         }
                         if (
-                            gameStage.stageAct is StageGameAct ||
+                            gameStage is StageGame ||
                             enemyController.hasEnemies() ||
                             spaceObjectsController.hasSpaceObjects()
                         ) {
@@ -257,41 +266,36 @@ fun rememberGameState(): GameState {
                                 doWork = { lasersController.fireLasers(ship = ship) }
                             )
                         }
-                        if (gameStage.stageAct is StageGameAct) {
-                            with(gameStage.stageAct as StageGameAct) {
-                                tinker(
-                                    id = spaceObjectsController.addSpaceRockId,
-                                    triggerMillis = spaceRockSpawnRateMillis.timeMillis,
-                                    doWork = { spaceObjectsController.addSpaceRock() }
-                                )
-                                enemyAttributes?.let {
-                                    if (enemyAttributes is LevelOneEnemyAttributes) {
-                                        tinker(
-                                            id = enemyController.addEnemyId,
-                                            triggerMillis = enemyAttributes.enemySpawnRateMillis.timeMillis,
-                                            doWork = { enemyController.addEnemy(enemyAttributes) }
-                                        )
-                                        tinker(
-                                            id = enemyLaserController.fireEnemyLaserId,
-                                            triggerMillis = enemyAttributes.enemyFireRateMillis.timeMillis,
-                                            doWork = { enemyLaserController.fireEnemyLasers(enemies = enemyController.enemies) }
-                                        )
-                                    }
-                                }
-                                tinker(
-                                    id = boosterController.addBoosterId,
-                                    triggerMillis = 4000,
-                                    doWork = { boosterController.addBooster() }
-                                )
-                            }
+                        if (gameStage is StageGame) {
+                            val stage = gameStage as StageGame
+                            tinker(
+                                id = spaceObjectsController.addSpaceRockId,
+                                triggerMillis = stage.spaceRockSpawnRateMillis.timeMillis,
+                                doWork = { spaceObjectsController.addSpaceRock() }
+                            )
+                            tinker(
+                                id = enemyController.addEnemyId,
+                                triggerMillis = stage.enemyType.spawnRate.timeMillis,
+                                doWork = { enemyController.addEnemy(stage.enemyType) }
+                            )
+                            tinker(
+                                id = boosterController.addBoosterId,
+                                triggerMillis = 4000,
+                                doWork = { boosterController.addBooster() }
+                            )
+                        } else if (gameStage is StageBoss) {
+                            val stage = gameStage as StageBoss
+                            tinker(
+                                id = enemyController.addEnemyId,
+                                triggerMillis = 1000,
+                                doWork = { enemyController.addEnemy(stage.enemyType) }
+                            )
                         }
                         tinker(
                             id = monitorLoopInSecId,
                             triggerMillis = 1000,
                             doWork = { monitorLoopInSec() }
                         )
-                    } else if (gameStatus == GameStatus.STOP) {
-                        break
                     }
                     refreshHandler = System.currentTimeMillis()
                 }

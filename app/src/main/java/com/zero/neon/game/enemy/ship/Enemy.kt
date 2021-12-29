@@ -1,6 +1,7 @@
 package com.zero.neon.game.enemy.ship
 
 import androidx.compose.ui.geometry.Rect
+import com.zero.neon.game.laser.Laser
 import java.io.Serializable
 
 interface Enemy : Serializable {
@@ -16,5 +17,6 @@ interface Enemy : Serializable {
 
     fun enemyRect(): Rect
     fun move()
+    fun generateLaser(): Laser
     fun onObjectImpact(impactPower: Int)
 }

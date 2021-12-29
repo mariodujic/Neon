@@ -8,29 +8,22 @@ data class ShipBoostedLaser(
     override var xOffset: Float,
     override var yOffset: Float,
     private val yRange: Float,
-    override var width: Float = SHIP_BOOSTED_LASER_WIDTH,
-    private val onDestroyLaser: (laserId: String) -> Unit
+    override var width: Float = SHIP_BOOSTED_LASER_WIDTH
 ) : Laser {
 
+    override val xOffsetMovementSpeed: Float = 0f
+    override val yOffsetMovementSpeed: Float = 5f
     override var height: Float = 25f
     override var rotation: Float = 0f
     override var impactPower: Int = 100
     override val drawableId: Int = R.drawable.laser_red_16
+    override var destroyed: Boolean = false
 
     override fun moveLaser() {
-        if (yOffset > -yRange) {
-            yOffset -= SHIP_BOOSTED_LASER_MOVEMENT
-        } else {
-            destroyLaser()
-        }
-    }
-
-    override fun destroyLaser() {
-        onDestroyLaser(id)
+        yOffset -= yOffsetMovementSpeed
     }
 
     companion object {
-        val SHIP_BOOSTED_LASER_WIDTH: Float = 8f
-        val SHIP_BOOSTED_LASER_MOVEMENT: Float = 5f
+        const val SHIP_BOOSTED_LASER_WIDTH: Float = 8f
     }
 }

@@ -1,29 +1,27 @@
 package com.zero.neon.game.enemy.laser
 
-import com.zero.neon.game.laser.Laser
 import com.zero.neon.R
+import com.zero.neon.game.laser.Laser
 import java.util.*
 
-class EnemyLaser(
+data class EnemyLaser(
     override var xOffset: Float,
     override var yOffset: Float,
     private val yRange: Float,
     override var width: Float,
-    private val onDestroyLaser: (laserId: String) -> Unit
+    override var height: Float = 30f,
+    override val xOffsetMovementSpeed: Float = 0f,
+    override val yOffsetMovementSpeed: Float = 3.5f,
+    override val drawableId: Int = R.drawable.laser_red_14,
+    override var impactPower: Int = 100
 ) : Laser {
 
     override val id: String = UUID.randomUUID().toString()
-    override var height: Float = 30f
     override var rotation: Float = 0f
-    override var impactPower: Int = 100
-    override val drawableId: Int = R.drawable.laser_red_14
+    override var destroyed: Boolean = false
 
     override fun moveLaser() {
-        yOffset += 3.5f
-        if (yOffset > yRange) destroyLaser()
-    }
-
-    override fun destroyLaser() {
-        onDestroyLaser(id)
+        xOffset += xOffsetMovementSpeed
+        yOffset += yOffsetMovementSpeed
     }
 }

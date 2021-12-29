@@ -1,97 +1,204 @@
 package com.zero.neon.game.stage
 
+import com.zero.neon.R
 import com.zero.neon.game.common.RepeatTime
 import com.zero.neon.game.enemy.ship.EnemySpawnPosition
-import com.zero.neon.game.enemy.ship.LevelOneEnemyAttributes
+import com.zero.neon.game.enemy.ship.EnemyType
+import com.zero.neon.game.enemy.ship.LevelOneBossType
 import com.zero.neon.game.enemy.ship.LevelOneEnemyType
+import java.io.Serializable
 
-enum class Stage(
-    val stageAct: StageAct,
-    val durationSec: Long
-) {
-    STAGE_ONE_MESSAGE_ONE(
-        StageMessageAct("Stage 1"),
-        durationSec = 3
+val stages = listOf(
+    StageMessage(
+        message = "Stage 1",
+        durationMillis = 3
     ),
-    STAGE_ONE_MESSAGE_TWO(
-        StageMessageAct("Get ready!"),
-        durationSec = 3
+    StageMessage(
+        message = "Get ready!",
+        durationMillis = 3
     ),
-    STAGE_ONE_MESSAGE_THREE(
-        StageMessageAct("GO!"),
-        durationSec = 1
+    StageMessage(
+        message = "GO!",
+        durationMillis = 1
     ),
-    STAGE_ONE_GAME_ONE(
-        stageAct = StageGameAct(
-            spaceRockSpawnRateMillis = RepeatTime.Millis(timeMillis = 1000),
-            enemyAttributes = LevelOneEnemyAttributes(
-                spawnPosition = EnemySpawnPosition.LEFT,
-                xOffsetSpeed = 0.4f,
-                yOffsetSpeed = 0.4f,
-                enemySpawnRateMillis = RepeatTime.Millis(timeMillis = 1000),
-                enemyFireRateMillis = RepeatTime.None,
-                enemyType = LevelOneEnemyType.TIER_THREE
-            )
+    StageGame(
+        spaceRockSpawnRateMillis = RepeatTime.None,
+        enemyType = LevelOneEnemyType(
+            drawableId = R.drawable.enemy_level_one,
+            width = 30f,
+            height = 40f,
+            hp = 150f,
+            impactPower = 50f,
+            spawnPosition = EnemySpawnPosition.LEFT,
+            xOffsetSpeed = 0.4f,
+            yOffsetSpeed = 0.4f,
+            enemySpawnRate = RepeatTime.Millis(1000)
         ),
-        durationSec = 10
+        15
     ),
-    STAGE_TWO_BREAK_ONE(
-        stageAct = StageBreakAct,
-        durationSec = 3
+    StageBreak(3),
+    StageMessage(
+        message = "Stage 2",
+        durationMillis = 3
     ),
-    STAGE_TWO_MESSAGE_ONE(
-        stageAct = StageMessageAct("Well done!"),
-        durationSec = 3
+    StageMessage(
+        message = "Get ready!",
+        durationMillis = 3
     ),
-    STAGE_TWO_MESSAGE_TWO(
-        stageAct = StageMessageAct("Stage 2"),
-        durationSec = 3
+    StageMessage(
+        message = "GO!",
+        durationMillis = 1
     ),
-    STAGE_TWO_MESSAGE_THREE(
-        stageAct = StageMessageAct("GO!"),
-        durationSec = 1
-    ),
-    STAGE_TWO_GAME_ONE(
-        stageAct = StageGameAct(
-            enemyAttributes = LevelOneEnemyAttributes(
-                spawnPosition = EnemySpawnPosition.LEFT,
-                xOffsetSpeed = 0.6f,
-                yOffsetSpeed = 0.5f,
-                enemySpawnRateMillis = RepeatTime.Millis(timeMillis = 1000),
-                enemyFireRateMillis = RepeatTime.Millis(timeMillis = 500),
-                enemyType = LevelOneEnemyType.TIER_TWO
-            )
+    StageGame(
+        spaceRockSpawnRateMillis = RepeatTime.None,
+        enemyType = LevelOneEnemyType(
+            drawableId = R.drawable.enemy_level_two,
+            width = 40f,
+            height = 40f,
+            hp = 180f,
+            impactPower = 60f,
+            spawnPosition = EnemySpawnPosition.RIGHT,
+            xOffsetSpeed = 0.5f,
+            yOffsetSpeed = 0.4f,
+            enemySpawnRate = RepeatTime.Millis(1000)
         ),
-        durationSec = 10
+        15
     ),
-    STAGE_THREE_BREAK_ONE(
-        stageAct = StageBreakAct,
-        durationSec = 3
+    StageBreak(3),
+    StageMessage(
+        message = "Stage 3",
+        durationMillis = 3
     ),
-    STAGE_THREE_MESSAGE_ONE(
-        stageAct = StageMessageAct("Easy.."),
-        durationSec = 3
+    StageMessage(
+        message = "Get ready!",
+        durationMillis = 3
     ),
-    STAGE_THREE_MESSAGE_TWO(
-        stageAct = StageMessageAct("Stage 3"),
-        durationSec = 3
+    StageMessage(
+        message = "GO!",
+        durationMillis = 1
     ),
-    STAGE_THREE_MESSAGE_THREE(
-        stageAct = StageMessageAct("GO!"),
-        durationSec = 1
-    ),
-    GAME_THREE(
-        stageAct = StageGameAct(
-            spaceRockSpawnRateMillis = RepeatTime.Millis(timeMillis = 1000),
-            enemyAttributes = LevelOneEnemyAttributes(
-                spawnPosition = EnemySpawnPosition.RIGHT,
-                xOffsetSpeed = 0.7f,
-                yOffsetSpeed = 0.5f,
-                enemySpawnRateMillis = RepeatTime.Millis(timeMillis = 1000),
-                enemyFireRateMillis = RepeatTime.Millis(timeMillis = 500),
-                enemyType = LevelOneEnemyType.TIER_ONE
-            )
+    StageGame(
+        spaceRockSpawnRateMillis = RepeatTime.Millis(2000),
+        enemyType = LevelOneEnemyType(
+            drawableId = R.drawable.enemy_level_three,
+            width = 45f,
+            height = 45f,
+            hp = 220f,
+            impactPower = 65f,
+            spawnPosition = EnemySpawnPosition.LEFT,
+            xOffsetSpeed = 0.6f,
+            yOffsetSpeed = 0.4f,
+            enemySpawnRate = RepeatTime.Millis(900)
         ),
-        durationSec = 10
-    )
-}
+        15
+    ),
+    StageBreak(3),
+    StageMessage(
+        message = "Boss fight",
+        durationMillis = 3
+    ),
+    StageMessage(
+        message = "Get ready!",
+        durationMillis = 3
+    ),
+    StageMessage(
+        message = "GO!",
+        durationMillis = 1
+    ),
+    StageBoss(enemyType = LevelOneBossType),
+    StageBreak(5),
+    StageMessage(
+        message = "Rekt",
+        durationMillis = 3
+    ),
+    StageMessage(
+        message = "Stage 5",
+        durationMillis = 3
+    ),
+    StageMessage(
+        message = "Get ready!",
+        durationMillis = 3
+    ),
+    StageMessage(
+        message = "GO!",
+        durationMillis = 1
+    ),
+    StageGame(
+        spaceRockSpawnRateMillis = RepeatTime.None,
+        enemyType = LevelOneEnemyType(
+            drawableId = R.drawable.enemy_level_four,
+            width = 35f,
+            height = 40f,
+            hp = 220f,
+            impactPower = 65f,
+            spawnPosition = EnemySpawnPosition.LEFT,
+            xOffsetSpeed = 0.5f,
+            yOffsetSpeed = 0.7f,
+            enemySpawnRate = RepeatTime.Millis(900)
+        ),
+        15
+    ),
+    StageGame(
+        spaceRockSpawnRateMillis = RepeatTime.None,
+        enemyType = LevelOneEnemyType(
+            drawableId = R.drawable.enemy_level_five,
+            width = 40f,
+            height = 40f,
+            hp = 230f,
+            impactPower = 70f,
+            spawnPosition = EnemySpawnPosition.RIGHT,
+            xOffsetSpeed = 0.5f,
+            yOffsetSpeed = 0.5f,
+            enemySpawnRate = RepeatTime.Millis(800)
+        ),
+        15
+    ),
+    StageGame(
+        spaceRockSpawnRateMillis = RepeatTime.None,
+        enemyType = LevelOneEnemyType(
+            drawableId = R.drawable.enemy_level_six,
+            width = 45f,
+            height = 45f,
+            hp = 240f,
+            impactPower = 75f,
+            spawnPosition = EnemySpawnPosition.LEFT,
+            xOffsetSpeed = 0.6f,
+            yOffsetSpeed = 0.6f,
+            enemySpawnRate = RepeatTime.Millis(800)
+        ),
+        15
+    ),
+    StageGame(
+        spaceRockSpawnRateMillis = RepeatTime.None,
+        enemyType = LevelOneEnemyType(
+            drawableId = R.drawable.enemy_level_seven,
+            width = 50f,
+            height = 50f,
+            hp = 250f,
+            impactPower = 80f,
+            spawnPosition = EnemySpawnPosition.RIGHT,
+            xOffsetSpeed = 0.6f,
+            yOffsetSpeed = 0.6f,
+            enemySpawnRate = RepeatTime.Millis(800)
+        ),
+        15
+    ),
+    StageBreak(3),
+    StageMessage(
+        message = "End",
+        durationMillis = 3
+    ),
+)
+
+sealed class Stage(val durationSec: Int) : Serializable
+
+data class StageMessage(val message: String, val durationMillis: Int) : Stage(durationMillis)
+data class StageGame(
+    val spaceRockSpawnRateMillis: RepeatTime = RepeatTime.None,
+    val enemyType: EnemyType,
+    val durationTimeSec: Int
+) : Stage(durationTimeSec)
+
+data class StageBoss(val enemyType: EnemyType) : Stage(0)
+
+data class StageBreak(val durationMillis: Int) : Stage(durationMillis)
