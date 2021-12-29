@@ -1,8 +1,16 @@
 <h1 align="center">Neon</h1>
 
-## Info
+<p align="center">
+  <a href="https://opensource.org/licenses/MIT"><img alt="License" src="https://img.shields.io/badge/License-MIT-purple.svg"/></a>
+  <a href="https://android-arsenal.com/api?level=21"><img alt="API" src="https://img.shields.io/badge/API-21%2B-brightgreen.svg?style=flat"/></a>
+  <a href="https://github.com/mariodujic/Neon/actions"><img alt="Build Status" src="https://github.com/mariodujic/Neon/workflows/Android%20CI/badge.svg"/></a> 
+</p>
 
+<p align="center">
 This project is `STG` mobile game made in Android. It is a fun project I do in my free time.
+</p>
+
+<br>
 
 <div float="left">
 <img src="/preview/neon_preview.gif"  width="24%"/>
