@@ -7,23 +7,21 @@ import java.util.*
 class TinkerTest {
 
     @Test
-    fun `should run work function when required time has passed`() {
+    fun `should run work once on invoke`() {
         val fakeId = UUID.randomUUID().toString()
         val mockWork: () -> Unit = spy {}
-        tinker(fakeId, FAKE_TIME_MILLIS, mockWork)
-        Thread.sleep(150)
         tinker(fakeId, FAKE_TIME_MILLIS, mockWork)
         verify(mockWork)()
     }
 
     @Test
-    fun `should not run work function when required time has not passed`() {
+    fun `should run work twice when required time has passed`() {
         val fakeId = UUID.randomUUID().toString()
         val mockWork: () -> Unit = spy {}
         tinker(fakeId, FAKE_TIME_MILLIS, mockWork)
-        Thread.sleep(50)
+        Thread.sleep(150)
         tinker(fakeId, FAKE_TIME_MILLIS, mockWork)
-        verify(mockWork, times(0))()
+        verify(mockWork, times(2))()
     }
 
     private companion object {

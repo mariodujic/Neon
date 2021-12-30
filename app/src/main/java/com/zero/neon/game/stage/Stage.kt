@@ -2,7 +2,7 @@ package com.zero.neon.game.stage
 
 import com.zero.neon.R
 import com.zero.neon.game.common.RepeatTime
-import com.zero.neon.game.enemy.ship.*
+import com.zero.neon.game.enemy.ship.model.*
 import java.io.Serializable
 
 val stages = listOf(
@@ -20,7 +20,7 @@ val stages = listOf(
     ),
     StageGame(
         spaceRockSpawnRateMillis = RepeatTime.None,
-        enemyType = LevelOneEnemyType(
+        enemyType = RegularEnemyType(
             drawableId = R.drawable.enemy_level_one,
             width = 30f,
             height = 40f,
@@ -36,7 +36,7 @@ val stages = listOf(
     StageBreak(3),
     StageGame(
         spaceRockSpawnRateMillis = RepeatTime.None,
-        enemyType = LevelOneEnemyType(
+        enemyType = RegularEnemyType(
             drawableId = R.drawable.enemy_level_one,
             width = 30f,
             height = 40f,
@@ -64,7 +64,7 @@ val stages = listOf(
     ),
     StageGame(
         spaceRockSpawnRateMillis = RepeatTime.None,
-        enemyType = LevelOneEnemyType(
+        enemyType = RegularEnemyType(
             drawableId = R.drawable.enemy_level_two,
             width = 40f,
             height = 40f,
@@ -92,7 +92,7 @@ val stages = listOf(
     ),
     StageGame(
         spaceRockSpawnRateMillis = RepeatTime.Millis(2000),
-        enemyType = LevelOneEnemyType(
+        enemyType = RegularEnemyType(
             drawableId = R.drawable.enemy_level_three,
             width = 45f,
             height = 45f,
@@ -138,7 +138,7 @@ val stages = listOf(
     ),
     StageGame(
         spaceRockSpawnRateMillis = RepeatTime.None,
-        enemyType = LevelOneEnemyType(
+        enemyType = RegularEnemyType(
             drawableId = R.drawable.enemy_level_four,
             width = 35f,
             height = 40f,
@@ -153,7 +153,7 @@ val stages = listOf(
     ),
     StageGame(
         spaceRockSpawnRateMillis = RepeatTime.None,
-        enemyType = LevelOneEnemyType(
+        enemyType = RegularEnemyType(
             drawableId = R.drawable.enemy_level_five,
             width = 40f,
             height = 40f,
@@ -168,7 +168,7 @@ val stages = listOf(
     ),
     StageGame(
         spaceRockSpawnRateMillis = RepeatTime.None,
-        enemyType = LevelOneEnemyType(
+        enemyType = RegularEnemyType(
             drawableId = R.drawable.enemy_level_six,
             width = 45f,
             height = 45f,
@@ -183,7 +183,7 @@ val stages = listOf(
     ),
     StageGame(
         spaceRockSpawnRateMillis = RepeatTime.None,
-        enemyType = LevelOneEnemyType(
+        enemyType = RegularEnemyType(
             drawableId = R.drawable.enemy_level_seven,
             width = 50f,
             height = 50f,

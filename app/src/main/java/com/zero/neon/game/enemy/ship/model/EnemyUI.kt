@@ -1,4 +1,4 @@
-package com.zero.neon.game.enemy.ship
+package com.zero.neon.game.enemy.ship.model
 
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Immutable

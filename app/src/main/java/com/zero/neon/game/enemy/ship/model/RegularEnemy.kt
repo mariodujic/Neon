@@ -1,4 +1,4 @@
-package com.zero.neon.game.enemy.ship
+package com.zero.neon.game.enemy.ship.model
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
@@ -10,7 +10,7 @@ data class RegularEnemy(
     private val screenWidth: Float,
     private val screenHeight: Float,
     override var xOffset: Float,
-    private val type: LevelOneEnemyType
+    private val type: RegularEnemyType
 ) : Enemy {
 
     override val enemyId: String = UUID.randomUUID().toString()

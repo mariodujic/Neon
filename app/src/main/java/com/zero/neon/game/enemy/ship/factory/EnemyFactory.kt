@@ -1,24 +1,17 @@
-package com.zero.neon.game.enemy.ship
+package com.zero.neon.game.enemy.ship.factory
 
+import com.zero.neon.game.enemy.ship.model.*
 import com.zero.neon.game.ship.ship.Ship
-import java.util.*
 
-class EnemyController(
+class EnemyFactory(
     private val screenWidth: Float,
     private val screenHeight: Float,
-    private val formationXOffset: FormationXOffset = FormationXOffset(screenWidth),
-    private val getShip: () -> Ship,
-    initialEnemies: List<Enemy> = emptyList(),
-    private val setEnemies: (List<Enemy>) -> Unit
+    private val formationXOffset: FormationXOffset = FormationXOffset(screenWidth)
 ) {
 
-    var enemies: List<Enemy> = initialEnemies
-        private set
-
-    val addEnemyId = UUID.randomUUID().toString()
-    fun addEnemy(type: EnemyType) {
+    operator fun invoke(type: EnemyType, getShip: () -> Ship): List<Enemy> {
         val enemies: MutableList<Enemy> = mutableListOf()
-        if (type is LevelOneEnemyType) {
+        if (type is RegularEnemyType) {
             when (type.formation) {
                 is ZigZag -> {
                     val enemy = RegularEnemy(
@@ -53,19 +46,6 @@ class EnemyController(
             )
             enemies += boss
         }
-        this.enemies += enemies
-    }
-
-    val processEnemiesId = UUID.randomUUID().toString()
-    fun processEnemies() {
-        enemies.forEach { it.move() }
-        enemies = enemies.toMutableList().apply { removeAll { it.hp <= 0 } }
-        updateEnemies()
-    }
-
-    fun hasEnemies() = enemies.isNotEmpty()
-
-    private fun updateEnemies() {
-        setEnemies(enemies)
+        return enemies
     }
 }

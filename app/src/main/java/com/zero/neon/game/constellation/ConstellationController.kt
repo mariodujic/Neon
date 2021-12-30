@@ -29,6 +29,4 @@ class ConstellationController(
     fun animateStars() {
         stars().forEach { it.animateStar() }
     }
-
-
 }

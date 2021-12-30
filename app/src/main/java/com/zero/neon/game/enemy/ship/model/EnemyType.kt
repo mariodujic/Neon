@@ -1,11 +1,11 @@
-package com.zero.neon.game.enemy.ship
+package com.zero.neon.game.enemy.ship.model
 
 import androidx.annotation.DrawableRes
 import com.zero.neon.game.common.RepeatTime
 
 sealed class EnemyType(val spawnRate: RepeatTime)
 
-data class LevelOneEnemyType(
+data class RegularEnemyType(
     @DrawableRes val drawableId: Int,
     val width: Float,
     val height: Float,
@@ -15,6 +15,6 @@ data class LevelOneEnemyType(
     val xOffsetSpeed: Float,
     val yOffsetSpeed: Float,
     val enemySpawnRate: RepeatTime
-) : EnemyType(enemySpawnRate)
+) : EnemyType(spawnRate = enemySpawnRate)
 
-object LevelOneBossType : EnemyType(RepeatTime.None)
+object LevelOneBossType : EnemyType(spawnRate = RepeatTime.Once)

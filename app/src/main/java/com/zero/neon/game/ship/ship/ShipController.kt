@@ -6,7 +6,7 @@ import androidx.compose.ui.geometry.Size
 import com.zero.neon.R
 import com.zero.neon.game.booster.Booster
 import com.zero.neon.game.booster.BoosterType
-import com.zero.neon.game.enemy.ship.Enemy
+import com.zero.neon.game.enemy.ship.model.Enemy
 import com.zero.neon.game.laser.Laser
 import com.zero.neon.game.spaceobject.SpaceObject
 import java.util.*

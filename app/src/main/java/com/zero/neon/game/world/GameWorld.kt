@@ -25,7 +25,7 @@ import com.zero.neon.common.theme.ShipShieldOne
 import com.zero.neon.common.theme.ShipShieldTwo
 import com.zero.neon.game.booster.BoosterUI
 import com.zero.neon.game.constellation.Star
-import com.zero.neon.game.enemy.ship.EnemyUI
+import com.zero.neon.game.enemy.ship.model.EnemyUI
 import com.zero.neon.game.ship.laser.LaserUI
 import com.zero.neon.game.ship.ship.Ship
 import com.zero.neon.game.spaceobject.SpaceObjectUI

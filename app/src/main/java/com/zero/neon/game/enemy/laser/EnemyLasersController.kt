@@ -1,6 +1,6 @@
 package com.zero.neon.game.enemy.laser
 
-import com.zero.neon.game.enemy.ship.Enemy
+import com.zero.neon.game.enemy.ship.model.Enemy
 import com.zero.neon.game.laser.Laser
 import java.util.*
 

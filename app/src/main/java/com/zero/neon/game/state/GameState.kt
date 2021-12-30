@@ -13,10 +13,10 @@ import com.zero.neon.game.booster.BoosterUI
 import com.zero.neon.game.constellation.ConstellationController
 import com.zero.neon.game.constellation.Star
 import com.zero.neon.game.enemy.laser.EnemyLasersController
-import com.zero.neon.game.enemy.ship.Enemy
-import com.zero.neon.game.enemy.ship.EnemyController
-import com.zero.neon.game.enemy.ship.EnemyToEnemyUIMapper
-import com.zero.neon.game.enemy.ship.EnemyUI
+import com.zero.neon.game.enemy.ship.controller.EnemyController
+import com.zero.neon.game.enemy.ship.mapper.EnemyToEnemyUIMapper
+import com.zero.neon.game.enemy.ship.model.Enemy
+import com.zero.neon.game.enemy.ship.model.EnemyUI
 import com.zero.neon.game.laser.Laser
 import com.zero.neon.game.laser.LaserToLaserUIMapper
 import com.zero.neon.game.settings.GameStatus
@@ -287,7 +287,7 @@ fun rememberGameState(): GameState {
                             val stage = gameStage as StageBoss
                             tinker(
                                 id = enemyController.addEnemyId,
-                                triggerMillis = 1000,
+                                triggerMillis = stage.enemyType.spawnRate.timeMillis,
                                 doWork = { enemyController.addEnemy(stage.enemyType) }
                             )
                         }

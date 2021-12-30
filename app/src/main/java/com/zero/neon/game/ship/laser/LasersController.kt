@@ -3,7 +3,7 @@ package com.zero.neon.game.ship.laser
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
-import com.zero.neon.game.enemy.ship.Enemy
+import com.zero.neon.game.enemy.ship.model.Enemy
 import com.zero.neon.game.laser.Laser
 import com.zero.neon.game.ship.laser.ShipBoostedLaser.Companion.SHIP_BOOSTED_LASER_WIDTH
 import com.zero.neon.game.ship.laser.ShipLaser.Companion.SHIP_LASER_WIDTH

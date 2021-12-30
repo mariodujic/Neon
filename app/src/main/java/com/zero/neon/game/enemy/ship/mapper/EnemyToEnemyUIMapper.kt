@@ -1,4 +1,7 @@
-package com.zero.neon.game.enemy.ship
+package com.zero.neon.game.enemy.ship.mapper
+
+import com.zero.neon.game.enemy.ship.model.Enemy
+import com.zero.neon.game.enemy.ship.model.EnemyUI
 
 class EnemyToEnemyUIMapper {
 
