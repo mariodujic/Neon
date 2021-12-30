@@ -4,8 +4,8 @@ import java.util.*
 import kotlin.random.Random
 
 class SpaceObjectsController(
-    private val screenWidthDp: Float,
-    private val screenHeightDp: Float,
+    private val screenWidth: Float,
+    private val screenHeight: Float,
     initialSpaceObjects: List<SpaceObject>,
     private val setSpaceObjects: (List<SpaceObject>) -> Unit
 ) {
@@ -19,11 +19,11 @@ class SpaceObjectsController(
     val addSpaceRockId = UUID.randomUUID().toString()
     fun addSpaceRock() {
         val rockSize = Random.nextInt(minRockSize, maxRockSize)
-        val rockXOffset = Random.nextInt(rockSize, screenWidthDp.toInt() - rockSize).toFloat()
+        val rockXOffset = Random.nextInt(rockSize, screenWidth.toInt() - rockSize).toFloat()
         val spaceRock = SpaceRock(
             xOffset = rockXOffset,
             size = rockSize.toFloat(),
-            screenHeight = screenHeightDp
+            screenHeight = screenHeight
         )
         spaceObjects = spaceObjects.toMutableList().apply { add(spaceRock) }
         updateSpaceObjectsUI()

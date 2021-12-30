@@ -8,9 +8,9 @@ import com.zero.neon.game.laser.Laser
 import com.zero.neon.game.ship.ship.Ship
 import java.util.*
 
-class LevelOneBoss(
-    screenWidthDp: Float,
-    private val screenHeightDp: Float,
+data class Boss(
+    private val screenWidth: Float,
+    private val screenHeight: Float,
     private val getShip: () -> Ship
 ) : Enemy {
 
@@ -24,9 +24,9 @@ class LevelOneBoss(
     private val bossMovementSpeed = 0.5f
 
     private val minXOffset = width
-    private val maxXOffset = screenWidthDp - width
+    private val maxXOffset = screenWidth - width
     private val minYOffset = height / 2
-    private val maxYOffset = screenHeightDp / 2
+    private val maxYOffset = screenHeight / 2
 
     private var movement: Movement = Movement.TOP_LEFT_TOP_RIGHT
 
@@ -72,7 +72,7 @@ class LevelOneBoss(
         return EnemyLaser(
             xOffset = xOffset + this.width / 2 - width / 2,
             yOffset = yOffset + height,
-            yRange = screenHeightDp,
+            yRange = screenHeight,
             width = width,
             height = width,
             xOffsetMovementSpeed = xOffsetMovementSpeed,

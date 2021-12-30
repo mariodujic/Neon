@@ -11,7 +11,7 @@ data class LevelOneEnemyType(
     val height: Float,
     val hp: Float,
     val impactPower: Float,
-    val spawnPosition: EnemySpawnPosition,
+    val formation: EnemyFormation,
     val xOffsetSpeed: Float,
     val yOffsetSpeed: Float,
     val enemySpawnRate: RepeatTime

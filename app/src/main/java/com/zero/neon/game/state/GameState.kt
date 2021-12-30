@@ -60,8 +60,8 @@ fun rememberGameState(): GameState {
     }
     val shipController = remember {
         ShipController(
-            screenWidthDp = screenWidth,
-            screenHeightDp = screenHeight,
+            screenWidth = screenWidth,
+            screenHeight = screenHeight,
             ship = ship,
         ) { ship = it }
     }
@@ -82,8 +82,8 @@ fun rememberGameState(): GameState {
     var spaceObjects: List<SpaceObject> by rememberSaveable { mutableStateOf(emptyList()) }
     val spaceObjectsController = remember {
         SpaceObjectsController(
-            screenWidthDp = screenWidth,
-            screenHeightDp = screenHeight,
+            screenWidth = screenWidth,
+            screenHeight = screenHeight,
             initialSpaceObjects = spaceObjects,
             setSpaceObjects = { spaceObjects = it }
         )
@@ -92,8 +92,8 @@ fun rememberGameState(): GameState {
     var boosters: List<Booster> by rememberSaveable { mutableStateOf(emptyList()) }
     val boosterController = remember {
         BoosterController(
-            screenWidthDp = screenWidth,
-            screenHeightDp = screenHeight,
+            screenWidth = screenWidth,
+            screenHeight = screenHeight,
             initialBoosters = boosters,
             updateBoosters = { boosters = it }
         )
@@ -102,8 +102,8 @@ fun rememberGameState(): GameState {
     var enemies: List<Enemy> by rememberSaveable { mutableStateOf(emptyList()) }
     val enemyController = remember {
         EnemyController(
-            screenWidthDp = screenWidth,
-            screenHeightDp = screenHeight,
+            screenWidth = screenWidth,
+            screenHeight = screenHeight,
             getShip = { ship },
             initialEnemies = enemies,
             setEnemies = { enemies = it }

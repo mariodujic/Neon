@@ -6,10 +6,11 @@ import com.zero.neon.game.enemy.laser.EnemyLaser
 import com.zero.neon.game.laser.Laser
 import java.util.*
 
-class LevelOneEnemy(
-    private val screenWidthDp: Float,
-    private val screenHeightDp: Float,
-    type: LevelOneEnemyType
+data class RegularEnemy(
+    private val screenWidth: Float,
+    private val screenHeight: Float,
+    override var xOffset: Float,
+    private val type: LevelOneEnemyType
 ) : Enemy {
 
     override val enemyId: String = UUID.randomUUID().toString()
@@ -18,12 +19,6 @@ class LevelOneEnemy(
     override var hp: Float = type.hp
     override val initialHp: Float = hp
     override val impactPower: Float = type.impactPower
-    override var xOffset: Float = type.spawnPosition.let {
-        when (it) {
-            EnemySpawnPosition.LEFT -> 0f
-            EnemySpawnPosition.RIGHT -> screenWidthDp
-        }
-    }
     override var yOffset: Float = 0f
     override val drawableId: Int = type.drawableId
     private var moveRight = true
@@ -41,16 +36,26 @@ class LevelOneEnemy(
     }
 
     override fun move() {
+        when (type.formation) {
+            is ZigZag -> moveZigZagFormation()
+            is Row -> moveRectangleFormation()
+        }
+        if (yOffset + height > screenHeight) hp = 0f
+    }
+
+    private fun moveZigZagFormation() {
         if (moveRight) {
             xOffset += xOffsetMovementSpeed
-            if (xOffset + width > screenWidthDp) moveRight = false
+            if (xOffset + width > screenWidth) moveRight = false
         } else {
             xOffset -= xOffsetMovementSpeed
             if (xOffset < 0f) moveRight = true
         }
         yOffset += yOffsetMovementSpeed
+    }
 
-        if (yOffset + height > screenHeightDp) hp = 0f
+    private fun moveRectangleFormation() {
+        yOffset += yOffsetMovementSpeed
     }
 
     override fun generateLaser(): Laser {
@@ -58,7 +63,7 @@ class LevelOneEnemy(
         return EnemyLaser(
             xOffset = xOffset + width / 2 - laserWidth / 2,
             yOffset = yOffset + height,
-            yRange = screenHeightDp,
+            yRange = screenHeight,
             width = laserWidth
         )
     }

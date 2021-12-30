@@ -5,8 +5,8 @@ import java.util.*
 import kotlin.random.Random
 
 class BoosterController(
-    private val screenWidthDp: Float,
-    private val screenHeightDp: Float,
+    private val screenWidth: Float,
+    private val screenHeight: Float,
     private val uuidUtils: UuidUtils = UuidUtils(),
     initialBoosters: List<Booster>,
     private val updateBoosters: (List<Booster>) -> Unit
@@ -19,12 +19,12 @@ class BoosterController(
 
     val addBoosterId = UUID.randomUUID().toString()
     fun addBooster() {
-        val boosterXOffset = Random.nextInt(boosterSize, screenWidthDp.toInt() - boosterSize)
+        val boosterXOffset = Random.nextInt(boosterSize, screenWidth.toInt() - boosterSize)
         val booster = Booster(
             id = uuidUtils.getUuid(),
             xOffset = boosterXOffset.toFloat(),
             size = boosterSize.toFloat(),
-            screenHeight = screenHeightDp
+            screenHeight = screenHeight
         )
         boosters = boosters.toMutableList().apply { add(booster) }
         updateBoosters()

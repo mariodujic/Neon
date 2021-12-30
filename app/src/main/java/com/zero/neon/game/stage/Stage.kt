@@ -2,10 +2,7 @@ package com.zero.neon.game.stage
 
 import com.zero.neon.R
 import com.zero.neon.game.common.RepeatTime
-import com.zero.neon.game.enemy.ship.EnemySpawnPosition
-import com.zero.neon.game.enemy.ship.EnemyType
-import com.zero.neon.game.enemy.ship.LevelOneBossType
-import com.zero.neon.game.enemy.ship.LevelOneEnemyType
+import com.zero.neon.game.enemy.ship.*
 import java.io.Serializable
 
 val stages = listOf(
@@ -29,12 +26,28 @@ val stages = listOf(
             height = 40f,
             hp = 150f,
             impactPower = 50f,
-            spawnPosition = EnemySpawnPosition.LEFT,
+            formation = Row(rowCount = 4),
             xOffsetSpeed = 0.4f,
-            yOffsetSpeed = 0.4f,
-            enemySpawnRate = RepeatTime.Millis(1000)
+            yOffsetSpeed = 0.35f,
+            enemySpawnRate = RepeatTime.Millis(1500)
         ),
-        15
+        3
+    ),
+    StageBreak(3),
+    StageGame(
+        spaceRockSpawnRateMillis = RepeatTime.None,
+        enemyType = LevelOneEnemyType(
+            drawableId = R.drawable.enemy_level_one,
+            width = 30f,
+            height = 40f,
+            hp = 150f,
+            impactPower = 50f,
+            formation = Row(rowCount = 3),
+            xOffsetSpeed = 0.4f,
+            yOffsetSpeed = 0.3f,
+            enemySpawnRate = RepeatTime.Millis(1500)
+        ),
+        4
     ),
     StageBreak(3),
     StageMessage(
@@ -57,7 +70,7 @@ val stages = listOf(
             height = 40f,
             hp = 180f,
             impactPower = 60f,
-            spawnPosition = EnemySpawnPosition.RIGHT,
+            formation = ZigZag(position = ZigZagInitialPosition.RIGHT),
             xOffsetSpeed = 0.5f,
             yOffsetSpeed = 0.4f,
             enemySpawnRate = RepeatTime.Millis(1000)
@@ -85,7 +98,7 @@ val stages = listOf(
             height = 45f,
             hp = 220f,
             impactPower = 65f,
-            spawnPosition = EnemySpawnPosition.LEFT,
+            formation = ZigZag(position = ZigZagInitialPosition.LEFT),
             xOffsetSpeed = 0.6f,
             yOffsetSpeed = 0.4f,
             enemySpawnRate = RepeatTime.Millis(900)
@@ -131,7 +144,7 @@ val stages = listOf(
             height = 40f,
             hp = 220f,
             impactPower = 65f,
-            spawnPosition = EnemySpawnPosition.LEFT,
+            formation = ZigZag(position = ZigZagInitialPosition.LEFT),
             xOffsetSpeed = 0.5f,
             yOffsetSpeed = 0.7f,
             enemySpawnRate = RepeatTime.Millis(900)
@@ -146,7 +159,7 @@ val stages = listOf(
             height = 40f,
             hp = 230f,
             impactPower = 70f,
-            spawnPosition = EnemySpawnPosition.RIGHT,
+            formation = ZigZag(position = ZigZagInitialPosition.RIGHT),
             xOffsetSpeed = 0.5f,
             yOffsetSpeed = 0.5f,
             enemySpawnRate = RepeatTime.Millis(800)
@@ -161,7 +174,7 @@ val stages = listOf(
             height = 45f,
             hp = 240f,
             impactPower = 75f,
-            spawnPosition = EnemySpawnPosition.LEFT,
+            formation = ZigZag(position = ZigZagInitialPosition.LEFT),
             xOffsetSpeed = 0.6f,
             yOffsetSpeed = 0.6f,
             enemySpawnRate = RepeatTime.Millis(800)
@@ -176,7 +189,7 @@ val stages = listOf(
             height = 50f,
             hp = 250f,
             impactPower = 80f,
-            spawnPosition = EnemySpawnPosition.RIGHT,
+            formation = ZigZag(position = ZigZagInitialPosition.RIGHT),
             xOffsetSpeed = 0.6f,
             yOffsetSpeed = 0.6f,
             enemySpawnRate = RepeatTime.Millis(800)
@@ -199,6 +212,6 @@ data class StageGame(
     val durationTimeSec: Int
 ) : Stage(durationTimeSec)
 
-data class StageBoss(val enemyType: EnemyType) : Stage(0)
+data class StageBoss(val enemyType: EnemyType) : Stage(1)
 
 data class StageBreak(val durationMillis: Int) : Stage(durationMillis)

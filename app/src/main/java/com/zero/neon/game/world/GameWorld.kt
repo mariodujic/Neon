@@ -166,6 +166,7 @@ fun GameWorld(
                 Image(
                     painterResource(id = it.drawableId),
                     contentDescription = stringResource(id = R.string.enemy),
+                    contentScale = ContentScale.FillBounds,
                     modifier = Modifier.size(width = it.width.dp, height = it.height.dp)
                 )
             }

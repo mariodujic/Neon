@@ -4,8 +4,9 @@ import com.zero.neon.game.ship.ship.Ship
 import java.util.*
 
 class EnemyController(
-    private val screenWidthDp: Float,
-    private val screenHeightDp: Float,
+    private val screenWidth: Float,
+    private val screenHeight: Float,
+    private val formationXOffset: FormationXOffset = FormationXOffset(screenWidth),
     private val getShip: () -> Ship,
     initialEnemies: List<Enemy> = emptyList(),
     private val setEnemies: (List<Enemy>) -> Unit
@@ -15,24 +16,44 @@ class EnemyController(
         private set
 
     val addEnemyId = UUID.randomUUID().toString()
-    fun addEnemy(enemyType: EnemyType) {
-        val enemy: Enemy? = if (enemyType is LevelOneEnemyType) {
-            LevelOneEnemy(
-                screenWidthDp = screenWidthDp,
-                screenHeightDp = screenHeightDp,
-                type = enemyType
-            )
-        } else if (enemyType is LevelOneBossType && enemies.isEmpty()) {
-            LevelOneBoss(
-                screenWidthDp = screenWidthDp,
-                screenHeightDp = screenHeightDp,
+    fun addEnemy(type: EnemyType) {
+        val enemies: MutableList<Enemy> = mutableListOf()
+        if (type is LevelOneEnemyType) {
+            when (type.formation) {
+                is ZigZag -> {
+                    val enemy = RegularEnemy(
+                        screenWidth = screenWidth,
+                        screenHeight = screenHeight,
+                        xOffset = formationXOffset.zigZagXOffset(type.formation),
+                        type = type
+                    )
+                    enemies += enemy
+                }
+                is Row -> {
+                    for (i in 1..type.formation.rowCount) {
+                        val enemy = RegularEnemy(
+                            screenWidth = screenWidth,
+                            screenHeight = screenHeight,
+                            xOffset = formationXOffset.rectangleXOffset(
+                                formation = type.formation,
+                                previousEnemy = enemies.lastOrNull(),
+                                enemyWidth = type.width
+                            ),
+                            type = type
+                        )
+                        enemies += enemy
+                    }
+                }
+            }
+        } else if (type is LevelOneBossType && enemies.isEmpty()) {
+            val boss = Boss(
+                screenWidth = screenWidth,
+                screenHeight = screenHeight,
                 getShip = getShip
             )
-        } else null
-        enemy?.let {
-            enemies = enemies + it
-            updateEnemies()
+            enemies += boss
         }
+        this.enemies += enemies
     }
 
     val processEnemiesId = UUID.randomUUID().toString()

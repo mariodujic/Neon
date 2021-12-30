@@ -12,15 +12,15 @@ import com.zero.neon.game.spaceobject.SpaceObject
 import java.util.*
 
 class ShipController(
-    private val screenWidthDp: Float,
-    screenHeightDp: Float,
+    private val screenWidth: Float,
+    screenHeight: Float,
     private var ship: Ship,
     private val setShip: (Ship) -> Unit
 ) {
 
     private val spaceShipCollidePower = 100
     private val movementSpeed: Float = 2f
-    private val maxYOffset: Float = screenHeightDp - 140
+    private val maxYOffset: Float = screenHeight - 140
 
     var movingLeft = false
     var movingRight = false
@@ -33,7 +33,7 @@ class ShipController(
         if (movingLeft && ship.xOffset >= 0 - ship.width / 4) {
             updateXOffset(ship.xOffset - movementSpeed)
         } else movingLeft = false
-        if (movingRight && ship.xOffset <= screenWidthDp - ship.width / 1.5) {
+        if (movingRight && ship.xOffset <= screenWidth - ship.width / 1.5) {
             updateXOffset(ship.xOffset + movementSpeed)
         } else movingRight = false
     }
