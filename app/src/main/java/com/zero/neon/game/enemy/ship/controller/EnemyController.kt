@@ -20,6 +20,7 @@ class EnemyController(
     private var enemies: List<Enemy> = initialEnemies
 
     val addEnemyId = uuidUtils.getUuid()
+    val addBossId = uuidUtils.getUuid()
     fun addEnemy(type: EnemyType) {
         val enemies = enemyFactory(type = type, getShip = getShip)
         this.enemies += enemies

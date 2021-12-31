@@ -27,9 +27,9 @@ val stages = listOf(
             hp = 150f,
             impactPower = 50f,
             formation = Row(rowCount = 4),
-            xOffsetSpeed = 0.4f,
-            yOffsetSpeed = 0.35f,
-            enemySpawnRate = RepeatTime.Millis(1500)
+            xOffsetSpeed = 0.8f,
+            yOffsetSpeed = 0.8f,
+            enemySpawnRate = RepeatTime.Millis(1000)
         ),
         3
     ),
@@ -43,9 +43,9 @@ val stages = listOf(
             hp = 150f,
             impactPower = 50f,
             formation = Row(rowCount = 3),
-            xOffsetSpeed = 0.4f,
-            yOffsetSpeed = 0.3f,
-            enemySpawnRate = RepeatTime.Millis(1500)
+            xOffsetSpeed = 0.8f,
+            yOffsetSpeed = 0.8f,
+            enemySpawnRate = RepeatTime.Millis(1000)
         ),
         4
     ),

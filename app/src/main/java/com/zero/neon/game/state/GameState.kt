@@ -286,7 +286,7 @@ fun rememberGameState(): GameState {
                         } else if (gameStage is StageBoss) {
                             val stage = gameStage as StageBoss
                             tinker(
-                                id = enemyController.addEnemyId,
+                                id = enemyController.addBossId,
                                 triggerMillis = stage.enemyType.spawnRate.timeMillis,
                                 doWork = { enemyController.addEnemy(stage.enemyType) }
                             )
