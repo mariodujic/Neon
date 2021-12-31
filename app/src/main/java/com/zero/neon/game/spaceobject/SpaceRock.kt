@@ -17,7 +17,7 @@ class SpaceRock(
     override var yOffset: Float = 1f
     private val randomDrawableIndex = Random.nextInt(0, RockType.values().size)
     override val drawableId: Int = RockType.values()[randomDrawableIndex].drawableId
-    override var hp: Int = size.toInt()
+    override var hp: Float = size
     override val impactPower = size.toInt()
     private var rotateClockWise = Random.nextBoolean()
     override var rotation = 0f
@@ -42,11 +42,11 @@ class SpaceRock(
         if (yOffset < screenHeight + 100) {
             yOffset += 1
         } else {
-            hp = 0
+            hp = 0f
         }
     }
 
-    override fun onObjectImpact(impactPower: Int) {
+    override fun onObjectImpact(impactPower: Float) {
         hp -= impactPower
     }
 

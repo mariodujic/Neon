@@ -18,5 +18,5 @@ interface Enemy : Serializable {
     fun enemyRect(): Rect
     fun move()
     fun generateLaser(): Laser
-    fun onObjectImpact(impactPower: Int)
+    fun onObjectImpact(impactPower: Float)
 }

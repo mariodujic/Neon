@@ -49,6 +49,6 @@ fun AudioPlayer(gameStatus: GameStatus) {
 }
 
 enum class Song(val uri: String) {
-    THIS_MEANS_WAR("https://bit.ly/3HepPW2"),
-    THE_BOMB("https://bit.ly/3sHymwQ"),
+    THIS_MEANS_WAR("https://bit.ly/3JxYIHF"),
+    THE_BOMB("https://bit.ly/3qzTzGo")
 }

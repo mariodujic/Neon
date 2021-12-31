@@ -15,7 +15,7 @@ data class UltimateLaser(
     override var width: Float = 30f
     override var height: Float = 30f
     override var rotation: Float = 0f
-    override var impactPower: Int = 1000
+    override var impactPower: Float = 1000f
     override val drawableId: Int = R.drawable.laser_blue_11
     override var destroyed: Boolean = false
 

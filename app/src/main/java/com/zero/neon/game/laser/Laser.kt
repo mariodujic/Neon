@@ -7,7 +7,7 @@ interface Laser {
     var width: Float
     var height: Float
     var rotation: Float
-    var impactPower: Int
+    var impactPower: Float
     val drawableId: Int
     val xOffsetMovementSpeed: Float
     val yOffsetMovementSpeed: Float

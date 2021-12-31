@@ -81,7 +81,7 @@ data class Boss(
         )
     }
 
-    override fun onObjectImpact(impactPower: Int) {
+    override fun onObjectImpact(impactPower: Float) {
         hp -= impactPower
     }
 

@@ -15,7 +15,7 @@ data class ShipLaser(
     override val yOffsetMovementSpeed: Float = 7f
     override var height: Float = 20f
     override var rotation: Float = 0f
-    override var impactPower: Int = 25
+    override var impactPower: Float = 25f
     override val drawableId: Int = R.drawable.laser_blue_7
     override var destroyed: Boolean = false
 

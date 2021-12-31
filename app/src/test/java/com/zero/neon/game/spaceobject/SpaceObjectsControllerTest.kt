@@ -1,7 +1,7 @@
 package com.zero.neon.game.spaceobject
 
-import com.zero.neon.testutils.FAKE_SCREEN_HEIGHT_DP
-import com.zero.neon.testutils.FAKE_SCREEN_WIDTH_DP
+import com.zero.neon.testutils.FAKE_SCREEN_HEIGHT
+import com.zero.neon.testutils.FAKE_SCREEN_WIDTH
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -22,10 +22,10 @@ class SpaceObjectsControllerTest {
     @Before
     fun setUp() {
         sut = SpaceObjectsController(
-            FAKE_SCREEN_WIDTH_DP,
-            FAKE_SCREEN_HEIGHT_DP,
-            emptyList(),
-            setSpaceObjects
+            screenWidth = FAKE_SCREEN_WIDTH,
+            screenHeight = FAKE_SCREEN_HEIGHT,
+            initialSpaceObjects = emptyList(),
+            setSpaceObjects = setSpaceObjects
         )
     }
 

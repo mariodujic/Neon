@@ -18,7 +18,7 @@ class ShipController(
     private val setShip: (Ship) -> Unit
 ) {
 
-    private val spaceShipCollidePower = 100
+    private val spaceShipCollidePower: Float = 100f
     private val movementSpeed: Float = 2f
     private val maxYOffset: Float = screenHeight - 140
 
@@ -167,11 +167,11 @@ class ShipController(
             if (enemyLaserRect.overlaps(if (ship.shieldEnabled) shipShieldRect else shipRect)) {
                 enemyLasers[enemyIndex].destroyed = true
 
-                val hpImpact = when (ship.shieldEnabled && enemyLaser.impactPower > 0) {
-                    true -> 0
+                val hpImpact: Float = when (ship.shieldEnabled && enemyLaser.impactPower > 0) {
+                    true -> 0f
                     false -> enemyLaser.impactPower
                 }
-                updateHp(ship.hp - hpImpact)
+                updateHp((ship.hp - hpImpact).toInt())
             }
         }
 
@@ -218,6 +218,6 @@ class ShipController(
     }
 
     companion object {
-        val TRIPLE_LASER_SIDE_OFFSET: Float = 20f
+        const val TRIPLE_LASER_SIDE_OFFSET: Float = 20f
     }
 }

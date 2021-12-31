@@ -10,13 +10,13 @@ data class RegularEnemy(
     private val screenWidth: Float,
     private val screenHeight: Float,
     override var xOffset: Float,
-    private val type: RegularEnemyType
+    private val type: RegularEnemyType,
+    override var hp: Float = type.hp
 ) : Enemy {
 
     override val enemyId: String = UUID.randomUUID().toString()
     override val width: Float = type.width
     override val height: Float = type.height
-    override var hp: Float = type.hp
     override val initialHp: Float = hp
     override val impactPower: Float = type.impactPower
     override var yOffset: Float = 0f
@@ -68,7 +68,7 @@ data class RegularEnemy(
         )
     }
 
-    override fun onObjectImpact(impactPower: Int) {
+    override fun onObjectImpact(impactPower: Float) {
         hp -= impactPower
     }
 }

@@ -193,7 +193,7 @@ fun rememberGameState(): GameState {
                                 shipController.monitorShipCollisions(
                                     spaceObjects = spaceObjectsController.spaceObjects,
                                     boosters = boosterController.boosters,
-                                    enemies = enemyController.enemies,
+                                    enemies = enemies,
                                     enemyLasers = enemyLaserController.enemyLasers
                                 ) { lasersController.fireUltimateLaser() }
                             }
@@ -204,14 +204,14 @@ fun rememberGameState(): GameState {
                             doWork = {
                                 lasersController.monitorLaserCollision(
                                     spaceObjects = spaceObjectsController.spaceObjects,
-                                    enemies = enemyController.enemies
+                                    enemies = enemies
                                 )
                             }
                         )
                         tinker(
                             id = enemyLaserController.fireEnemyLaserId,
                             triggerMillis = 1000,
-                            doWork = { enemyLaserController.fireEnemyLasers(enemies = enemyController.enemies) }
+                            doWork = { enemyLaserController.fireEnemyLasers(enemies = enemies) }
                         )
                         if (boosterController.hasBoosters()) {
                             tinker(

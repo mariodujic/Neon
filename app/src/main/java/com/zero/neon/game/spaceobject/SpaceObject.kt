@@ -10,11 +10,11 @@ interface SpaceObject : Serializable {
     var size: Float
     val drawableId: Int
     val destroyable: Boolean
-    var hp: Int
+    var hp: Float
     val impactPower: Int
     var rotation: Float
 
     fun spaceObjectRect(): Rect
     fun moveObject()
-    fun onObjectImpact(impactPower: Int)
+    fun onObjectImpact(impactPower: Float)
 }
