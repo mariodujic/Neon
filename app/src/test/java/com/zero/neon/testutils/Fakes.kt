@@ -3,13 +3,14 @@ package com.zero.neon.testutils
 import com.zero.neon.R
 import com.zero.neon.game.common.RepeatTime
 import com.zero.neon.game.enemy.ship.model.*
-import com.zero.neon.game.ship.ship.Ship
 import java.util.*
 
 const val FAKE_SCREEN_WIDTH = 500f
 const val FAKE_SCREEN_HEIGHT = 550f
 val FAKE_TIME_MILLIS = System.currentTimeMillis()
 val FAKE_UUID: String = UUID.randomUUID().toString()
+val FAKE_ZIG_ZAG_FORMATION = ZigZag(position = ZigZagInitialPosition.LEFT)
+val FAKE_ROW_FORMATION = Row(rowCount = 4)
 val FAKE_REGULAR_ENEMY_TYPE: RegularEnemyType = RegularEnemyType(
     drawableId = R.drawable.enemy_level_five,
     width = 50f,

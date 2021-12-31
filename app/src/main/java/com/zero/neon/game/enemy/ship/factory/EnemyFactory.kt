@@ -27,7 +27,7 @@ class EnemyFactory(
                         val enemy = RegularEnemy(
                             screenWidth = screenWidth,
                             screenHeight = screenHeight,
-                            xOffset = formationXOffset.rectangleXOffset(
+                            xOffset = formationXOffset.rowXOffset(
                                 formation = type.formation,
                                 previousEnemy = enemies.lastOrNull(),
                                 enemyWidth = type.width
