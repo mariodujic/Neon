@@ -13,11 +13,8 @@ class StageController(
         val stageTimeExpired =
             stageStartSnapshotMillis + getStage().durationSec * 1000 < dateUtils.currentTimeMillis()
         val hasNextStage = stageIndex < stages.lastIndex
-        if (
-            stageTimeExpired &&
-            (getStage() !is StageBreak || readyForNextStage) &&
-            hasNextStage
-        ) {
+        if (stageTimeExpired && hasNextStage) {
+            if (!readyForNextStage) return StageBreak
             stageIndex++
             stageStartSnapshotMillis = dateUtils.currentTimeMillis()
         }

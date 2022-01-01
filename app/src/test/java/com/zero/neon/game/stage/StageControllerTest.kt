@@ -69,4 +69,22 @@ class StageControllerTest {
         val actualOrdinal = sut.getGameStage(true)
         assertEquals(expectedOrdinal, actualOrdinal)
     }
+
+    @Test
+    fun `should return StageBreak when stageTimeExpired, hasNextStage and not readyForNextStage`() {
+        `when`(dateUtils.currentTimeMillis())
+            .thenReturn(FAKE_TIME_MILLIS + stages[0].durationSec * 1000 + 1)
+        val expectedStage = StageBreak
+        val actualStage = sut.getGameStage(readyForNextStage = false)
+        assertEquals(expectedStage, actualStage)
+    }
+
+    @Test
+    fun `should not return StageBreak when stageTimeExpired, hasNextStage and readyForNextStage`() {
+        `when`(dateUtils.currentTimeMillis())
+            .thenReturn(FAKE_TIME_MILLIS + stages[0].durationSec * 1000 + 1)
+        val unexpectedStage = StageBreak
+        val actualStage = sut.getGameStage(readyForNextStage = true)
+        assertNotEquals(unexpectedStage, actualStage)
+    }
 }

@@ -31,9 +31,8 @@ val stages = listOf(
             yOffsetSpeed = 0.8f,
             enemySpawnRate = RepeatTime.Millis(1000)
         ),
-        3
+        durationTimeSec = 3
     ),
-    StageBreak(3),
     StageGame(
         spaceRockSpawnRateMillis = RepeatTime.None,
         enemyType = RegularEnemyType(
@@ -47,9 +46,8 @@ val stages = listOf(
             yOffsetSpeed = 0.8f,
             enemySpawnRate = RepeatTime.Millis(1000)
         ),
-        4
+        durationTimeSec = 4
     ),
-    StageBreak(3),
     StageMessage(
         message = "Stage 2",
         durationMillis = 3
@@ -75,9 +73,8 @@ val stages = listOf(
             yOffsetSpeed = 0.4f,
             enemySpawnRate = RepeatTime.Millis(1000)
         ),
-        15
+        durationTimeSec = 15
     ),
-    StageBreak(3),
     StageMessage(
         message = "Stage 3",
         durationMillis = 3
@@ -103,9 +100,8 @@ val stages = listOf(
             yOffsetSpeed = 0.4f,
             enemySpawnRate = RepeatTime.Millis(900)
         ),
-        15
+        durationTimeSec = 15
     ),
-    StageBreak(3),
     StageMessage(
         message = "Boss fight",
         durationMillis = 3
@@ -119,7 +115,6 @@ val stages = listOf(
         durationMillis = 1
     ),
     StageBoss(enemyType = LevelOneBossType),
-    StageBreak(5),
     StageMessage(
         message = "Rekt",
         durationMillis = 3
@@ -149,7 +144,7 @@ val stages = listOf(
             yOffsetSpeed = 0.7f,
             enemySpawnRate = RepeatTime.Millis(900)
         ),
-        15
+        durationTimeSec = 15
     ),
     StageGame(
         spaceRockSpawnRateMillis = RepeatTime.None,
@@ -164,7 +159,7 @@ val stages = listOf(
             yOffsetSpeed = 0.5f,
             enemySpawnRate = RepeatTime.Millis(800)
         ),
-        15
+        durationTimeSec = 15
     ),
     StageGame(
         spaceRockSpawnRateMillis = RepeatTime.None,
@@ -179,7 +174,7 @@ val stages = listOf(
             yOffsetSpeed = 0.6f,
             enemySpawnRate = RepeatTime.Millis(800)
         ),
-        15
+        durationTimeSec = 15
     ),
     StageGame(
         spaceRockSpawnRateMillis = RepeatTime.None,
@@ -194,9 +189,8 @@ val stages = listOf(
             yOffsetSpeed = 0.6f,
             enemySpawnRate = RepeatTime.Millis(800)
         ),
-        15
+        durationTimeSec = 15
     ),
-    StageBreak(3),
     StageMessage(
         message = "End",
         durationMillis = 3
@@ -213,5 +207,4 @@ data class StageGame(
 ) : Stage(durationTimeSec)
 
 data class StageBoss(val enemyType: EnemyType) : Stage(1)
-
-data class StageBreak(val durationMillis: Int) : Stage(durationMillis)
+object StageBreak : Stage(3)
