@@ -5,12 +5,11 @@ import com.zero.neon.game.enemy.ship.model.Enemy
 import com.zero.neon.game.enemy.ship.model.EnemyType
 import com.zero.neon.game.ship.ship.Ship
 import com.zero.neon.utils.UuidUtils
-import java.util.*
 
 class EnemyController(
     private val screenWidth: Float,
     private val screenHeight: Float,
-    uuidUtils: UuidUtils = UuidUtils(),
+    uuidUtils: UuidUtils,
     private val enemyFactory: EnemyFactory = EnemyFactory(screenWidth, screenHeight),
     private val getShip: () -> Ship,
     initialEnemies: List<Enemy> = emptyList(),

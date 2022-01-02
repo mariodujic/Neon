@@ -32,6 +32,7 @@ import com.zero.neon.game.stage.StageBoss
 import com.zero.neon.game.stage.StageController
 import com.zero.neon.game.stage.StageGame
 import com.zero.neon.game.stage.StageMessage
+import com.zero.neon.utils.UuidUtils
 import com.zero.neon.utils.observeAsState
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -43,6 +44,7 @@ fun rememberGameState(): GameState {
     val configuration = LocalConfiguration.current
     val screenWidth = rememberSaveable { configuration.screenWidthDp.toFloat() }
     val screenHeight = rememberSaveable { configuration.screenHeightDp.toFloat() }
+    val uuidUtils = remember { UuidUtils() }
     val coroutineScope = rememberCoroutineScope()
 
     var stars: List<Star> by rememberSaveable { mutableStateOf(emptyList()) }
@@ -72,6 +74,7 @@ fun rememberGameState(): GameState {
         LasersController(
             screenWidth = screenWidth,
             screenHeight = screenHeight,
+            uuidUtils = uuidUtils,
             initialShipLasers = shipLasers,
             initialUltimateLasers = ultimateLasers,
             setShipLasers = { shipLasers = it },
@@ -94,6 +97,7 @@ fun rememberGameState(): GameState {
         BoosterController(
             screenWidth = screenWidth,
             screenHeight = screenHeight,
+            uuidUtils = uuidUtils,
             initialBoosters = boosters,
             updateBoosters = { boosters = it }
         )
@@ -104,6 +108,7 @@ fun rememberGameState(): GameState {
         EnemyController(
             screenWidth = screenWidth,
             screenHeight = screenHeight,
+            uuidUtils = uuidUtils,
             getShip = { ship },
             initialEnemies = enemies,
             setEnemies = { enemies = it }

@@ -15,7 +15,7 @@ import com.zero.neon.utils.UuidUtils
 class LasersController(
     private val screenWidth: Float,
     private val screenHeight: Float,
-    private val uuidUtils: UuidUtils = UuidUtils(),
+    private val uuidUtils: UuidUtils,
     initialShipLasers: List<Laser> = listOf(),
     initialUltimateLasers: List<Laser> = listOf(),
     private val setShipLasers: (List<Laser>) -> Unit,

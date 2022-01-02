@@ -1,13 +1,12 @@
 package com.zero.neon.game.booster
 
 import com.zero.neon.utils.UuidUtils
-import java.util.*
-import kotlin.random.Random
 
 class BoosterController(
     private val screenWidth: Float,
     private val screenHeight: Float,
-    private val uuidUtils: UuidUtils = UuidUtils(),
+    private val uuidUtils: UuidUtils,
+    private val generateBooster: GenerateBooster = GenerateBooster(uuidUtils, screenHeight),
     initialBoosters: List<Booster>,
     private val updateBoosters: (List<Booster>) -> Unit
 ) {
@@ -15,25 +14,19 @@ class BoosterController(
     var boosters: List<Booster> = initialBoosters
         private set
 
-    private val boosterSize = 40
-
-    val addBoosterId = UUID.randomUUID().toString()
+    val addBoosterId = uuidUtils.getUuid()
     fun addBooster() {
-        val boosterXOffset = Random.nextInt(boosterSize, screenWidth.toInt() - boosterSize)
-        val booster = Booster(
-            id = uuidUtils.getUuid(),
-            xOffset = boosterXOffset.toFloat(),
-            size = boosterSize.toFloat(),
-            screenHeight = screenHeight
-        )
-        boosters = boosters.toMutableList().apply { add(booster) }
+        val booster = generateBooster(width = BOOSTER_SIZE, maxXOffset = screenWidth - BOOSTER_SIZE)
+        boosters += booster
         updateBoosters()
     }
 
-    val processBoostersId = UUID.randomUUID().toString()
+    val processBoostersId = uuidUtils.getUuid()
     fun processBoosters() {
-        boosters.forEach { it.moveObject() }
-        boosters = boosters.toMutableList().apply { removeAll { it.collected } }
+        boosters.forEach {
+            if (it.collected) boosters -= it
+            it.moveObject()
+        }
         updateBoosters()
     }
 
@@ -41,5 +34,9 @@ class BoosterController(
 
     private fun updateBoosters() {
         updateBoosters(boosters)
+    }
+
+    companion object {
+        const val BOOSTER_SIZE = 40f
     }
 }

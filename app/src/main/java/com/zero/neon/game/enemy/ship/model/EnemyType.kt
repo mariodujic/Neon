@@ -2,8 +2,9 @@ package com.zero.neon.game.enemy.ship.model
 
 import androidx.annotation.DrawableRes
 import com.zero.neon.game.common.RepeatTime
+import java.io.Serializable
 
-sealed class EnemyType(val spawnRate: RepeatTime)
+sealed class EnemyType(val spawnRate: RepeatTime) : Serializable
 
 data class RegularEnemyType(
     @DrawableRes val drawableId: Int,

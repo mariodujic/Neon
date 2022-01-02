@@ -7,14 +7,14 @@ data class Booster(
     val id: String,
     var xOffset: Float,
     var size: Float,
-    private val screenHeight: Float
+    private val screenHeight: Float,
+    var collected: Boolean = false
 ) : Serializable {
 
     var yOffset = 1f
     private val boosters: Array<BoosterType> = BoosterType.values()
     private val index: Int = Random.nextInt(0, boosters.size)
     val type: BoosterType = boosters[index]
-    var collected: Boolean = false
     val impactPower = when (type) {
         /**
          * This booster type heals space ship on impact.

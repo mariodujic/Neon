@@ -1,6 +1,8 @@
 package com.zero.neon.game.enemy.ship.model
 
-sealed interface EnemyFormation
+import java.io.Serializable
+
+sealed interface EnemyFormation : Serializable
 
 data class ZigZag(val position: ZigZagInitialPosition) : EnemyFormation
 data class Row(val rowCount: Int) : EnemyFormation

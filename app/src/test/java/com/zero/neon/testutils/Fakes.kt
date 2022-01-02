@@ -1,6 +1,7 @@
 package com.zero.neon.testutils
 
 import com.zero.neon.R
+import com.zero.neon.game.booster.Booster
 import com.zero.neon.game.common.RepeatTime
 import com.zero.neon.game.enemy.ship.model.*
 import java.util.*
@@ -32,4 +33,8 @@ val FAKE_ENEMY: RegularEnemy = RegularEnemy(
 )
 val FAKE_ENEMIES: List<Enemy> = listOf(
     FAKE_ENEMY
+)
+val FAKE_BOOSTER = Booster("a", 100f, 40f, FAKE_SCREEN_HEIGHT)
+val FAKE_BOOSTER_LIST = listOf(
+    FAKE_BOOSTER
 )
