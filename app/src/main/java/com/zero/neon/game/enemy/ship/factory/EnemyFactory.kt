@@ -39,11 +39,14 @@ class EnemyFactory(
                 }
             }
         } else if (type is LevelOneBossType && enemies.isEmpty()) {
-            val boss = Boss(
+            val boss = LevelOneBoss(
                 screenWidth = screenWidth,
                 screenHeight = screenHeight,
                 getShip = getShip
             )
+            enemies += boss
+        } else if(type is LevelTwoBossType && enemies.isEmpty()) {
+            val boss = LevelTwoBoss(screenWidth = screenWidth, screenHeight = screenHeight)
             enemies += boss
         }
         return enemies

@@ -1,5 +1,6 @@
 package com.zero.neon.game.booster
 
+import com.zero.neon.game.common.Millis
 import com.zero.neon.utils.UuidUtils
 
 class BoosterController(
@@ -15,6 +16,7 @@ class BoosterController(
         private set
 
     val addBoosterId = uuidUtils.getUuid()
+    val addBoosterRepeatTime = Millis(4000)
     fun addBooster() {
         val booster = generateBooster(width = BOOSTER_SIZE, maxXOffset = screenWidth - BOOSTER_SIZE)
         boosters += booster
@@ -22,6 +24,7 @@ class BoosterController(
     }
 
     val processBoostersId = uuidUtils.getUuid()
+    val processBoostersRepeatTime = Millis(5)
     fun processBoosters() {
         boosters.forEach {
             if (it.collected) boosters -= it

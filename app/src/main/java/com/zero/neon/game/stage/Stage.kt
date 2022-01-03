@@ -1,9 +1,12 @@
 package com.zero.neon.game.stage
 
 import com.zero.neon.R
+import com.zero.neon.game.common.Millis
+import com.zero.neon.game.common.Never
 import com.zero.neon.game.common.RepeatTime
 import com.zero.neon.game.enemy.ship.model.*
 import java.io.Serializable
+import java.util.*
 
 val stages = listOf(
     StageMessage(
@@ -19,7 +22,7 @@ val stages = listOf(
         durationMillis = 1
     ),
     StageGame(
-        spaceRockSpawnRateMillis = RepeatTime.None,
+        spaceRockSpawnRateMillis = Never,
         enemyType = RegularEnemyType(
             drawableId = R.drawable.enemy_level_one,
             width = 30f,
@@ -29,12 +32,12 @@ val stages = listOf(
             formation = Row(rowCount = 4),
             xOffsetSpeed = 0.8f,
             yOffsetSpeed = 0.8f,
-            enemySpawnRate = RepeatTime.Millis(1000)
+            enemySpawnRate = Millis(1000)
         ),
         durationTimeSec = 3
     ),
     StageGame(
-        spaceRockSpawnRateMillis = RepeatTime.None,
+        spaceRockSpawnRateMillis = Never,
         enemyType = RegularEnemyType(
             drawableId = R.drawable.enemy_level_one,
             width = 30f,
@@ -44,7 +47,7 @@ val stages = listOf(
             formation = Row(rowCount = 3),
             xOffsetSpeed = 0.8f,
             yOffsetSpeed = 0.8f,
-            enemySpawnRate = RepeatTime.Millis(1000)
+            enemySpawnRate = Millis(1000)
         ),
         durationTimeSec = 4
     ),
@@ -61,7 +64,7 @@ val stages = listOf(
         durationMillis = 1
     ),
     StageGame(
-        spaceRockSpawnRateMillis = RepeatTime.None,
+        spaceRockSpawnRateMillis = Never,
         enemyType = RegularEnemyType(
             drawableId = R.drawable.enemy_level_two,
             width = 40f,
@@ -71,7 +74,7 @@ val stages = listOf(
             formation = ZigZag(position = ZigZagInitialPosition.RIGHT),
             xOffsetSpeed = 0.5f,
             yOffsetSpeed = 0.4f,
-            enemySpawnRate = RepeatTime.Millis(1000)
+            enemySpawnRate = Millis(1000)
         ),
         durationTimeSec = 15
     ),
@@ -88,7 +91,7 @@ val stages = listOf(
         durationMillis = 1
     ),
     StageGame(
-        spaceRockSpawnRateMillis = RepeatTime.Millis(2000),
+        spaceRockSpawnRateMillis = Millis(2000),
         enemyType = RegularEnemyType(
             drawableId = R.drawable.enemy_level_three,
             width = 45f,
@@ -98,7 +101,7 @@ val stages = listOf(
             formation = ZigZag(position = ZigZagInitialPosition.LEFT),
             xOffsetSpeed = 0.6f,
             yOffsetSpeed = 0.4f,
-            enemySpawnRate = RepeatTime.Millis(900)
+            enemySpawnRate = Millis(900)
         ),
         durationTimeSec = 15
     ),
@@ -114,7 +117,7 @@ val stages = listOf(
         message = "GO!",
         durationMillis = 1
     ),
-    StageBoss(enemyType = LevelOneBossType),
+    StageBoss(bossId = UUID.randomUUID().toString(), enemyType = LevelOneBossType),
     StageMessage(
         message = "Rekt",
         durationMillis = 3
@@ -132,7 +135,7 @@ val stages = listOf(
         durationMillis = 1
     ),
     StageGame(
-        spaceRockSpawnRateMillis = RepeatTime.None,
+        spaceRockSpawnRateMillis = Never,
         enemyType = RegularEnemyType(
             drawableId = R.drawable.enemy_level_four,
             width = 35f,
@@ -142,12 +145,12 @@ val stages = listOf(
             formation = ZigZag(position = ZigZagInitialPosition.LEFT),
             xOffsetSpeed = 0.5f,
             yOffsetSpeed = 0.7f,
-            enemySpawnRate = RepeatTime.Millis(900)
+            enemySpawnRate = Millis(900)
         ),
         durationTimeSec = 15
     ),
     StageGame(
-        spaceRockSpawnRateMillis = RepeatTime.None,
+        spaceRockSpawnRateMillis = Never,
         enemyType = RegularEnemyType(
             drawableId = R.drawable.enemy_level_five,
             width = 40f,
@@ -157,12 +160,12 @@ val stages = listOf(
             formation = ZigZag(position = ZigZagInitialPosition.RIGHT),
             xOffsetSpeed = 0.5f,
             yOffsetSpeed = 0.5f,
-            enemySpawnRate = RepeatTime.Millis(800)
+            enemySpawnRate = Millis(800)
         ),
         durationTimeSec = 15
     ),
     StageGame(
-        spaceRockSpawnRateMillis = RepeatTime.None,
+        spaceRockSpawnRateMillis = Never,
         enemyType = RegularEnemyType(
             drawableId = R.drawable.enemy_level_six,
             width = 45f,
@@ -172,12 +175,12 @@ val stages = listOf(
             formation = ZigZag(position = ZigZagInitialPosition.LEFT),
             xOffsetSpeed = 0.6f,
             yOffsetSpeed = 0.6f,
-            enemySpawnRate = RepeatTime.Millis(800)
+            enemySpawnRate = Millis(800)
         ),
         durationTimeSec = 15
     ),
     StageGame(
-        spaceRockSpawnRateMillis = RepeatTime.None,
+        spaceRockSpawnRateMillis = Never,
         enemyType = RegularEnemyType(
             drawableId = R.drawable.enemy_level_seven,
             width = 50f,
@@ -187,10 +190,23 @@ val stages = listOf(
             formation = ZigZag(position = ZigZagInitialPosition.RIGHT),
             xOffsetSpeed = 0.6f,
             yOffsetSpeed = 0.6f,
-            enemySpawnRate = RepeatTime.Millis(800)
+            enemySpawnRate = Millis(800)
         ),
         durationTimeSec = 15
     ),
+    StageMessage(
+        message = "Boss fight",
+        durationMillis = 3
+    ),
+    StageMessage(
+        message = "Get ready!",
+        durationMillis = 3
+    ),
+    StageMessage(
+        message = "GO!",
+        durationMillis = 1
+    ),
+    StageBoss(bossId = UUID.randomUUID().toString(), enemyType = LevelTwoBossType),
     StageMessage(
         message = "End",
         durationMillis = 3
@@ -201,10 +217,10 @@ sealed class Stage(val durationSec: Int) : Serializable
 
 data class StageMessage(val message: String, val durationMillis: Int) : Stage(durationMillis)
 data class StageGame(
-    val spaceRockSpawnRateMillis: RepeatTime = RepeatTime.None,
+    val spaceRockSpawnRateMillis: RepeatTime = Never,
     val enemyType: EnemyType,
     val durationTimeSec: Int
 ) : Stage(durationTimeSec)
 
-data class StageBoss(val enemyType: EnemyType) : Stage(1)
+data class StageBoss(val bossId: String, val enemyType: EnemyType) : Stage(1)
 object StageBreak : Stage(3)

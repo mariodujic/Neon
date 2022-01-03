@@ -2,7 +2,7 @@ package com.zero.neon.testutils
 
 import com.zero.neon.R
 import com.zero.neon.game.booster.Booster
-import com.zero.neon.game.common.RepeatTime
+import com.zero.neon.game.common.Millis
 import com.zero.neon.game.enemy.ship.model.*
 import java.util.*
 
@@ -23,7 +23,7 @@ val FAKE_REGULAR_ENEMY_TYPE: RegularEnemyType = RegularEnemyType(
     ),
     xOffsetSpeed = 0.5f,
     yOffsetSpeed = 0.5f,
-    enemySpawnRate = RepeatTime.Millis(1000)
+    enemySpawnRate = Millis(1000)
 )
 val FAKE_ENEMY: RegularEnemy = RegularEnemy(
     screenWidth = FAKE_SCREEN_WIDTH,

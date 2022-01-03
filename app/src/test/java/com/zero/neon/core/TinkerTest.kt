@@ -1,5 +1,6 @@
 package com.zero.neon.core
 
+import com.zero.neon.game.common.Millis
 import org.junit.Test
 import org.mockito.Mockito.*
 import java.util.*
@@ -10,7 +11,7 @@ class TinkerTest {
     fun `should run work once on invoke`() {
         val fakeId = UUID.randomUUID().toString()
         val mockWork: () -> Unit = spy {}
-        tinker(fakeId, FAKE_TIME_MILLIS, mockWork)
+        tinker(fakeId, Millis(FAKE_TIME_MILLIS), mockWork)
         verify(mockWork)()
     }
 
@@ -18,9 +19,9 @@ class TinkerTest {
     fun `should run work twice when required time has passed`() {
         val fakeId = UUID.randomUUID().toString()
         val mockWork: () -> Unit = spy {}
-        tinker(fakeId, FAKE_TIME_MILLIS, mockWork)
+        tinker(fakeId, Millis(FAKE_TIME_MILLIS), mockWork)
         Thread.sleep(150)
-        tinker(fakeId, FAKE_TIME_MILLIS, mockWork)
+        tinker(fakeId, Millis(FAKE_TIME_MILLIS), mockWork)
         verify(mockWork, times(2))()
     }
 

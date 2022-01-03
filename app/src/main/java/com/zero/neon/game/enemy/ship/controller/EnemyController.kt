@@ -1,5 +1,6 @@
 package com.zero.neon.game.enemy.ship.controller
 
+import com.zero.neon.game.common.Millis
 import com.zero.neon.game.enemy.ship.factory.EnemyFactory
 import com.zero.neon.game.enemy.ship.model.Enemy
 import com.zero.neon.game.enemy.ship.model.EnemyType
@@ -27,6 +28,7 @@ class EnemyController(
     }
 
     val processEnemiesId = uuidUtils.getUuid()
+    val processEnemiesRepeatTime = Millis(5)
     fun processEnemies() {
         enemies.forEach {
             if (it.hp <= 0) enemies -= it

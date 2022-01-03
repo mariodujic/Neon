@@ -8,7 +8,7 @@ import com.zero.neon.game.laser.Laser
 import com.zero.neon.game.ship.ship.Ship
 import java.util.*
 
-data class Boss(
+data class LevelOneBoss(
     private val screenWidth: Float,
     private val screenHeight: Float,
     private val getShip: () -> Ship
@@ -62,22 +62,24 @@ data class Boss(
         }
     }
 
-    override fun generateLaser(): Laser {
+    override fun generateLasers(): List<Laser> {
         val width = 30f
         val ship: Ship = getShip()
         val xOffsetDiff = ship.xOffset - xOffset
         val yOffsetDiff = ship.yOffset - yOffset
         val xOffsetMovementSpeed = xOffsetDiff / (yOffsetDiff - 2)
         val yOffMovementSpeed = yOffsetDiff / (yOffsetDiff - 2)
-        return EnemyLaser(
-            xOffset = xOffset + this.width / 2 - width / 2,
-            yOffset = yOffset + height,
-            yRange = screenHeight,
-            width = width,
-            height = width,
-            xOffsetMovementSpeed = xOffsetMovementSpeed,
-            yOffsetMovementSpeed = yOffMovementSpeed,
-            drawableId = R.drawable.laser_red_8
+        return listOf(
+            EnemyLaser(
+                xOffset = xOffset + this.width / 2 - width / 2,
+                yOffset = yOffset + height,
+                yRange = screenHeight,
+                width = width,
+                height = width,
+                xOffsetMovementSpeed = xOffsetMovementSpeed,
+                yOffsetMovementSpeed = yOffMovementSpeed,
+                drawableId = R.drawable.laser_red_8
+            )
         )
     }
 

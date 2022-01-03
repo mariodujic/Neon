@@ -3,6 +3,7 @@ package com.zero.neon.game.ship.laser
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
+import com.zero.neon.game.common.Millis
 import com.zero.neon.game.enemy.ship.model.Enemy
 import com.zero.neon.game.laser.Laser
 import com.zero.neon.game.ship.laser.ShipBoostedLaser.Companion.SHIP_BOOSTED_LASER_WIDTH
@@ -26,6 +27,7 @@ class LasersController(
     private var ultimateLasers: List<Laser> = initialUltimateLasers
 
     val fireLaserId = uuidUtils.getUuid()
+    val fireLaserRepeatTime = Millis(100)
     fun fireLasers(ship: Ship) {
 
         val lasers = if (ship.laserBoosterEnabled) {
@@ -67,6 +69,7 @@ class LasersController(
     }
 
     val processShipLasersId = uuidUtils.getUuid()
+    val processShipLasersRepeatTime = Millis(5)
     fun processShipLasers() {
         shipLasers.forEach {
             it.moveLaser()
@@ -98,6 +101,7 @@ class LasersController(
     }
 
     val processLasersId = uuidUtils.getUuid()
+    val processLasersRepeatTime = Millis(40)
     fun processLasers() {
         ultimateLasers.forEach {
             it.moveLaser()
@@ -114,6 +118,7 @@ class LasersController(
     }
 
     val monitorLaserCollisionId = uuidUtils.getUuid()
+    val monitorLaserCollisionRepeatTime = Millis(1)
     fun monitorLaserCollision(spaceObjects: List<SpaceObject>, enemies: List<Enemy>) {
         val lasers = shipLasers + ultimateLasers
         val spaceObjectRectList = spaceObjects.map { it.spaceObjectRect() }

@@ -1,5 +1,6 @@
 package com.zero.neon.game.constellation
 
+import com.zero.neon.game.common.Millis
 import java.util.*
 import kotlin.random.Random
 
@@ -26,6 +27,7 @@ class ConstellationController(
     }
 
     val animateStarsId = UUID.randomUUID().toString()
+    val animateStarsRepeatTime = Millis(50)
     fun animateStars() {
         stars().forEach { it.animateStar() }
     }

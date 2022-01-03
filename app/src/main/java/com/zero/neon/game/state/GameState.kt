@@ -10,6 +10,7 @@ import com.zero.neon.game.booster.Booster
 import com.zero.neon.game.booster.BoosterController
 import com.zero.neon.game.booster.BoosterToBoosterUIMapper
 import com.zero.neon.game.booster.BoosterUI
+import com.zero.neon.game.common.Millis
 import com.zero.neon.game.constellation.ConstellationController
 import com.zero.neon.game.constellation.Star
 import com.zero.neon.game.enemy.laser.EnemyLasersController
@@ -155,6 +156,7 @@ fun rememberGameState(): GameState {
     }
 
     val monitorLoopInSecId = rememberSaveable { UUID.randomUUID().toString() }
+    val monitorLoopRepeatTime = remember { Millis(1000) }
     fun monitorLoopInSec() {
         updateGameTime()
         updateGameTimeIndicator()
@@ -183,17 +185,17 @@ fun rememberGameState(): GameState {
                     if (gameStatus == GameStatus.RUNNING) {
                         tinker(
                             id = constellationController.animateStarsId,
-                            triggerMillis = 50,
+                            repeatTime = constellationController.animateStarsRepeatTime,
                             doWork = { constellationController.animateStars() }
                         )
                         tinker(
                             id = shipController.moveShipId,
-                            triggerMillis = 3,
+                            repeatTime = shipController.moveShipRepeatTime,
                             doWork = { shipController.moveShip() }
                         )
                         tinker(
                             id = shipController.monitorShipCollisionsId,
-                            triggerMillis = 100,
+                            repeatTime = shipController.monitorShipCollisionsRepeatTime,
                             doWork = {
                                 shipController.monitorShipCollisions(
                                     spaceObjects = spaceObjectsController.spaceObjects,
@@ -205,7 +207,7 @@ fun rememberGameState(): GameState {
                         )
                         tinker(
                             id = lasersController.monitorLaserCollisionId,
-                            triggerMillis = 1,
+                            repeatTime = lasersController.monitorLaserCollisionRepeatTime,
                             doWork = {
                                 lasersController.monitorLaserCollision(
                                     spaceObjects = spaceObjectsController.spaceObjects,
@@ -215,48 +217,48 @@ fun rememberGameState(): GameState {
                         )
                         tinker(
                             id = enemyLaserController.fireEnemyLaserId,
-                            triggerMillis = 1000,
+                            repeatTime = enemyLaserController.fireEnemyLaserRepeatTime,
                             doWork = { enemyLaserController.fireEnemyLasers(enemies = enemies) }
                         )
                         if (boosterController.hasBoosters()) {
                             tinker(
                                 id = boosterController.processBoostersId,
-                                triggerMillis = 5,
+                                repeatTime = boosterController.processBoostersRepeatTime,
                                 doWork = { boosterController.processBoosters() }
                             )
                         }
                         if (lasersController.hasUltimateLasers()) {
                             tinker(
                                 id = lasersController.processLasersId,
-                                triggerMillis = 40,
+                                repeatTime = lasersController.processLasersRepeatTime,
                                 doWork = { lasersController.processLasers() }
                             )
                         }
                         if (lasersController.hasShipLasers()) {
                             tinker(
                                 id = lasersController.processShipLasersId,
-                                triggerMillis = 5,
+                                repeatTime = lasersController.processShipLasersRepeatTime,
                                 doWork = { lasersController.processShipLasers() }
                             )
                         }
                         if (spaceObjectsController.hasSpaceObjects()) {
                             tinker(
                                 id = spaceObjectsController.processSpaceObjectsId,
-                                triggerMillis = 5,
+                                repeatTime = spaceObjectsController.processSpaceObjectsRepeatTime,
                                 doWork = { spaceObjectsController.processSpaceObjects() }
                             )
                         }
                         if (enemyLaserController.hasEnemyLasers()) {
                             tinker(
                                 id = enemyLaserController.processLasersId,
-                                triggerMillis = 5,
+                                repeatTime = enemyLaserController.processLasersRepeatTime,
                                 doWork = { enemyLaserController.processLasers() }
                             )
                         }
                         if (enemyController.hasEnemies()) {
                             tinker(
                                 id = enemyController.processEnemiesId,
-                                triggerMillis = 5,
+                                repeatTime = enemyController.processEnemiesRepeatTime,
                                 doWork = { enemyController.processEnemies() }
                             )
                         }
@@ -267,7 +269,7 @@ fun rememberGameState(): GameState {
                         ) {
                             tinker(
                                 id = lasersController.fireLaserId,
-                                triggerMillis = 100,
+                                repeatTime = lasersController.fireLaserRepeatTime,
                                 doWork = { lasersController.fireLasers(ship = ship) }
                             )
                         }
@@ -275,30 +277,30 @@ fun rememberGameState(): GameState {
                             val stage = gameStage as StageGame
                             tinker(
                                 id = spaceObjectsController.addSpaceRockId,
-                                triggerMillis = stage.spaceRockSpawnRateMillis.timeMillis,
+                                repeatTime = stage.spaceRockSpawnRateMillis,
                                 doWork = { spaceObjectsController.addSpaceRock() }
                             )
                             tinker(
                                 id = enemyController.addEnemyId,
-                                triggerMillis = stage.enemyType.spawnRate.timeMillis,
+                                repeatTime = stage.enemyType.spawnRate,
                                 doWork = { enemyController.addEnemy(stage.enemyType) }
                             )
                             tinker(
                                 id = boosterController.addBoosterId,
-                                triggerMillis = 4000,
+                                repeatTime = boosterController.addBoosterRepeatTime,
                                 doWork = { boosterController.addBooster() }
                             )
                         } else if (gameStage is StageBoss) {
                             val stage = gameStage as StageBoss
                             tinker(
-                                id = enemyController.addBossId,
-                                triggerMillis = stage.enemyType.spawnRate.timeMillis,
+                                id = stage.bossId,
+                                repeatTime = stage.enemyType.spawnRate,
                                 doWork = { enemyController.addEnemy(stage.enemyType) }
                             )
                         }
                         tinker(
                             id = monitorLoopInSecId,
-                            triggerMillis = 1000,
+                            repeatTime = monitorLoopRepeatTime,
                             doWork = { monitorLoopInSec() }
                         )
                     }

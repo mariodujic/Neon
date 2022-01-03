@@ -1,5 +1,6 @@
 package com.zero.neon.game.spaceobject
 
+import com.zero.neon.game.common.Millis
 import java.util.*
 import kotlin.random.Random
 
@@ -30,6 +31,7 @@ class SpaceObjectsController(
     }
 
     val processSpaceObjectsId = UUID.randomUUID().toString()
+    val processSpaceObjectsRepeatTime = Millis(5)
     fun processSpaceObjects() {
         spaceObjects.forEach { it.moveObject() }
         spaceObjects = spaceObjects.toMutableList().apply { removeAll { it.hp <= 0 } }

@@ -58,13 +58,15 @@ data class RegularEnemy(
         yOffset += yOffsetMovementSpeed
     }
 
-    override fun generateLaser(): Laser {
+    override fun generateLasers(): List<Laser> {
         val laserWidth = 18f
-        return EnemyLaser(
-            xOffset = xOffset + width / 2 - laserWidth / 2,
-            yOffset = yOffset + height,
-            yRange = screenHeight,
-            width = laserWidth
+        return listOf(
+            EnemyLaser(
+                xOffset = xOffset + width / 2 - laserWidth / 2,
+                yOffset = yOffset + height,
+                yRange = screenHeight,
+                width = laserWidth
+            )
         )
     }
 

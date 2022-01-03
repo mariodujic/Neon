@@ -6,6 +6,7 @@ import androidx.compose.ui.geometry.Size
 import com.zero.neon.R
 import com.zero.neon.game.booster.Booster
 import com.zero.neon.game.booster.BoosterType
+import com.zero.neon.game.common.Millis
 import com.zero.neon.game.enemy.ship.model.Enemy
 import com.zero.neon.game.laser.Laser
 import com.zero.neon.game.spaceobject.SpaceObject
@@ -26,6 +27,7 @@ class ShipController(
     var movingRight = false
 
     val moveShipId = UUID.randomUUID().toString()
+    val moveShipRepeatTime = Millis(3)
     fun moveShip() {
         if (ship.yOffset > maxYOffset) {
             updateYOffset(ship.yOffset - movementSpeed)
@@ -73,6 +75,7 @@ class ShipController(
     }
 
     val monitorShipCollisionsId = UUID.randomUUID().toString()
+    val monitorShipCollisionsRepeatTime = Millis(100)
     fun monitorShipCollisions(
         spaceObjects: List<SpaceObject>,
         boosters: List<Booster>,
