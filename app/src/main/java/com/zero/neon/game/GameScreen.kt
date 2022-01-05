@@ -37,6 +37,7 @@ fun GameScreen(onGamePause: () -> Unit) {
         StatusIndicator(
             gameTime = gameState.gameTimeIndicator,
             hp = gameState.ship.hp,
+            mineralsEarnedTotal = gameState.mineralsEarnedTotal,
             modifier = Modifier
                 .align(Alignment.TopStart)
                 .zIndex(300f)
@@ -65,6 +66,7 @@ fun GameScreen(onGamePause: () -> Unit) {
                 boosters = gameState.boosters,
                 enemies = gameState.enemies,
                 enemyLasers = gameState.enemyLasers,
+                points = gameState.points,
                 modifier = Modifier.weight(1f)
             )
             MovementButtons(

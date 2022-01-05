@@ -19,6 +19,11 @@ data class RegularEnemy(
     override val height: Float = type.height
     override val initialHp: Float = hp
     override val impactPower: Float = type.impactPower
+    override val points: Int = 1
+    override var destroyed: Boolean = false
+        private set
+    override var outOfScreen: Boolean = false
+        private set
     override var yOffset: Float = 0f
     override val drawableId: Int = type.drawableId
     private var moveRight = true
@@ -35,12 +40,13 @@ data class RegularEnemy(
         )
     }
 
-    override fun move() {
+    override fun process() {
         when (type.formation) {
             is ZigZag -> moveZigZagFormation()
             is Row -> moveRectangleFormation()
         }
-        if (yOffset + height > screenHeight) hp = 0f
+        if (yOffset + height > screenHeight) outOfScreen = true
+        if (hp <= 0) destroyed = true
     }
 
     private fun moveZigZagFormation() {

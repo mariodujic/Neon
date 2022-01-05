@@ -13,4 +13,5 @@
     <string name="splash">Splash image</string>
     <string name="restart_game_button">Restart</string>
     <string name="game_pause_dialog_title">PAUSE</string>
+    <string name="mineral_content_description">Mineral</string>
 </resources>

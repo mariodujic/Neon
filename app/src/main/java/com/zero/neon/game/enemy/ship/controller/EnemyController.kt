@@ -14,13 +14,13 @@ class EnemyController(
     private val enemyFactory: EnemyFactory = EnemyFactory(screenWidth, screenHeight),
     private val getShip: () -> Ship,
     initialEnemies: List<Enemy> = emptyList(),
-    private val setEnemies: (List<Enemy>) -> Unit
+    private val setEnemies: (List<Enemy>) -> Unit,
+    private val addPoints: (xOffset: Float, yOffset: Float, width: Float, value: Int) -> Unit
 ) {
 
     private var enemies: List<Enemy> = initialEnemies
 
     val addEnemyId = uuidUtils.getUuid()
-    val addBossId = uuidUtils.getUuid()
     fun addEnemy(type: EnemyType) {
         val enemies = enemyFactory(type = type, getShip = getShip)
         this.enemies += enemies
@@ -31,8 +31,18 @@ class EnemyController(
     val processEnemiesRepeatTime = Millis(5)
     fun processEnemies() {
         enemies.forEach {
-            if (it.hp <= 0) enemies -= it
-            it.move()
+            it.process()
+            if (it.destroyed) {
+                enemies -= it
+                addPoints(
+                    it.xOffset,
+                    it.yOffset + it.height / 2,
+                    it.width,
+                    it.points
+                )
+            } else if (it.outOfScreen) {
+                enemies -= it
+            }
         }
         updateEnemies()
     }

@@ -19,6 +19,11 @@ data class LevelTwoBoss(
     override var hp: Float = 4000f
     override val initialHp: Float = hp
     override val impactPower: Float = 10f
+    override val points: Int = 10
+    override var destroyed: Boolean = false
+        private set
+    override var outOfScreen: Boolean = false
+        private set
     override val drawableId: Int = R.drawable.enemy_level_two_boss
     private val bossMovementSpeed = 0.5f
 
@@ -38,7 +43,7 @@ data class LevelTwoBoss(
         )
     }
 
-    override fun move() {
+    override fun process() {
         if (xOffset <= 0) {
             movement = Movement.RIGHT
         } else if (xOffset >= maxXOffset) {
@@ -49,6 +54,9 @@ data class LevelTwoBoss(
             Movement.RIGHT -> xOffset += bossMovementSpeed
             Movement.LEFT -> xOffset -= bossMovementSpeed
         }
+
+        if (yOffset + height > screenHeight) outOfScreen = true
+        if (hp <= 0) destroyed = true
     }
 
     override fun generateLasers(): List<Laser> {

@@ -20,6 +20,10 @@ import com.zero.neon.game.enemy.ship.model.Enemy
 import com.zero.neon.game.enemy.ship.model.EnemyUI
 import com.zero.neon.game.laser.Laser
 import com.zero.neon.game.laser.LaserToLaserUIMapper
+import com.zero.neon.game.points.controller.PointsController
+import com.zero.neon.game.points.mapper.PointToPointUIMapper
+import com.zero.neon.game.points.model.Point
+import com.zero.neon.game.points.model.PointUI
 import com.zero.neon.game.settings.GameStatus
 import com.zero.neon.game.ship.laser.LaserUI
 import com.zero.neon.game.ship.laser.LasersController
@@ -104,6 +108,16 @@ fun rememberGameState(): GameState {
         )
     }
 
+    var mineralsEarnedTotal: Int by rememberSaveable { mutableStateOf(0) }
+    var points: List<Point> by rememberSaveable { mutableStateOf(emptyList()) }
+    val pointsController = remember {
+        PointsController(
+            initialPoints = points,
+            updatePoints = { points = it },
+            updateMineralsEarnedTotal = { mineralsEarnedTotal += it }
+        )
+    }
+
     var enemies: List<Enemy> by rememberSaveable { mutableStateOf(emptyList()) }
     val enemyController = remember {
         EnemyController(
@@ -112,7 +126,15 @@ fun rememberGameState(): GameState {
             uuidUtils = uuidUtils,
             getShip = { ship },
             initialEnemies = enemies,
-            setEnemies = { enemies = it }
+            setEnemies = { enemies = it },
+            addPoints = { xOffset: Float, yOffset: Float, width: Float, points: Int ->
+                pointsController.addPoint(
+                    xOffset = xOffset,
+                    yOffset = yOffset,
+                    width = width,
+                    value = points
+                )
+            }
         )
     }
 
@@ -220,6 +242,11 @@ fun rememberGameState(): GameState {
                             repeatTime = enemyLaserController.fireEnemyLaserRepeatTime,
                             doWork = { enemyLaserController.fireEnemyLasers(enemies = enemies) }
                         )
+                        tinker(
+                            id = pointsController.processPointsId,
+                            repeatTime = pointsController.processPointsRepeatTime,
+                            doWork = { pointsController.processPoints() }
+                        )
                         if (boosterController.hasBoosters()) {
                             tinker(
                                 id = boosterController.processBoostersId,
@@ -326,6 +353,8 @@ fun rememberGameState(): GameState {
         enemies = enemies.map { enemyMapper(it) },
         enemyLasers = enemyLasers.map { lasersMapper(it) },
         gameTimeIndicator = gameTimeIndicator,
+        points = points.map { pointToPointUIMapper(it) },
+        mineralsEarnedTotal = mineralsEarnedTotal.toString(),
         moveShipLeft = { shipController.movingLeft = it },
         moveShipRight = { shipController.movingRight = it },
         toggleGameStatus = {
@@ -348,6 +377,8 @@ data class GameState(
     val enemies: List<EnemyUI>,
     val enemyLasers: List<LaserUI>,
     val gameTimeIndicator: String,
+    val points: List<PointUI>,
+    val mineralsEarnedTotal: String,
     val moveShipLeft: (Boolean) -> Unit,
     val moveShipRight: (Boolean) -> Unit,
     val toggleGameStatus: () -> Unit
@@ -356,5 +387,6 @@ data class GameState(
 
 private val boosterMapper = BoosterToBoosterUIMapper()
 private val enemyMapper = EnemyToEnemyUIMapper()
+private val pointToPointUIMapper = PointToPointUIMapper()
 private val lasersMapper = LaserToLaserUIMapper()
 private val spaceObjectsMapper = SpaceObjectToSpaceObjectUIMapper()

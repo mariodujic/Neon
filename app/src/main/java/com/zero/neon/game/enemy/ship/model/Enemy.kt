@@ -14,9 +14,12 @@ interface Enemy : Serializable {
     val initialHp: Float
     val impactPower: Float
     val drawableId: Int
+    val points: Int
+    val destroyed: Boolean
+    val outOfScreen: Boolean
 
     fun enemyRect(): Rect
-    fun move()
+    fun process()
     fun generateLasers(): List<Laser>
     fun onObjectImpact(impactPower: Float)
 }
