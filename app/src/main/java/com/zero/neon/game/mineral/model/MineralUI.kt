@@ -1,12 +1,11 @@
-package com.zero.neon.game.points.model
+package com.zero.neon.game.mineral.model
 
 import androidx.compose.runtime.Immutable
 
 @Immutable
-data class PointUI(
+data class MineralUI(
     val xOffset: Float,
     val yOffset: Float,
     val width: Float,
-    val value: Int,
     val alpha: Float
 )

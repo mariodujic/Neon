@@ -68,7 +68,7 @@ fun StatusIndicator(
             Text(
                 text = mineralsEarnedTotal,
                 fontWeight = FontWeight.SemiBold,
-                style = MaterialTheme.typography.h6
+                style = MaterialTheme.typography.h5
             )
         }
     }

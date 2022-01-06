@@ -6,8 +6,8 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -21,7 +21,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.zero.neon.R
 import com.zero.neon.common.theme.ShipShieldOne
@@ -29,7 +28,7 @@ import com.zero.neon.common.theme.ShipShieldTwo
 import com.zero.neon.game.booster.BoosterUI
 import com.zero.neon.game.constellation.Star
 import com.zero.neon.game.enemy.ship.model.EnemyUI
-import com.zero.neon.game.points.model.PointUI
+import com.zero.neon.game.mineral.model.MineralUI
 import com.zero.neon.game.ship.laser.LaserUI
 import com.zero.neon.game.ship.ship.Ship
 import com.zero.neon.game.spaceobject.SpaceObjectUI
@@ -44,7 +43,7 @@ fun GameWorld(
     boosters: List<BoosterUI>,
     enemies: List<EnemyUI>,
     enemyLasers: List<LaserUI>,
-    points: List<PointUI>,
+    minerals: List<MineralUI>,
     modifier: Modifier = Modifier
 ) {
 
@@ -176,20 +175,19 @@ fun GameWorld(
                 )
             }
         }
-        points.forEach {
+        minerals.forEach {
             Box(
                 modifier = Modifier
                     .width(it.width.dp)
                     .offset(x = it.xOffset.dp, y = it.yOffset.dp)
             ) {
-                Text(
-                    text = it.value.toString(),
-                    style = MaterialTheme.typography.h5,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White,
+                Icon(
+                    painter = painterResource(id = R.drawable.mineral),
+                    contentDescription = stringResource(id = R.string.mineral_content_description),
+                    tint = Color.Unspecified,
                     modifier = Modifier
+                        .size(25.dp)
                         .alpha(alpha = it.alpha)
-                        .align(Alignment.Center)
                 )
             }
         }

@@ -20,10 +20,10 @@ import com.zero.neon.game.enemy.ship.model.Enemy
 import com.zero.neon.game.enemy.ship.model.EnemyUI
 import com.zero.neon.game.laser.Laser
 import com.zero.neon.game.laser.LaserToLaserUIMapper
-import com.zero.neon.game.points.controller.PointsController
-import com.zero.neon.game.points.mapper.PointToPointUIMapper
-import com.zero.neon.game.points.model.Point
-import com.zero.neon.game.points.model.PointUI
+import com.zero.neon.game.mineral.controller.MineralsController
+import com.zero.neon.game.mineral.mapper.MineralToMineralUIMapper
+import com.zero.neon.game.mineral.model.Mineral
+import com.zero.neon.game.mineral.model.MineralUI
 import com.zero.neon.game.settings.GameStatus
 import com.zero.neon.game.ship.laser.LaserUI
 import com.zero.neon.game.ship.laser.LasersController
@@ -109,11 +109,11 @@ fun rememberGameState(): GameState {
     }
 
     var mineralsEarnedTotal: Int by rememberSaveable { mutableStateOf(0) }
-    var points: List<Point> by rememberSaveable { mutableStateOf(emptyList()) }
-    val pointsController = remember {
-        PointsController(
-            initialPoints = points,
-            updatePoints = { points = it },
+    var minerals: List<Mineral> by rememberSaveable { mutableStateOf(emptyList()) }
+    val mineralsController = remember {
+        MineralsController(
+            initialMinerals = minerals,
+            updateMinerals = { minerals = it },
             updateMineralsEarnedTotal = { mineralsEarnedTotal += it }
         )
     }
@@ -127,12 +127,12 @@ fun rememberGameState(): GameState {
             getShip = { ship },
             initialEnemies = enemies,
             setEnemies = { enemies = it },
-            addPoints = { xOffset: Float, yOffset: Float, width: Float, points: Int ->
-                pointsController.addPoint(
+            addMinerals = { xOffset: Float, yOffset: Float, width: Float, mineralAmount: Int ->
+                mineralsController.addMinerals(
                     xOffset = xOffset,
                     yOffset = yOffset,
                     width = width,
-                    value = points
+                    mineralAmount = mineralAmount
                 )
             }
         )
@@ -243,9 +243,9 @@ fun rememberGameState(): GameState {
                             doWork = { enemyLaserController.fireEnemyLasers(enemies = enemies) }
                         )
                         tinker(
-                            id = pointsController.processPointsId,
-                            repeatTime = pointsController.processPointsRepeatTime,
-                            doWork = { pointsController.processPoints() }
+                            id = mineralsController.processMineralsId,
+                            repeatTime = mineralsController.processMineralsRepeatTime,
+                            doWork = { mineralsController.processMinerals() }
                         )
                         if (boosterController.hasBoosters()) {
                             tinker(
@@ -353,7 +353,7 @@ fun rememberGameState(): GameState {
         enemies = enemies.map { enemyMapper(it) },
         enemyLasers = enemyLasers.map { lasersMapper(it) },
         gameTimeIndicator = gameTimeIndicator,
-        points = points.map { pointToPointUIMapper(it) },
+        minerals = minerals.map { mineralToMineralUIMapper(it) },
         mineralsEarnedTotal = mineralsEarnedTotal.toString(),
         moveShipLeft = { shipController.movingLeft = it },
         moveShipRight = { shipController.movingRight = it },
@@ -377,7 +377,7 @@ data class GameState(
     val enemies: List<EnemyUI>,
     val enemyLasers: List<LaserUI>,
     val gameTimeIndicator: String,
-    val points: List<PointUI>,
+    val minerals: List<MineralUI>,
     val mineralsEarnedTotal: String,
     val moveShipLeft: (Boolean) -> Unit,
     val moveShipRight: (Boolean) -> Unit,
@@ -387,6 +387,6 @@ data class GameState(
 
 private val boosterMapper = BoosterToBoosterUIMapper()
 private val enemyMapper = EnemyToEnemyUIMapper()
-private val pointToPointUIMapper = PointToPointUIMapper()
+private val mineralToMineralUIMapper = MineralToMineralUIMapper()
 private val lasersMapper = LaserToLaserUIMapper()
 private val spaceObjectsMapper = SpaceObjectToSpaceObjectUIMapper()

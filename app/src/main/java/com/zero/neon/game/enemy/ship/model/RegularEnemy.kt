@@ -19,7 +19,7 @@ data class RegularEnemy(
     override val height: Float = type.height
     override val initialHp: Float = hp
     override val impactPower: Float = type.impactPower
-    override val points: Int = 1
+    override val minerals: Int = 1
     override var destroyed: Boolean = false
         private set
     override var outOfScreen: Boolean = false

@@ -66,7 +66,7 @@ fun GameScreen(onGamePause: () -> Unit) {
                 boosters = gameState.boosters,
                 enemies = gameState.enemies,
                 enemyLasers = gameState.enemyLasers,
-                points = gameState.points,
+                minerals = gameState.minerals,
                 modifier = Modifier.weight(1f)
             )
             MovementButtons(

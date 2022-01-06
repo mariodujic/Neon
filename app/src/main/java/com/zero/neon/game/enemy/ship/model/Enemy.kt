@@ -14,7 +14,7 @@ interface Enemy : Serializable {
     val initialHp: Float
     val impactPower: Float
     val drawableId: Int
-    val points: Int
+    val minerals: Int
     val destroyed: Boolean
     val outOfScreen: Boolean
 

@@ -20,7 +20,7 @@ data class LevelOneBoss(
     override var hp: Float = 3000f
     override val initialHp: Float = hp
     override val impactPower: Float = 10f
-    override val points: Int = 10
+    override val minerals: Int = 10
     override var destroyed: Boolean = false
         private set
     override var outOfScreen: Boolean = false
