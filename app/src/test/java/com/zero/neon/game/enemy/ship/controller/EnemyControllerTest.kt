@@ -32,6 +32,9 @@ class EnemyControllerTest {
     @Mock
     private lateinit var addMinerals: (xOffset: Float, yOffset: Float, width: Float, mineralAmount: Int) -> Unit
 
+    @Mock
+    private lateinit var addExplosion: (xOffset: Float, yOffset: Float, width: Float, height: Float) -> Unit
+
     private lateinit var sut: EnemyController
 
     @Before
@@ -45,7 +48,8 @@ class EnemyControllerTest {
             getShip = getShip,
             initialEnemies = FAKE_ENEMIES,
             setEnemies = setEnemies,
-            addMinerals = addMinerals
+            addMinerals = addMinerals,
+            addExplosion = addExplosion
         )
     }
 

@@ -14,4 +14,5 @@
     <string name="restart_game_button">Restart</string>
     <string name="game_pause_dialog_title">PAUSE</string>
     <string name="mineral_content_description">Mineral</string>
+    <string name="explosion_content_description">Explosion</string>
 </resources>

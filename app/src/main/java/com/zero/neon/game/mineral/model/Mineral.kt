@@ -5,7 +5,7 @@ import java.io.Serializable
 data class Mineral(
     val xOffset: Float,
     var yOffset: Float,
-    val width: Float,
+    val width: Float
 ) : Serializable {
 
     var alpha: Float = 1f

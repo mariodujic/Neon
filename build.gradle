@@ -11,6 +11,7 @@ buildscript {
         junit_version = '4.13.2'
         accompanist_version = '0.20.3'
         exoplayer_version = '2.16.1'
+        coil_version = '1.4.0'
         navigation_version = '2.4.0-rc01'
     }
     repositories {

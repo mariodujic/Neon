@@ -18,6 +18,8 @@ import com.zero.neon.game.enemy.ship.controller.EnemyController
 import com.zero.neon.game.enemy.ship.mapper.EnemyToEnemyUIMapper
 import com.zero.neon.game.enemy.ship.model.Enemy
 import com.zero.neon.game.enemy.ship.model.EnemyUI
+import com.zero.neon.game.explosion.controller.ExplosionController
+import com.zero.neon.game.explosion.model.Explosion
 import com.zero.neon.game.laser.Laser
 import com.zero.neon.game.laser.LaserToLaserUIMapper
 import com.zero.neon.game.mineral.controller.MineralsController
@@ -108,6 +110,14 @@ fun rememberGameState(): GameState {
         )
     }
 
+    var explosions: List<Explosion> by rememberSaveable { mutableStateOf(emptyList()) }
+    val explosionsController = remember {
+        ExplosionController(
+            initialExplosions = explosions,
+            updateExplosions = { explosions = it }
+        )
+    }
+
     var mineralsEarnedTotal: Int by rememberSaveable { mutableStateOf(0) }
     var minerals: List<Mineral> by rememberSaveable { mutableStateOf(emptyList()) }
     val mineralsController = remember {
@@ -133,6 +143,14 @@ fun rememberGameState(): GameState {
                     yOffset = yOffset,
                     width = width,
                     mineralAmount = mineralAmount
+                )
+            },
+            addExplosion = { xOffset: Float, yOffset: Float, width: Float, height: Float ->
+                explosionsController.addExplosion(
+                    xOffset = xOffset,
+                    yOffset = yOffset,
+                    width = width,
+                    height = height
                 )
             }
         )
@@ -247,6 +265,11 @@ fun rememberGameState(): GameState {
                             repeatTime = mineralsController.processMineralsRepeatTime,
                             doWork = { mineralsController.processMinerals() }
                         )
+                        tinker(
+                            id = explosionsController.processExplosionsId,
+                            repeatTime = explosionsController.processExplosionsRepeatTime,
+                            doWork = { explosionsController.processExplosions() }
+                        )
                         if (boosterController.hasBoosters()) {
                             tinker(
                                 id = boosterController.processBoostersId,
@@ -355,6 +378,7 @@ fun rememberGameState(): GameState {
         gameTimeIndicator = gameTimeIndicator,
         minerals = minerals.map { mineralToMineralUIMapper(it) },
         mineralsEarnedTotal = mineralsEarnedTotal.toString(),
+        explosions = explosions,
         moveShipLeft = { shipController.movingLeft = it },
         moveShipRight = { shipController.movingRight = it },
         toggleGameStatus = {
@@ -379,6 +403,7 @@ data class GameState(
     val gameTimeIndicator: String,
     val minerals: List<MineralUI>,
     val mineralsEarnedTotal: String,
+    val explosions: List<Explosion>,
     val moveShipLeft: (Boolean) -> Unit,
     val moveShipRight: (Boolean) -> Unit,
     val toggleGameStatus: () -> Unit

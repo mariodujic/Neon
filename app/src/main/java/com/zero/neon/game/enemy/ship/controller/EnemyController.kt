@@ -15,7 +15,8 @@ class EnemyController(
     private val getShip: () -> Ship,
     initialEnemies: List<Enemy> = emptyList(),
     private val setEnemies: (List<Enemy>) -> Unit,
-    private val addMinerals: (xOffset: Float, yOffset: Float, width: Float, mineralAmount: Int) -> Unit
+    private val addMinerals: (xOffset: Float, yOffset: Float, width: Float, mineralAmount: Int) -> Unit,
+    private val addExplosion: (xOffset: Float, yOffset: Float, width: Float, height: Float) -> Unit
 ) {
 
     private var enemies: List<Enemy> = initialEnemies
@@ -39,6 +40,12 @@ class EnemyController(
                     it.yOffset + it.height / 2,
                     it.width,
                     it.minerals
+                )
+                addExplosion(
+                    it.xOffset + it.width / 2,
+                    it.yOffset + it.height / 2,
+                    it.width,
+                    it.height
                 )
             } else if (it.outOfScreen) {
                 enemies -= it

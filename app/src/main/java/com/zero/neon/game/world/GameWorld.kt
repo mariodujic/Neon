@@ -22,16 +22,19 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberImagePainter
 import com.zero.neon.R
 import com.zero.neon.common.theme.ShipShieldOne
 import com.zero.neon.common.theme.ShipShieldTwo
 import com.zero.neon.game.booster.BoosterUI
 import com.zero.neon.game.constellation.Star
 import com.zero.neon.game.enemy.ship.model.EnemyUI
+import com.zero.neon.game.explosion.model.Explosion
 import com.zero.neon.game.mineral.model.MineralUI
 import com.zero.neon.game.ship.laser.LaserUI
 import com.zero.neon.game.ship.ship.Ship
 import com.zero.neon.game.spaceobject.SpaceObjectUI
+import com.zero.neon.game.utils.rememberImageLoader
 
 @Composable
 fun GameWorld(
@@ -44,8 +47,11 @@ fun GameWorld(
     enemies: List<EnemyUI>,
     enemyLasers: List<LaserUI>,
     minerals: List<MineralUI>,
+    explosions: List<Explosion>,
     modifier: Modifier = Modifier
 ) {
+
+    val imageLoader = rememberImageLoader()
 
     val infiniteTransition = rememberInfiniteTransition()
     val shipShieldColor by infiniteTransition.animateColor(
@@ -190,6 +196,16 @@ fun GameWorld(
                         .alpha(alpha = it.alpha)
                 )
             }
+        }
+        explosions.forEach {
+            Image(
+                painter = rememberImagePainter(data = R.drawable.explosion, imageLoader = imageLoader),
+                contentDescription = stringResource(id = R.string.explosion_content_description),
+                contentScale = ContentScale.FillBounds,
+                modifier = Modifier
+                    .offset(it.xOffset.dp, it.yOffset.dp)
+                    .size(it.size.dp)
+            )
         }
         enemyLasers.forEach {
             Image(

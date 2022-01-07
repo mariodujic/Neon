@@ -63,6 +63,9 @@ dependencies {
     testImplementation "org.mockito:mockito-inline:$mockito_version"
     /*Audio player*/
     implementation "com.google.android.exoplayer:exoplayer:$exoplayer_version"
+    /*Image*/
+    implementation "io.coil-kt:coil-compose:$coil_version"
+    implementation "io.coil-kt:coil-gif:$coil_version"
     /*Navigation*/
     implementation "androidx.navigation:navigation-compose:$navigation_version"
 }
