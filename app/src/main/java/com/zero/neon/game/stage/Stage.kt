@@ -25,48 +25,6 @@ val stages = listOf(
         spaceRockSpawnRateMillis = Never,
         enemyType = RegularEnemyType(
             drawableId = R.drawable.enemy_level_one,
-            width = 30f,
-            height = 40f,
-            hp = 150f,
-            impactPower = 50f,
-            formation = Row(rowCount = 4),
-            xOffsetSpeed = 0.8f,
-            yOffsetSpeed = 0.8f,
-            enemySpawnRate = Millis(1000)
-        ),
-        durationTimeSec = 3
-    ),
-    StageGame(
-        spaceRockSpawnRateMillis = Never,
-        enemyType = RegularEnemyType(
-            drawableId = R.drawable.enemy_level_one,
-            width = 30f,
-            height = 40f,
-            hp = 150f,
-            impactPower = 50f,
-            formation = Row(rowCount = 3),
-            xOffsetSpeed = 0.8f,
-            yOffsetSpeed = 0.8f,
-            enemySpawnRate = Millis(1000)
-        ),
-        durationTimeSec = 4
-    ),
-    StageMessage(
-        message = "Stage 2",
-        durationMillis = 3
-    ),
-    StageMessage(
-        message = "Get ready!",
-        durationMillis = 3
-    ),
-    StageMessage(
-        message = "GO!",
-        durationMillis = 1
-    ),
-    StageGame(
-        spaceRockSpawnRateMillis = Never,
-        enemyType = RegularEnemyType(
-            drawableId = R.drawable.enemy_level_two,
             width = 40f,
             height = 40f,
             hp = 180f,
@@ -76,19 +34,22 @@ val stages = listOf(
             yOffsetSpeed = 0.4f,
             enemySpawnRate = Millis(1000)
         ),
-        durationTimeSec = 15
+        durationTimeSec = 5
     ),
-    StageMessage(
-        message = "Stage 3",
-        durationMillis = 3
-    ),
-    StageMessage(
-        message = "Get ready!",
-        durationMillis = 3
-    ),
-    StageMessage(
-        message = "GO!",
-        durationMillis = 1
+    StageGame(
+        spaceRockSpawnRateMillis = Never,
+        enemyType = RegularEnemyType(
+            drawableId = R.drawable.enemy_level_two,
+            width = 30f,
+            height = 40f,
+            hp = 150f,
+            impactPower = 50f,
+            formation = Row(rowCount = 3),
+            xOffsetSpeed = 0.8f,
+            yOffsetSpeed = 0.5f,
+            enemySpawnRate = Millis(1000)
+        ),
+        durationTimeSec = 4
     ),
     StageGame(
         spaceRockSpawnRateMillis = Millis(2000),
@@ -100,10 +61,25 @@ val stages = listOf(
             impactPower = 65f,
             formation = ZigZag(position = ZigZagInitialPosition.LEFT),
             xOffsetSpeed = 0.6f,
-            yOffsetSpeed = 0.4f,
+            yOffsetSpeed = 0.6f,
             enemySpawnRate = Millis(900)
         ),
-        durationTimeSec = 15
+        durationTimeSec = 5
+    ),
+    StageGame(
+        spaceRockSpawnRateMillis = Never,
+        enemyType = RegularEnemyType(
+            drawableId = R.drawable.enemy_level_one,
+            width = 30f,
+            height = 40f,
+            hp = 150f,
+            impactPower = 50f,
+            formation = Row(rowCount = 3),
+            xOffsetSpeed = 0.8f,
+            yOffsetSpeed = 0.7f,
+            enemySpawnRate = Millis(1000)
+        ),
+        durationTimeSec = 4
     ),
     StageMessage(
         message = "Boss fight",
@@ -123,7 +99,7 @@ val stages = listOf(
         durationMillis = 3
     ),
     StageMessage(
-        message = "Stage 5",
+        message = "Stage 2",
         durationMillis = 3
     ),
     StageMessage(
