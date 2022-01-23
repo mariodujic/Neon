@@ -13,7 +13,7 @@ val FAKE_UUID: String = UUID.randomUUID().toString()
 val FAKE_ZIG_ZAG_FORMATION = ZigZag(position = ZigZagInitialPosition.LEFT)
 val FAKE_ROW_FORMATION = Row(rowCount = 4)
 val FAKE_REGULAR_ENEMY_TYPE: RegularEnemyType = RegularEnemyType(
-    drawableId = R.drawable.enemy_level_five,
+    drawableId = R.drawable.enemy_green_2,
     width = 50f,
     height = 50f,
     hp = 200f,

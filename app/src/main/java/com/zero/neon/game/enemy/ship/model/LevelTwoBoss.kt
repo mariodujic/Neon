@@ -24,7 +24,7 @@ data class LevelTwoBoss(
         private set
     override var outOfScreen: Boolean = false
         private set
-    override val drawableId: Int = R.drawable.enemy_level_two_boss
+    override val drawableId: Int = R.drawable.enemy_green_boss
     private val bossMovementSpeed = 0.5f
 
     private val maxXOffset = screenWidth - width
