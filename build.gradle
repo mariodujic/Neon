@@ -6,7 +6,7 @@ buildscript {
         core_ktx_version = '1.7.0'
         material_version = '1.4.0'
         activity_compose_version = '1.4.0'
-        gradle_plugin_version = '7.0.4'
+        gradle_plugin_version = '7.1.0'
         mockito_version = '4.1.0'
         junit_version = '4.13.2'
         accompanist_version = '0.20.3'
