@@ -363,7 +363,10 @@ fun rememberGameState(): GameState {
             job.cancel()
         }
     }
+
+    @Suppress("UNUSED_EXPRESSION")
     refreshHandler
+
     return GameState(
         gameStatus = gameStatus,
         gameMessage = gameMessage,

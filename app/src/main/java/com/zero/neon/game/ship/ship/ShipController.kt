@@ -114,7 +114,7 @@ class ShipController(
                     true -> 0
                     false -> spaceObject.impactPower
                 }
-                updateHp(ship.hp - hpImpact)
+                updateHp(-hpImpact)
 
                 when (spaceObject.drawableId) {
                     BoosterType.ULTIMATE_WEAPON_BOOSTER.drawableId -> fileUltimateLaser()
@@ -134,12 +134,12 @@ class ShipController(
             }
             if (boosterRect.overlaps(shipRect)) {
                 boosters[boosterIndex].collect()
-                updateHp(ship.hp - booster.impactPower)
                 when (booster.type) {
                     BoosterType.ULTIMATE_WEAPON_BOOSTER -> fileUltimateLaser()
                     BoosterType.SHIELD_BOOSTER -> enableShield(enable = true)
                     BoosterType.LASER_BOOSTER -> enableLaserBooster(enable = true)
                     BoosterType.TRIPLE_LASER_BOOSTER -> enableTripleLaserBooster(enable = true)
+                    BoosterType.HEALTH_BOOSTER -> updateHp(100)
                 }
             }
         }
@@ -157,7 +157,7 @@ class ShipController(
                     true -> 0
                     false -> enemy.impactPower.toInt()
                 }
-                updateHp(ship.hp - hpImpact)
+                updateHp(-hpImpact)
             }
         }
         enemyLasers.forEachIndexed { enemyIndex, enemyLaser ->
@@ -174,7 +174,7 @@ class ShipController(
                     true -> 0f
                     false -> enemyLaser.impactPower
                 }
-                updateHp((ship.hp - hpImpact).toInt())
+                updateHp(-hpImpact.toInt())
             }
         }
 
@@ -215,8 +215,8 @@ class ShipController(
         setShip(ship)
     }
 
-    private fun updateHp(hp: Int) {
-        ship = ship.copy(hp = hp)
+    private fun updateHp(hpChange: Int) {
+        ship = ship.copy(hp = ship.hp + hpChange)
         setShip(ship)
     }
 

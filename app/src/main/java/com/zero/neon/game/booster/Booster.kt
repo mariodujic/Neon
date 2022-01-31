@@ -15,13 +15,6 @@ data class Booster(
     private val boosters: Array<BoosterType> = BoosterType.values()
     private val index: Int = Random.nextInt(0, boosters.size)
     val type: BoosterType = boosters[index]
-    val impactPower = when (type) {
-        /**
-         * This booster type heals space ship on impact.
-         */
-        BoosterType.HEALTH_BOOSTER -> -50
-        else -> 0
-    }
 
     fun moveObject() {
         if (yOffset < screenHeight + 100) {
