@@ -12,8 +12,8 @@ This project is `STG` mobile game made in Android. It is a fun project I do in m
 
 <br>
 
+[Click to view gameplay GIF](/preview/neon_preview.gif)
 <div float="left">
-<img src="/preview/neon_preview.gif"  width="24%"/>
 <img src="/preview/screenshot_3.jpg"  width="24%"/>
 <img src="/preview/screenshot_2.jpg"  width="24%"/>
 <img src="/preview/screenshot_1.jpg"  width="24%"/>
