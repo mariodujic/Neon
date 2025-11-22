@@ -1,27 +1,28 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'org.jetbrains.kotlin.plugin.compose'
 }
 
 android {
-    namespace "com.zero.neon"
-    compileSdk 32
+    namespace = "com.zero.neon"
 
     defaultConfig {
-        minSdk 21
-        targetSdk 32
-        versionCode 1
-        versionName "1.0"
+        minSdk = 21
+        targetSdk = 36
+        compileSdk = 36
+        versionCode = 1
+        versionName = "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
-            useSupportLibrary true
+            useSupportLibrary = true
         }
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled = false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -60,7 +61,7 @@ dependencies {
     /*Tests*/
     testImplementation "junit:junit:$junit_version"
     testImplementation "org.mockito:mockito-core:$mockito_version"
-    testImplementation "org.mockito:mockito-inline:$mockito_version"
+    testImplementation "org.mockito:mockito-inline:$mockito_inline_version"
     /*Audio player*/
     implementation "com.google.android.exoplayer:exoplayer:$exoplayer_version"
     /*Image*/
